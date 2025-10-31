@@ -36,10 +36,12 @@ services:
           type: web
           name: redtickets-backend
           property: host
-    disk:
-      name: media-uploads
-      mountPath: /opt/render/project/src/media
-      sizeGB: 1
+    # NOTA: Disco persistente requiere plan Starter ($7/mo)
+    # Para free tier, uploads se almacenan temporalmente
+    # disk:
+    #   name: media-uploads
+    #   mountPath: /opt/render/project/src/media
+    #   sizeGB: 1
 
   # ========================================
   # FRONTEND: Vite + React
@@ -47,7 +49,7 @@ services:
   - type: web
     name: redtickets-frontend
     runtime: static
-    region: oregon
+    # NOTA: Static sites no soportan region (usan CDN global automáticamente)
     plan: free
     branch: main
     rootDir: frontend
@@ -76,7 +78,6 @@ services:
         value: https://redtickets-backend.onrender.com/api/chat
       - key: VITE_ENABLE_AI_CHAT
         value: true
-
 # ========================================
 # NOTAS DE CONFIGURACIÓN:
 # ========================================
@@ -84,4 +85,6 @@ services:
 # 2. Configurar DATABASE_URI y GROQ_API_KEY manualmente en Render Dashboard
 # 3. Free tier: se duerme después de 15min de inactividad
 # 4. Para evitar sleep: upgrade a plan Starter ($7/mo)
-# 5. Backend necesita disco persistente para uploads de media
+# 5. Free tier NO soporta disco persistente (uploads temporales)
+# 6. Para uploads permanentes: upgrade a Starter y descomentar sección disk
+# 7. Static sites usan CDN global (no necesitan region)

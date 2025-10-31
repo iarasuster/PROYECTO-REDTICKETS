@@ -26,14 +26,16 @@ function parseActions(text) {
 
 // TEST CASES
 console.log("========== TEST 1: sobre-nosotros ==========");
-const test1 = "Somos una empresa de gestión de eventos y venta de tickets. [ACTION:navigate:sobre-nosotros|Conoce Nuestra Historia]";
+const test1 =
+  "Somos una empresa de gestión de eventos y venta de tickets. [ACTION:navigate:sobre-nosotros|Conoce Nuestra Historia]";
 const result1 = parseActions(test1);
 console.log("Input:", test1);
 console.log("Output:", result1);
 console.log("✅ Esperado: text limpio, 1 acción con section='sobre-nosotros'");
 
 console.log("\n========== TEST 2: múltiples acciones ==========");
-const test2 = "¡Bienvenido! ¿Necesitas ayuda con algo en particular? [ACTION:navigate:servicios|Ver Servicios] [ACTION:navigate:ayuda|Centro de Ayuda]";
+const test2 =
+  "¡Bienvenido! ¿Necesitas ayuda con algo en particular? [ACTION:navigate:servicios|Ver Servicios] [ACTION:navigate:ayuda|Centro de Ayuda]";
 const result2 = parseActions(test2);
 console.log("Input:", test2);
 console.log("Output:", result2);

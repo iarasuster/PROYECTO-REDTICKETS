@@ -21,6 +21,7 @@ cp .env.example .env
 ```
 
 **Variables obligatorias:**
+
 ```env
 DATABASE_URI=mongodb+srv://user:pass@cluster.mongodb.net/database
 PAYLOAD_SECRET=$(openssl rand -base64 32)
@@ -37,6 +38,7 @@ cp .env.example .env
 ```
 
 **Para desarrollo local:**
+
 ```env
 VITE_API_URL=http://localhost:3000
 VITE_CHAT_API_URL=http://localhost:3000/api/chat
@@ -103,6 +105,7 @@ git push -u origin main
 1. **New +** → **Web Service**
 2. Conectar GitHub repository
 3. Configuración:
+
    ```
    Name: redtickets-backend
    Region: Oregon
@@ -115,6 +118,7 @@ git push -u origin main
    ```
 
 4. **Environment Variables:**
+
    ```
    DATABASE_URI=mongodb+srv://...
    PAYLOAD_SECRET=<auto-generate>
@@ -124,6 +128,7 @@ git push -u origin main
    ```
 
 5. **Add Disk:**
+
    - Name: `media-uploads`
    - Mount Path: `/opt/render/project/src/media`
    - Size: 1GB
@@ -135,6 +140,7 @@ git push -u origin main
 1. **New +** → **Static Site**
 2. Conectar mismo repositorio
 3. Configuración:
+
    ```
    Name: redtickets-frontend
    Branch: main
@@ -144,6 +150,7 @@ git push -u origin main
    ```
 
 4. **Environment Variables:**
+
    ```
    VITE_API_URL=https://redtickets-backend.onrender.com
    VITE_CHAT_API_URL=https://redtickets-backend.onrender.com/api/chat
@@ -151,6 +158,7 @@ git push -u origin main
    ```
 
 5. **Redirects/Rewrites:**
+
    ```
    Source: /*
    Destination: /index.html
@@ -254,6 +262,7 @@ cd ../frontend && npm install
 **Causa:** Free tier se duerme después de 15min
 
 **Solución:**
+
 - Espera 30-60 segundos (se despierta automáticamente)
 - O upgrade a plan Starter ($7/mo) para mantener siempre activo
 
@@ -262,6 +271,7 @@ cd ../frontend && npm install
 **Causa:** URL incorrecta en variables de entorno
 
 **Solución:**
+
 1. Ve a Render Dashboard → Frontend
 2. Environment → Verifica `VITE_API_URL`
 3. Debe ser: `https://tu-backend.onrender.com` (sin trailing slash)
@@ -270,11 +280,13 @@ cd ../frontend && npm install
 ### ❌ Chatbot no responde
 
 **Causas posibles:**
+
 1. `GROQ_API_KEY` incorrecta
 2. Rate limit de Groq excedido
 3. CORS no configurado
 
 **Solución:**
+
 ```bash
 # Verificar logs en Render
 # Dashboard → Backend → Logs
@@ -289,6 +301,7 @@ cd ../frontend && npm install
 **Causa:** Connection string incorrecto o IP no whitelistada
 
 **Solución:**
+
 1. MongoDB Atlas → Network Access → Allow 0.0.0.0/0
 2. Verificar connection string en Render env vars
 3. Asegurar que incluye password y database name
@@ -322,32 +335,38 @@ Render detectará el push automáticamente y hará re-deploy.
 ### Free Tier
 
 **Backend (Web Service):**
+
 - ✅ 750 horas/mes gratis
 - ⚠️ Se duerme después de 15min inactividad
 - ⚠️ 100GB bandwidth/mes
 - ⚠️ Build time limitado
 
 **Frontend (Static Site):**
+
 - ✅ Completamente gratis
 - ✅ Sin límite de requests
 - ✅ CDN global incluido
 
 **MongoDB Atlas:**
+
 - ✅ 512MB storage gratis
 - ✅ Shared cluster
 
 **Groq API:**
+
 - ✅ Rate limits generosos gratis
 - ✅ Suficiente para proyecto personal
 
 ### Paid Plans (Opcional)
 
 **Render Starter ($7/mo por servicio):**
+
 - Sin sleep
 - Más CPU y RAM
 - Despliegues más rápidos
 
 **MongoDB Atlas ($9/mo):**
+
 - Más storage
 - Backups automáticos
 

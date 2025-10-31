@@ -8,7 +8,7 @@ import { useState, useCallback, useRef } from "react";
 /**
  * Parsea comandos [ACTION:...] del texto y los convierte en acciones de UI
  * Formato: [ACTION:navigate:section|Label del botón]
- * 
+ *
  * LÍMITE: Máximo 2 acciones según OpenAI Design Guidelines
  * "Limit primary actions per card: Support up to two actions maximum"
  */
@@ -57,7 +57,8 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
     async (e) => {
       e?.preventDefault();
 
-      if (!input.trim() || status === "submitting" || status === "streaming") return;
+      if (!input.trim() || status === "submitting" || status === "streaming")
+        return;
 
       const userMessage = {
         id: Date.now().toString(),

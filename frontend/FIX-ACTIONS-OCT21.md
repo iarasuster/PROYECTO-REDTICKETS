@@ -3,18 +3,22 @@
 ## Problemas Encontrados
 
 ### 1. ❌ Comandos [ACTION] se mostraban como texto
+
 **Síntoma:** En lugar de botones, aparecía el texto literal:
+
 ```
 [ACTION:navigate:sobre-nosotros|Conoce Nuestra Historia]
 ```
 
 **Causa:** El regex no aceptaba guiones `-` en los slugs de sección.
+
 ```javascript
 // ❌ ANTES: Solo \w+ (letras, números, guión bajo)
 const actionRegex = /\[ACTION:navigate:(\w+)\|([^\]]+)\]/g;
 ```
 
 **Solución:** Actualizado regex para aceptar guiones:
+
 ```javascript
 // ✅ AHORA: Acepta guiones con [\w-]+
 const actionRegex = /\[ACTION:navigate:([\w-]+)\|([^\]]+)\]/g;
@@ -23,6 +27,7 @@ const actionRegex = /\[ACTION:navigate:([\w-]+)\|([^\]]+)\]/g;
 **Archivo:** `frontend/src/hooks/useSimpleChat.js`
 
 **Secciones afectadas:**
+
 - ✅ `sobre-nosotros` → Ahora funciona
 - ✅ `servicios` → Funcionaba antes
 - ✅ `inicio` → Funcionaba antes
@@ -33,18 +38,28 @@ const actionRegex = /\[ACTION:navigate:([\w-]+)\|([^\]]+)\]/g;
 ---
 
 ### 2. ❌ Indicador de "pensando" duplicado
+
 **Síntoma:** Aparecían dos sets de puntos "..." cuando el bot estaba escribiendo.
 
 **Causa:** Había dos componentes de typing indicator:
+
 1. Nuevo shimmer (OpenAI style) ✅
 2. Viejo typing indicator (legacy) ❌
 
 ```jsx
-{/* Shimmer nuevo */}
-{isLoading && <div className="chat-ui__thinking">...</div>}
+{
+  /* Shimmer nuevo */
+}
+{
+  isLoading && <div className="chat-ui__thinking">...</div>;
+}
 
-{/* Viejo duplicado */}
-{isLoading && <div className="chat-ui__typing">...</div>}
+{
+  /* Viejo duplicado */
+}
+{
+  isLoading && <div className="chat-ui__typing">...</div>;
+}
 ```
 
 **Solución:** Eliminado el indicador viejo (`.chat-ui__typing`)
@@ -58,16 +73,18 @@ const actionRegex = /\[ACTION:navigate:([\w-]+)\|([^\]]+)\]/g;
 ## Archivos Modificados
 
 ### 1. `frontend/src/hooks/useSimpleChat.js`
+
 ```diff
 - const actionRegex = /\[ACTION:navigate:(\w+)\|([^\]]+)\]/g;
 + const actionRegex = /\[ACTION:navigate:([\w-]+)\|([^\]]+)\]/g;
 ```
 
 ### 2. `frontend/src/components/ChatUI.jsx`
+
 ```diff
   {/* Shimmer effect */}
   {isLoading && <div className="chat-ui__thinking">●●●</div>}
-  
+
 - {/* Typing indicator OLD */}
 - {isLoading && <div className="chat-ui__typing">...</div>}
 ```
@@ -77,7 +94,9 @@ const actionRegex = /\[ACTION:navigate:([\w-]+)\|([^\]]+)\]/g;
 ## Testing
 
 ### Test del Regex:
+
 Ejecutar en consola del navegador:
+
 ```bash
 # Abrir frontend/test-parseActions.js en la consola
 # Debería mostrar:
@@ -88,6 +107,7 @@ Ejecutar en consola del navegador:
 ```
 
 ### Test Visual:
+
 1. Abrir chat
 2. Preguntar: "hola quienes son"
 3. **Verificar:**
@@ -103,6 +123,7 @@ Ejecutar en consola del navegador:
 **Usuario:** "hola quienes son"
 
 **Bot debería mostrar:**
+
 ```
 Somos una empresa de gestión de eventos y venta de tickets.
 
@@ -110,6 +131,7 @@ Somos una empresa de gestión de eventos y venta de tickets.
 ```
 
 **NO debería mostrar:**
+
 ```
 Somos una empresa de gestión de eventos y venta de tickets.
 [ACTION:navigate:sobre-nosotros|Conoce Nuestra Historia] ← ❌ ESTO ES MALO
@@ -149,6 +171,7 @@ http://localhost:5173
 ## Notas Técnicas
 
 ### Pattern del Regex Explicado:
+
 ```javascript
 /\[ACTION:navigate:([\w-]+)\|([^\]]+)\]/g
 
@@ -162,6 +185,7 @@ http://localhost:5173
 ```
 
 ### Slugs Válidos:
+
 - ✅ `sobre-nosotros` (con guión)
 - ✅ `servicios` (sin guión)
 - ✅ `comunidad` (sin guión)

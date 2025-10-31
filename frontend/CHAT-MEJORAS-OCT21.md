@@ -36,16 +36,17 @@ onClick={() => {
 
 ### Estados Disponibles:
 
-| Estado | Descripción | UI Muestra |
-|--------|-------------|------------|
-| `ready` | Listo para nuevo mensaje | "En línea" |
-| `submitting` | Enviando request al backend | "Enviando..." |
-| `streaming` | Recibiendo respuesta palabra por palabra | "Escribiendo..." + shimmer |
-| `error` | Error en la comunicación | "Error de conexión" |
+| Estado       | Descripción                              | UI Muestra                 |
+| ------------ | ---------------------------------------- | -------------------------- |
+| `ready`      | Listo para nuevo mensaje                 | "En línea"                 |
+| `submitting` | Enviando request al backend              | "Enviando..."              |
+| `streaming`  | Recibiendo respuesta palabra por palabra | "Escribiendo..." + shimmer |
+| `error`      | Error en la comunicación                 | "Error de conexión"        |
 
 ### Implementación:
 
 **useSimpleChat.js:**
+
 ```javascript
 const [status, setStatus] = useState("ready");
 
@@ -54,6 +55,7 @@ setStatus("submitting") → fetch → setStatus("streaming") → stream completo
 ```
 
 **ChatUI.jsx:**
+
 ```jsx
 <p className="chat-ui__status">
   {status === "submitting" && "Enviando..."}
@@ -70,6 +72,7 @@ setStatus("submitting") → fetch → setStatus("streaming") → stream completo
 ```
 
 **Beneficios:**
+
 - ✅ Mejor feedback visual durante todo el ciclo
 - ✅ Usuario sabe exactamente qué está pasando
 - ✅ Más profesional (estándar de Vercel AI SDK)
@@ -83,16 +86,17 @@ setStatus("submitting") → fetch → setStatus("streaming") → stream completo
 ### Implementación:
 
 **useSimpleChat.js:**
+
 ```javascript
 export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
   const startTimeRef = useRef(null);
-  
+
   // Al enviar mensaje
   startTimeRef.current = Date.now();
-  
+
   // Al completar respuesta
   const duration = Date.now() - startTimeRef.current;
-  
+
   if (onFinish && typeof onFinish === "function") {
     onFinish({
       message: assistantMessage,
@@ -104,6 +108,7 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
 ```
 
 **ChatUI.jsx:**
+
 ```jsx
 useSimpleChat({
   api: "/api/chat",
@@ -117,35 +122,39 @@ useSimpleChat({
 ### Casos de Uso:
 
 1. **Analytics de Performance:**
+
 ```javascript
 onFinish: ({ duration }) => {
   analytics.track("chat_response_time", { duration });
-}
+};
 ```
 
 2. **Logging de Conversaciones:**
+
 ```javascript
 onFinish: ({ message, messages }) => {
-  saveToDatabase({ 
-    conversation: messages, 
-    lastResponse: message.content 
+  saveToDatabase({
+    conversation: messages,
+    lastResponse: message.content,
   });
-}
+};
 ```
 
 3. **Tracking de Acciones:**
+
 ```javascript
 onFinish: ({ message }) => {
   if (message.actions.length > 0) {
     analytics.track("chat_actions_generated", {
       count: message.actions.length,
-      sections: message.actions.map(a => a.section),
+      sections: message.actions.map((a) => a.section),
     });
   }
-}
+};
 ```
 
 **Beneficios:**
+
 - ✅ Medir tiempos de respuesta
 - ✅ Identificar preguntas frecuentes
 - ✅ Optimizar prompts según engagement
@@ -166,9 +175,10 @@ onFinish: ({ message }) => {
 ## 📊 Comparación: Antes vs Ahora
 
 ### Antes:
+
 ```javascript
 // Estado binario
-isLoading: true/false
+isLoading: true / false;
 
 // Sin analytics
 // Sin tracking de duración
@@ -176,12 +186,13 @@ isLoading: true/false
 ```
 
 ### Ahora:
+
 ```javascript
 // Estados granulares
-status: 'ready' | 'submitting' | 'streaming' | 'error'
+status: "ready" | "submitting" | "streaming" | "error";
 
 // Con analytics
-onFinish: ({ message, duration, messages }) => { }
+onFinish: ({ message, duration, messages }) => {};
 
 // Navegación sin cerrar chat
 // Mejor feedback visual en cada estado
@@ -207,6 +218,7 @@ Código antiguo que use `isLoading` seguirá funcionando sin cambios.
 ## 🧪 Testing
 
 ### 1. Estados del Chat:
+
 ```bash
 # Probar flujo completo
 1. Escribir mensaje → Ver "Enviando..."
@@ -216,6 +228,7 @@ Código antiguo que use `isLoading` seguirá funcionando sin cambios.
 ```
 
 ### 2. Navegación:
+
 ```bash
 1. Hacer pregunta que genere botones
 2. Click en botón → Navega a sección
@@ -224,6 +237,7 @@ Código antiguo que use `isLoading` seguirá funcionando sin cambios.
 ```
 
 ### 3. onFinish Callback:
+
 ```bash
 # Ver en consola del navegador
 1. Enviar mensaje
@@ -235,12 +249,14 @@ Código antiguo que use `isLoading` seguirá funcionando sin cambios.
 ## 📝 Archivos Modificados
 
 1. **frontend/src/hooks/useSimpleChat.js**
+
    - Agregado `status` state
    - Agregado `startTimeRef` para medir duración
    - Agregado parámetro `onFinish` opcional
    - Mantiene `isLoading` para compatibility
 
 2. **frontend/src/components/ChatUI.jsx**
+
    - Uso de `status` en lugar de `isLoading`
    - Feedback visual granular en header
    - Íconos dinámicos según estado
