@@ -1,0 +1,217 @@
+// URL base de la API de Payload CMS
+// Cambiar este valor según donde esté ejecutándose Payload
+const API_BASE_URL = "http://localhost:3000/api";
+
+// Configuración del chatbot
+const CHATBOT_API_URL = "http://localhost:3000/api"; // Backend Next.js (mismo puerto)
+
+// Función helper para hacer peticiones HTTP
+const fetchAPI = async (endpoint, options = {}) => {
+  const url = `${API_BASE_URL}${endpoint}`;
+
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  try {
+    const response = await fetch(url, config);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+// ===== FUNCIONES PARA SECCIONES =====
+
+// Función para obtener TODO el contenido (sin filtros, filtraremos en el frontend)
+export const getAllContent = async () => {
+  return fetchAPI("/sections?limit=1000&sort=orden");
+};
+
+// Función para obtener contenido por sección (filtrando en frontend)
+export const getContentBySection = async (seccion) => {
+  const result = await getAllContent();
+  const filtered =
+    result.docs?.filter(
+      (item) => item.seccion === seccion && item.publicado === true
+    ) || [];
+
+  return {
+    ...result,
+    docs: filtered,
+    totalDocs: filtered.length,
+  };
+};
+
+// Función para obtener todo el contenido de secciones
+export const getAllSections = async () => {
+  const query = new URLSearchParams({
+    where: JSON.stringify({ publicado: { equals: true } }),
+    sort: "orden",
+  });
+
+  return fetchAPI(`/sections?${query}`);
+};
+
+// Función para obtener una sección por su slug
+export const getSectionBySlug = async (slug) => {
+  const query = new URLSearchParams({
+    where: JSON.stringify({
+      slug: { equals: slug },
+      publicado: { equals: true },
+    }),
+    limit: "1",
+  });
+
+  const response = await fetchAPI(`/sections?${query}`);
+  return response.docs?.[0] || null;
+};
+
+// Función para obtener contenido específico por tipo y sección
+// Función para obtener contenido por sección y tipo (filtrando en frontend)
+export const getContentByTypeAndSection = async (tipoContenido, seccion) => {
+  const result = await getAllContent();
+  const filtered =
+    result.docs?.filter(
+      (item) =>
+        item.seccion === seccion &&
+        item.tipo === tipoContenido &&
+        item.publicado === true
+    ) || [];
+
+  return {
+    ...result,
+    docs: filtered,
+    totalDocs: filtered.length,
+  };
+};
+
+// ===== FUNCIONES DEL CHATBOT CON IA =====
+
+// Función para enviar mensaje al chatbot inteligente
+export const sendChatMessage = async (message, conversationHistory = []) => {
+  try {
+    const response = await fetch(`${CHATBOT_API_URL}/chat`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: message.trim(),
+        conversationHistory: conversationHistory,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.response || `HTTP error! status: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+    return {
+      success: true,
+      response: data.response,
+      timestamp: data.timestamp,
+    };
+  } catch (error) {
+    console.error("Error en sendChatMessage:", error);
+
+    // Respuestas de fallback según el tipo de error
+    if (error.message.includes("503")) {
+      return {
+        success: false,
+        response:
+          "🤖 El modelo de IA se está inicializando. Por favor, espera unos segundos e intenta nuevamente.",
+        error: "model_loading",
+      };
+    }
+
+    if (error.message.includes("401")) {
+      return {
+        success: false,
+        response:
+          "🔑 Hay un problema con la configuración del chatbot. Estamos trabajando en solucionarlo.",
+        error: "auth_error",
+      };
+    }
+
+    if (error.message.includes("API key no configurada")) {
+      return {
+        success: false,
+        response:
+          "⚙️ El chatbot inteligente está en configuración. Mientras tanto, puedes contactarnos en soporte@redtickets.com",
+        error: "config_error",
+      };
+    }
+
+    // Error genérico - respuesta amigable
+    return {
+      success: false,
+      response:
+        "🤖 Disculpa, tengo dificultades para responder en este momento. ¿Podrías intentar reformular tu pregunta o contactarnos en soporte@redtickets.com?",
+      error: "general_error",
+    };
+  }
+};
+
+// Función para obtener respuestas de fallback inteligentes
+export const getFallbackResponse = (userMessage) => {
+  const message = userMessage.toLowerCase();
+
+  // Respuestas contextual según palabras clave
+  if (
+    message.includes("evento") ||
+    message.includes("concierto") ||
+    message.includes("show")
+  ) {
+    return "🎵 En RedTickets encontrarás los mejores eventos: conciertos, teatro, deportes y más. ¿Buscas algún tipo de evento en particular?";
+  }
+
+  if (
+    message.includes("entrada") ||
+    message.includes("ticket") ||
+    message.includes("comprar")
+  ) {
+    return "🎫 Para comprar entradas, visita redtickets.com donde podrás ver todos los eventos disponibles y proceder con la compra segura.";
+  }
+
+  if (
+    message.includes("precio") ||
+    message.includes("costo") ||
+    message.includes("cuanto")
+  ) {
+    return "💰 Los precios varían según el evento. En nuestra plataforma verás todas las opciones de entradas disponibles con sus precios actualizados.";
+  }
+
+  if (
+    message.includes("ayuda") ||
+    message.includes("soporte") ||
+    message.includes("contacto")
+  ) {
+    return "🆘 Estoy aquí para ayudarte con información sobre eventos y RedTickets. También puedes contactarnos en soporte@redtickets.com o +54 11 1234-5678.";
+  }
+
+  if (
+    message.includes("hola") ||
+    message.includes("saludar") ||
+    message.includes("buenos")
+  ) {
+    return "👋 ¡Hola! Soy el asistente de RedTickets. Estoy aquí para ayudarte con información sobre eventos, entradas y nuestros servicios. ¿En qué puedo asistirte?";
+  }
+
+  // Respuesta genérica amigable
+  return "🤖 Gracias por tu mensaje. Como asistente de RedTickets, puedo ayudarte con información sobre eventos, entradas y nuestros servicios. ¿Hay algo específico que te interese saber?";
+};

@@ -1,0 +1,96 @@
+# ========================================
+# DEPENDENCIES
+# ========================================
+node_modules/
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ========================================
+# ENVIRONMENT VARIABLES
+# ========================================
+.env
+.env*.local
+.env.production
+.env.development
+
+# ========================================
+# BUILD & CACHE
+# ========================================
+dist/
+build/
+.next/
+out/
+.cache/
+*.tsbuildinfo
+
+# ========================================
+# LOGS
+# ========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ========================================
+# OS & EDITOR
+# ========================================
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+# ========================================
+# TESTING
+# ========================================
+/coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# ========================================
+# PRODUCTION
+# ========================================
+*.pem
+/media
+
+# ========================================
+# PAYLOAD CMS
+# ========================================
+/backend/media
+/backend/.next
+/backend/build
+
+# ========================================
+# VITE (Frontend)
+# ========================================
+/frontend/dist
+/frontend/dist-ssr
+*.local
+
+# ========================================
+# MISC
+# ========================================
+.vercel
+*.tgz
+.npm
+.eslintcache
+blogEmbeddings.json

@@ -1,0 +1,153 @@
+/* GENERATIVE UI RENDERER STYLES */
+
+.gen-renderer {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Action Buttons */
+.gen-renderer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.gen-ui-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  color: var(--text-primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gen-ui-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.gen-ui-button--primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.gen-ui-button--primary:hover {
+  background: var(--primary-dark);
+}
+
+.gen-ui-button--secondary {
+  background: white;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.gen-ui-button--secondary:hover {
+  background: rgba(255, 102, 0, 0.1);
+}
+
+.gen-ui-button__icon {
+  font-size: 1rem;
+}
+
+.gen-ui-button__label {
+  font-size: 0.875rem;
+}
+
+/* Content Cards */
+.gen-renderer__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.gen-ui-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #e9ecef;
+}
+
+.gen-ui-card:hover {
+  background: white;
+  border-color: var(--primary-color);
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.1);
+}
+
+.gen-ui-card__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: var(--text-primary);
+}
+
+.gen-ui-card__subtitle {
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+}
+
+.gen-ui-card__excerpt {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 0.5rem 0;
+}
+
+.gen-ui-card__cta {
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Animations */
+.gen-renderer {
+  animation: genUISlideIn 0.3s ease;
+}
+
+@keyframes genUISlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .gen-ui-button {
+    padding: 0.4rem 0.875rem;
+    font-size: 0.8rem;
+  }
+  
+  .gen-ui-card {
+    padding: 0.75rem;
+  }
+  
+  .gen-ui-card__title {
+    font-size: 0.9rem;
+  }
+  
+  .gen-ui-card__excerpt {
+    font-size: 0.8rem;
+  }
+}
