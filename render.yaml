@@ -13,7 +13,7 @@ services:
     runtime: node
     region: oregon # Cambiar a tu región preferida
     plan: free # Opciones: free, starter ($7/mo), standard ($25/mo)
-    branch: main
+    branch: master
     rootDir: backend
     buildCommand: npm install && npm run build
     startCommand: npm run start
@@ -46,12 +46,10 @@ services:
   # ========================================
   # FRONTEND: Vite + React
   # ========================================
-  - type: web
+  - type: static
     name: redtickets-frontend
-    runtime: static
     # NOTA: Static sites no soportan region (usan CDN global automáticamente)
-    plan: free
-    branch: main
+    branch: master
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
