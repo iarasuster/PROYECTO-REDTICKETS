@@ -65,11 +65,7 @@ services:
           name: redtickets-backend
           property: host
       - key: VITE_CHAT_API_URL
-        fromService:
-          type: web
-          name: redtickets-backend
-          property: host
-          envVarKey: VITE_CHAT_API_URL
+        sync: false # Configurar manualmente: https://redtickets-backend.onrender.com/api/chat
       - key: VITE_ENABLE_AI_CHAT
         value: "true"
 
