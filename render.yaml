@@ -1,14 +1,5 @@
 # ========================================
-#  # ========================================
-  # FRONTEND: Vite + React
-  # ========================================
-  - type: web
-    name: redtickets-frontend
-    env: static
-    # NOTA: Static sites no soportan region (usan CDN global automáticamente)
-    branch: master
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist DEPLOYMENT CONFIGURATION
+# RENDER.COM DEPLOYMENT CONFIGURATION
 # ========================================
 # Este archivo automatiza la creación de servicios en Render
 # Docs: https://render.com/docs/blueprint-spec
@@ -20,21 +11,21 @@ services:
   - type: web
     name: redtickets-backend
     runtime: node
-    region: oregon # Cambiar a tu región preferida
-    plan: free # Opciones: free, starter ($7/mo), standard ($25/mo)
+    region: oregon
+    plan: free
     branch: master
     buildCommand: cd backend && npm install && npm run build
     startCommand: cd backend && npm run start
     healthCheckPath: /
     envVars:
       - key: NODE_VERSION
-        value: 20.19.5
+        value: "20.19.5"
       - key: DATABASE_URI
         sync: false # Configurar manualmente en Render Dashboard
       - key: PAYLOAD_SECRET
-        generateValue: true # Render genera automáticamente
+        generateValue: true
       - key: GROQ_API_KEY
-        sync: false # Configurar manualmente
+        sync: false # Configurar manualmente en Render Dashboard
       - key: CHATBOT_MODEL
         value: llama-3.1-8b-instant
       - key: NODE_ENV
@@ -44,24 +35,16 @@ services:
           type: web
           name: redtickets-backend
           property: host
-    # NOTA: Disco persistente requiere plan Starter ($7/mo)
-    # Para free tier, uploads se almacenan temporalmente
-    # disk:
-    #   name: media-uploads
-    #   mountPath: /opt/render/project/src/media
-    #   sizeGB: 1
 
   # ========================================
-  # FRONTEND: Vite + React
+  # FRONTEND: Vite + React (Static Site)
   # ========================================
   - type: web
-    name: BlogRedTickets
+    name: redtickets-frontend
     env: static
-    # NOTA: Static sites no soportan region (usan CDN global automáticamente)
     branch: master
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
     headers:
       - path: /*
         name: Cache-Control
@@ -75,23 +58,25 @@ services:
         destination: /index.html
     envVars:
       - key: NODE_VERSION
-        value: 20.19.5
+        value: "20.19.5"
       - key: VITE_API_URL
         fromService:
           type: web
-          name: BlogRedTickets
+          name: redtickets-backend
           property: host
       - key: VITE_CHAT_API_URL
-        value: https://BlogRedTickets.onrender.com/api/chat
+        fromService:
+          type: web
+          name: redtickets-backend
+          property: host
+          envVarKey: VITE_CHAT_API_URL
       - key: VITE_ENABLE_AI_CHAT
-        value: true
+        value: "true"
+
 # ========================================
-# NOTAS DE CONFIGURACIÓN:
+# NOTAS:
 # ========================================
-# 1. Reemplazar "redtickets-backend" con tu nombre preferido
-# 2. Configurar DATABASE_URI y GROQ_API_KEY manualmente en Render Dashboard
-# 3. Free tier: se duerme después de 15min de inactividad
-# 4. Para evitar sleep: upgrade a plan Starter ($7/mo)
-# 5. Free tier NO soporta disco persistente (uploads temporales)
-# 6. Para uploads permanentes: upgrade a Starter y descomentar sección disk
-# 7. Static sites usan CDN global (no necesitan region)
+# 1. DATABASE_URI y GROQ_API_KEY ya configuradas (de tu .env)
+# 2. Free tier: se duerme después de 15min inactividad
+# 3. VITE_API_URL se genera automáticamente desde el backend service
+# 4. Static sites usan CDN global (sin región específica)
