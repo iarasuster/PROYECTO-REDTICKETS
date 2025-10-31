@@ -47,7 +47,7 @@ services:
   # FRONTEND: Vite + React
   # ========================================
   - type: web
-    name: redtickets-frontend
+    name: BlogRedTickets
     env: static
     # NOTA: Static sites no soportan region (usan CDN global automáticamente)
     branch: master
@@ -71,10 +71,10 @@ services:
       - key: VITE_API_URL
         fromService:
           type: web
-          name: redtickets-backend
+          name: BlogRedTickets
           property: host
       - key: VITE_CHAT_API_URL
-        value: https://redtickets-backend.onrender.com/api/chat
+        value: https://BlogRedTickets.onrender.com/api/chat
       - key: VITE_ENABLE_AI_CHAT
         value: true
 # ========================================
