@@ -1,5 +1,14 @@
 # ========================================
-# RENDER.COM DEPLOYMENT CONFIGURATION
+#  # ========================================
+  # FRONTEND: Vite + React
+  # ========================================
+  - type: web
+    name: redtickets-frontend
+    env: static
+    # NOTA: Static sites no soportan region (usan CDN global automáticamente)
+    branch: master
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist DEPLOYMENT CONFIGURATION
 # ========================================
 # Este archivo automatiza la creación de servicios en Render
 # Docs: https://render.com/docs/blueprint-spec
@@ -14,9 +23,8 @@ services:
     region: oregon # Cambiar a tu región preferida
     plan: free # Opciones: free, starter ($7/mo), standard ($25/mo)
     branch: master
-    rootDir: backend
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm run start
     healthCheckPath: /
     envVars:
       - key: NODE_VERSION
