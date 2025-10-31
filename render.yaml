@@ -46,8 +46,9 @@ services:
   # ========================================
   # FRONTEND: Vite + React
   # ========================================
-  - type: static
+  - type: web
     name: redtickets-frontend
+    env: static
     # NOTA: Static sites no soportan region (usan CDN global automáticamente)
     branch: master
     rootDir: frontend
