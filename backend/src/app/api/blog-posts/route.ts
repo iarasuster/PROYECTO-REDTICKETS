@@ -17,7 +17,7 @@ export const GET = async () => {
 
     // Buscar todos los posts publicados
     const posts = await payload.find({
-      collection: 'posts',
+      collection: 'sections',
       where: {
         publicado: {
           equals: true,
