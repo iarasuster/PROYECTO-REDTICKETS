@@ -14,8 +14,9 @@ services:
     region: oregon
     plan: free
     branch: master
-    buildCommand: npm install --prefix backend && npm run generate:types --prefix backend && npm run generate:importmap --prefix backend && npm run build --prefix backend
-    startCommand: npm run start --prefix backend
+    rootDir: backend
+    buildCommand: npm install && npm run generate:types && npm run generate:importmap && npm run build
+    startCommand: npm run start
     healthCheckPath: /
     envVars:
       - key: NODE_VERSION
@@ -43,8 +44,9 @@ services:
     name: redtickets-frontend
     env: static
     branch: master
-    buildCommand: npm install --prefix frontend && npm run build --prefix frontend
-    staticPublishPath: frontend/dist
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
     headers:
       - path: /*
         name: Cache-Control
@@ -68,7 +70,6 @@ services:
         sync: false # Configurar manualmente: https://redtickets-backend.onrender.com/api/chat
       - key: VITE_ENABLE_AI_CHAT
         value: "true"
-
 # ========================================
 # NOTAS:
 # ========================================
