@@ -15,7 +15,7 @@ services:
     plan: free
     branch: master
     rootDir: backend
-    buildCommand: npm install && npm run generate:types && npm run generate:importmap && npm run build
+    buildCommand: rm -rf node_modules package-lock.json && npm install && npm run generate:types && npm run generate:importmap && npm run build
     startCommand: npm run start
     healthCheckPath: /
     envVars:
