@@ -91,15 +91,15 @@ export async function POST(req: Request) {
 
     // 🔍 BÚSQUEDA SEMÁNTICA EN EL BLOG
     let enhancedMessages = messages
-    let blogContext = ''
 
     try {
       console.log(`🔍 Buscando en blog: "${lastUserMessage}"`)
       
       // Buscar posts relevantes
-      const { context, actions } = await getContextualAnswer(lastUserMessage, 3)
+      const result = await getContextualAnswer(lastUserMessage, 3) as any
+      const { context, actions } = result
       
-      blogContext = context
+      // blogContext guardado para debugging si se necesita
       console.log(`✅ Contexto encontrado (${actions.length} acciones)`)
 
       // Inyectar contexto del blog en el sistema
@@ -128,7 +128,6 @@ Menciona estos artículos si son relevantes y genera comandos [ACTION:navigate:s
       system: SYSTEM_PROMPT,
       messages: enhancedMessages,
       temperature: 0.7,
-      maxTokens: 300, // Respuestas cortas
     })
 
     // Convertir a stream de texto
