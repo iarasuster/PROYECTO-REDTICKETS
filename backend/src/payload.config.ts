@@ -35,7 +35,9 @@ export default buildConfig({
     'http://localhost:5173', 
     'http://localhost:5174',
     'http://localhost:4173',
-    'https://redtickets.vercel.app' // Para producción
+    'https://redtickets.vercel.app', // Para producción Vercel
+    'https://redtickets-backend.onrender.com', // Backend en Render
+    'https://redtickets-frontend.onrender.com', // Frontend en Render
   ],
   csrf: [
     'http://localhost:3000',
@@ -44,7 +46,9 @@ export default buildConfig({
     'http://localhost:5173',
     'http://localhost:5174', 
     'http://localhost:4173',
-    'https://redtickets.vercel.app'
+    'https://redtickets.vercel.app',
+    'https://redtickets-backend.onrender.com', // Backend en Render
+    'https://redtickets-frontend.onrender.com', // Frontend en Render
   ],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
