@@ -15,9 +15,18 @@ export const Sections: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    create: ({ req: { user } }) => {
+      console.log('🔍 Create access check - User:', user ? user.email : 'NO USER')
+      return !!user
+    },
+    update: ({ req: { user } }) => {
+      console.log('🔍 Update access check - User:', user ? user.email : 'NO USER')
+      return !!user
+    },
+    delete: ({ req: { user } }) => {
+      console.log('🔍 Delete access check - User:', user ? user.email : 'NO USER')
+      return !!user
+    },
   },
   fields: [
     {
