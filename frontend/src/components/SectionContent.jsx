@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   getContentBySection,
   getContentByTypeAndSection,
@@ -56,6 +56,29 @@ const SectionContent = ({ seccion, tipo = null, className = "" }) => {
       fetchContent();
     }
   }, [seccion, tipo]);
+
+  // Intersection Observer para scroll animations
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px",
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("animate-in");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // Observar todos los content-items
+    const items = document.querySelectorAll(".content-item");
+    items.forEach((item) => observer.observe(item));
+
+    return () => observer.disconnect();
+  }, [content]);
 
   if (loading) {
     return <div className="section-loading">Cargando contenido...</div>;

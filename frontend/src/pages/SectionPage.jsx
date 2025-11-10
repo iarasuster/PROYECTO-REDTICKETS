@@ -65,7 +65,7 @@ function SectionPage() {
   }
 
   return (
-    <div className="section-page">
+    <div className="section-page" data-section={seccionSlug}>
       <div className="container">
         {/* Hero de la sección */}
         <div className="section-hero">

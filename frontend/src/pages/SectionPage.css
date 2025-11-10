@@ -1,4 +1,33 @@
-/* 🎨 SectionPage - Estilo LangChain + RedTickets */
+/* 🎨 SectionPage - Estilo LangChain + RedTickets + Animaciones */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
 
 .section-page {
   min-height: calc(100vh - 200px);
@@ -12,21 +41,21 @@
   text-align: center;
   padding: var(--spacing-lg) 2rem;
   margin-bottom: var(--spacing-xl);
-  background: transparent;
   position: relative;
+  background: transparent;
 }
 
 .section-hero::before {
   content: '';
   position: absolute;
-  top: 50%;
+  top: -200px;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(197, 248, 42, 0.1) 0%, transparent 70%);
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
   pointer-events: none;
   z-index: 0;
+  animation: glowPulse 4s ease-in-out infinite;
 }
 
 .section-hero > * {
@@ -40,6 +69,45 @@
   margin-bottom: 1rem;
   color: #ffffff;
   letter-spacing: -0.04em;
+  animation: fadeInUp 0.8s ease both;
+  transition: all 0.4s ease;
+}
+
+.section-title:hover {
+  transform: translateY(-2px) scale(1.02);
+  text-shadow: 0 4px 20px rgba(255, 102, 0, 0.5);
+}
+
+/* ========== 🎨 COLORES POR SECCIÓN ========== */
+
+/* Inicio - Naranja principal */
+.section-page[data-section="inicio"] .section-hero::before {
+  background: radial-gradient(circle, rgba(255, 102, 0, 0.3) 0%, rgba(255, 102, 0, 0.1) 40%, transparent 70%);
+}
+
+/* Sobre Nosotros - Violeta corporativo */
+.section-page[data-section="sobre-nosotros"] .section-hero::before {
+  background: radial-gradient(circle, rgba(151, 71, 255, 0.3) 0%, rgba(151, 71, 255, 0.1) 40%, transparent 70%);
+}
+
+/* Servicios - Azul cyan */
+.section-page[data-section="servicios"] .section-hero::before {
+  background: radial-gradient(circle, rgba(51, 194, 165, 0.3) 0%, rgba(51, 194, 165, 0.1) 40%, transparent 70%);
+}
+
+/* Comunidad - Verde lima */
+.section-page[data-section="comunidad"] .section-hero::before {
+  background: radial-gradient(circle, rgba(131, 187, 28, 0.3) 0%, rgba(131, 187, 28, 0.1) 40%, transparent 70%);
+}
+
+/* Ayuda - Amarillo */
+.section-page[data-section="ayuda"] .section-hero::before {
+  background: radial-gradient(circle, rgba(208, 205, 23, 0.3) 0%, rgba(208, 205, 23, 0.1) 40%, transparent 70%);
+}
+
+/* Contacto - Rosa magenta */
+.section-page[data-section="contacto"] .section-hero::before {
+  background: radial-gradient(circle, rgba(255, 116, 185, 0.3) 0%, rgba(255, 116, 185, 0.1) 40%, transparent 70%);
 }
 
 .section-description {
@@ -49,6 +117,8 @@
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 400;
+  animation: fadeInUp 1s ease both;
+  animation-delay: 0.2s;
 }
 
 /* Loading State */
