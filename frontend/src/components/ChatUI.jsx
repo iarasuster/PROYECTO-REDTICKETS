@@ -14,6 +14,12 @@ const ChatUI = ({ isOpen, onClose }) => {
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
+  // Detectar automáticamente la URL del backend según el entorno
+  const CHAT_API_URL =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:3000/api/chat"
+      : "https://redtickets-backend.onrender.com/api/chat";
+
   // Hook personalizado para chat con streaming
   const {
     messages,
@@ -25,7 +31,7 @@ const ChatUI = ({ isOpen, onClose }) => {
     error,
     setMessages,
   } = useSimpleChat({
-    api: import.meta.env.VITE_CHAT_API_URL || "http://localhost:3000/api/chat",
+    api: CHAT_API_URL,
     initialMessages: [
       {
         id: "welcome",

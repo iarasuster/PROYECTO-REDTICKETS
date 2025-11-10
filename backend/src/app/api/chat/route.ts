@@ -63,15 +63,29 @@ export async function OPTIONS() {
 
 export async function POST(req: Request) {
   try {
+    // 🔍 Debug: verificar que la API key existe
+    if (!process.env.GROQ_API_KEY) {
+      console.error('❌ GROQ_API_KEY no está configurada en las variables de entorno')
+      return new Response(JSON.stringify({ 
+        error: 'API key no configurada. Contacta al administrador.' 
+      }), { 
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
     const { messages } = await req.json()
 
     // Verificar que hay mensajes
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return new Response('No messages provided', { 
+      console.error('❌ No se recibieron mensajes')
+      return new Response(JSON.stringify({ error: 'No messages provided' }), { 
         status: 400,
-        headers: corsHeaders,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
+
+    console.log('📤 Enviando request a Groq con', messages.length, 'mensajes')
 
     // Usar streamText SIN tools (más simple y compatible)
     const result = await streamText({
@@ -80,6 +94,8 @@ export async function POST(req: Request) {
       messages,
       temperature: 0.7,
     })
+
+    console.log('✅ Stream iniciado correctamente')
 
     // Retornar streaming de texto simple
     const response = result.toTextStreamResponse()
@@ -91,10 +107,13 @@ export async function POST(req: Request) {
     
     return response
   } catch (error) {
-    console.error('Error in chat API:', error)
-    return new Response('Error processing chat', { 
+    console.error('❌ Error in chat API:', error)
+    return new Response(JSON.stringify({ 
+      error: 'Error al procesar el chat',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }), { 
       status: 500,
-      headers: corsHeaders,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
 }
