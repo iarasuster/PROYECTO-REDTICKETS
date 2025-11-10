@@ -1,13 +1,15 @@
 // URL base de la API de Payload CMS
 // Detecta automáticamente si está en desarrollo o producción
-const API_BASE_URL = import.meta.env.MODE === 'development' 
-  ? "http://localhost:3000/api"
-  : "https://redtickets-backend.onrender.com/api";
+const API_BASE_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000/api"
+    : "https://redtickets-backend.onrender.com/api";
 
 // Configuración del chatbot
-const CHATBOT_API_URL = import.meta.env.MODE === 'development'
-  ? "http://localhost:3000/api"
-  : "https://redtickets-backend.onrender.com/api";
+const CHATBOT_API_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000/api"
+    : "https://redtickets-backend.onrender.com/api";
 
 // Función helper para hacer peticiones HTTP
 const fetchAPI = async (endpoint, options = {}) => {

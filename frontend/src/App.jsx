@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import SectionPage from "./pages/SectionPage";
 import Chatbot from "./components/Chatbot";
@@ -11,6 +11,18 @@ function App() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  // Cerrar menú al cambiar tamaño de ventana
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <Router>
@@ -33,7 +45,19 @@ function App() {
               </a>
             </h1>
 
-            {/* Botón hamburguesa para móviles */}
+            {/* Navegación principal - Desktop */}
+            <nav className="main-nav desktop-nav">
+              <NavLink to="/seccion/sobre-nosotros">Sobre Nosotros</NavLink>
+              <NavLink to="/seccion/servicios">Servicios</NavLink>
+              <NavLink to="/seccion/comunidad">Comunidad</NavLink>
+              <NavLink to="/seccion/ayuda">Ayuda</NavLink>
+              <NavLink to="/seccion/contacto">Contacto</NavLink>
+            </nav>
+
+            {/* Botón CTA principal */}
+            <button className="cta-button">Ver eventos</button>
+            
+            {/* Hamburger para móvil */}
             <button
               className={`hamburger ${isMenuOpen ? "active" : ""}`}
               onClick={toggleMenu}
@@ -43,38 +67,29 @@ function App() {
               <span></span>
               <span></span>
             </button>
-
-            {/* Navegación principal */}
-            <nav className={`main-nav ${isMenuOpen ? "mobile-open" : ""}`}>
-              <Link to="/" onClick={() => setIsMenuOpen(false)}>
-                Inicio
-              </Link>
-              <Link
-                to="/seccion/sobre-nosotros"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Sobre Nosotros
-              </Link>
-              <Link
-                to="/seccion/servicios"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Servicios
-              </Link>
-              <Link
-                to="/seccion/comunidad"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Comunidad
-              </Link>
-              <Link to="/seccion/ayuda" onClick={() => setIsMenuOpen(false)}>
-                Ayuda
-              </Link>
-              <Link to="/seccion/contacto" onClick={() => setIsMenuOpen(false)}>
-                Contacto
-              </Link>
-            </nav>
           </div>
+
+          {/* Navegación móvil - Sidebar */}
+          <nav className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
+            <NavLink
+              to="/seccion/sobre-nosotros"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Sobre Nosotros
+            </NavLink>
+            <NavLink to="/seccion/servicios" onClick={() => setIsMenuOpen(false)}>
+              Servicios
+            </NavLink>
+            <NavLink to="/seccion/comunidad" onClick={() => setIsMenuOpen(false)}>
+              Comunidad
+            </NavLink>
+            <NavLink to="/seccion/ayuda" onClick={() => setIsMenuOpen(false)}>
+              Ayuda
+            </NavLink>
+            <NavLink to="/seccion/contacto" onClick={() => setIsMenuOpen(false)}>
+              Contacto
+            </NavLink>
+          </nav>
         </header>
 
         {/* Contenido principal */}

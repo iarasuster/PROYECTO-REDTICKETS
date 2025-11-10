@@ -9,7 +9,8 @@ Blog corporativo headless con **Payload CMS**, **React**, **MongoDB Atlas** y **
 - ✅ **Payload CMS** - Gestión de contenido headless
 - ✅ **React + Vite** - Frontend moderno y rápido
 - ✅ **MongoDB Atlas** - Base de datos en la nube
-- ✅ **Chatbot con IA** - Integración con Hugging Face (Mistral-7B)
+- ✅ **Chatbot con IA** - Integración con Groq (Llama 3.1-8b-instant)
+- ✅ **Búsqueda Semántica** - Embeddings con OpenAI
 - ✅ **Generative UI** - Interfaz dinámica según contexto
 - ✅ **6 Secciones** - Inicio, Sobre Nosotros, Servicios, Comunidad, Ayuda, Contacto
 - ✅ **Responsive** - Mobile-first design
@@ -23,7 +24,7 @@ Blog corporativo headless con **Payload CMS**, **React**, **MongoDB Atlas** y **
 
 - Node.js 20.19.5 (usar nvm)
 - MongoDB Atlas account (gratuito)
-- Hugging Face account (gratuito)
+- Groq API Key (gratuito - https://console.groq.com)
 
 ### Instalación
 
@@ -35,14 +36,12 @@ nvm use 20.19.5
 cd backend
 npm install
 cp .env.example .env
-# Editar .env con tu DATABASE_URI y PAYLOAD_SECRET
+# Editar .env con tu DATABASE_URI, PAYLOAD_SECRET y GROQ_API_KEY
 npm run dev
 
 # 3. Frontend - React
 cd ../frontend
 npm install
-cp .env.example .env
-# Editar .env con tu VITE_HUGGING_FACE_TOKEN
 npm run dev
 ```
 

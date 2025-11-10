@@ -1,62 +1,79 @@
-/* Home Page Styles */
+/* 🏠 Home Page - Estilo LangChain + RedTickets */
 
 .home-page {
-  background: #fafafa;
+  background: var(--dark);
+  padding-top: 80px;
 }
 
 .hero-section {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-  color: white;
-  padding: 4rem 0;
+  background: var(--dark);
+  padding: var(--spacing-xl) 2rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(255, 102, 0, 0.15) 0%, transparent 70%);
+  z-index: 0;
+}
+
+.hero-section > * {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-title {
-  font-size: 2.25rem;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 700;
-  margin-bottom: 1rem;
-  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
+  color: #ffffff;
+  letter-spacing: -0.04em;
+}
+
+.hero-title span {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero-subtitle {
-  font-size: 1.15rem;
-  opacity: 0.95;
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  color: rgba(255, 255, 255, 0.7);
   max-width: 700px;
-  margin: 0 auto;
-  line-height: 1.5;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+  font-weight: 400;
 }
 
 .contenido-section {
-  padding: 3rem 0;
+  padding: var(--spacing-xl) 0;
 }
 
 @media (min-width: 768px) {
   .hero-section {
-    padding: 5rem 0;
-  }
-  
-  .hero-title {
-    font-size: 3rem;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.35rem;
+    padding: var(--spacing-xl) 2rem;
   }
 }
 
 @media (max-width: 480px) {
   .hero-section {
-    padding: 3rem 0;
-  }
-  
-  .hero-title {
-    font-size: 1.75rem;
+    padding: var(--spacing-lg) 1.5rem;
   }
   
   .hero-subtitle {
-    font-size: 1.05rem;
+    font-size: 1.0625rem;
   }
 }

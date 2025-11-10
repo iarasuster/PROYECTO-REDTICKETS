@@ -6,7 +6,7 @@
 
 #### `chatbot.js`
 
-- ✅ Conexión a Hugging Face API (Mistral-7B-Instruct)
+- ✅ Conexión a Groq API (Llama 3.1-8b-instant)
 - ✅ Detección automática de intenciones (services, contact, events, help, about)
 - ✅ Sistema de fallback inteligente
 - ✅ Limpieza y formateo de respuestas
@@ -90,7 +90,7 @@
 #### `AI-CHATBOT-README.md` (NUEVO)
 
 - ✅ Guía de configuración completa
-- ✅ Cómo obtener token de Hugging Face
+- ✅ Cómo obtener API Key de Groq
 - ✅ Explicación de arquitectura
 - ✅ Guía de personalización
 - ✅ Testing y debugging
@@ -183,17 +183,18 @@ frontend/src/components/Chatbot.css
 
 ## 🚀 Cómo Usar
 
-### 1. Configurar Token de Hugging Face
+### 1. Configurar API Key de Groq
 
 ```bash
-# 1. Ir a https://huggingface.co/settings/tokens
-# 2. Crear token con permiso "Read"
-# 3. Copiar token (empieza con hf_)
+# 1. Ir a https://console.groq.com/keys
+# 2. Crear una cuenta gratuita
+# 3. Generar nueva API key
+# 4. Copiar la key (empieza con gsk_)
 
-# 4. Configurar en frontend
-cd frontend
+# 5. Configurar en backend
+cd backend
 cp .env.example .env
-# Editar .env y pegar tu token en VITE_HUGGING_FACE_TOKEN
+# Editar .env y pegar tu key en GROQ_API_KEY
 ```
 
 ### 2. Iniciar el Sistema
@@ -261,11 +262,13 @@ Bot: "Puedes contactarnos en contacto@redtickets.net
 
 ### Cambiar Modelo de IA
 
-En `frontend/src/ai-assistant/chatbot.js`:
+En `backend/src/app/api/chat/route.ts`:
 
 ```javascript
-const HUGGING_FACE_API =
-  "https://api-inference.huggingface.co/models/TU_MODELO";
+const result = await streamText({
+  model: groq("llama-3.3-70b-versatile"), // o 'mixtral-8x7b-32768'
+  // ... resto de configuración
+});
 ```
 
 ### Agregar Nueva Intención
@@ -309,17 +312,17 @@ const getRedTicketsContext = () => {
 ```
 1. Usuario escribe en ChatUI
         ↓
-2. useChatbot hook captura input
+2. useSimpleChat hook captura input
         ↓
-3. chatbot.js detecta intención
+3. Envía a backend /api/chat
         ↓
-4. Envía a Hugging Face API
+4. Backend usa Groq API (Llama 3.1)
         ↓
-5. Recibe respuesta del modelo
+5. Respuesta streaming con comandos
         ↓
-6. generativeActions genera UI
+6. Hook parsea [ACTION:navigate:...]
         ↓
-7. GenerativeRenderer renderiza
+7. ChatUI renderiza botones dinámicos
         ↓
 8. Usuario ve respuesta + acciones
 ```
@@ -330,11 +333,11 @@ const getRedTicketsContext = () => {
 
 Para extender el sistema:
 
-1. **Entrenar Modelo Personalizado**
+1. **Mejorar Prompts del Sistema**
 
-   - Crear dataset con conversaciones de RedTickets
-   - Fine-tune Mistral-7B en Hugging Face
-   - Actualizar endpoint en chatbot.js
+   - Agregar más contexto de RedTickets en el prompt
+   - Incluir FAQs específicas del negocio
+   - Optimizar comandos de navegación
 
 2. **Analytics**
 

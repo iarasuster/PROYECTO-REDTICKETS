@@ -3,58 +3,93 @@
   box-sizing: border-box;
 }
 
+/* 🎬 Smooth scroll nativo */
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
-  /* Colores principales RedTickets (del Figma) */
+  /* 🎨 Colores principales RedTickets (modernizados) */
   --primary-color: #FF6600;
   --primary-dark: #E55A00;
   --primary-light: #FF8533;
+  --primary-lighter: #FFB380;
+  --primary-subtle: #FFF0E6;
+  
   --secondary-color: #212529;
   --secondary-light: #343a40;
   --success-color: #28a745;
   --danger-color: #dc3545;
   --warning-color: #ffc107;
   --info-color: #17a2b8;
+  --lime-green: #C5F82A;
   
-  /* Colores de texto */
-  --text-primary: #212529;
+  /* 📝 Colores de texto mejorados */
+  --text-primary: #1a1a1a;
   --text-secondary: #6c757d;
   --text-muted: #adb5bd;
   --text-light: #ffffff;
   
-  /* Colores de fondo */
+  /* 🎭 Colores de fondo modernos */
   --bg-primary: #ffffff;
   --bg-secondary: #f8f9fa;
-  --bg-light: #ffffff;
-  --bg-dark: #212529;
+  --bg-light: #fafbfc;
+  --bg-dark: #2d2d2d;
+  --bg-gradient: linear-gradient(135deg, #FF6600 0%, #FF8533 100%);
+  --bg-gradient-subtle: linear-gradient(135deg, #FFF0E6 0%, #FFE6D9 100%);
   
-  /* Sombras suaves */
-  --shadow-sm: 0 1px 3px rgba(255, 102, 0, 0.12);
-  --shadow-md: 0 4px 6px rgba(255, 102, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(255, 102, 0, 0.1);
+  /* ✨ Sombras modernas con profundidad */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
+  --shadow-primary: 0 4px 16px rgba(255, 102, 0, 0.2);
+  --shadow-primary-lg: 0 8px 24px rgba(255, 102, 0, 0.25);
   
-  /* Transiciones */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
+  /* 🎬 Transiciones fluidas con cubic-bezier */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   
-  /* Espaciado */
+  /* 📏 Espaciado consistente */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
   --spacing-xxl: 3rem;
+  --spacing-xxxl: 4rem;
   
-  /* Border radius */
-  --radius-sm: 3px;
-  --radius-md: 5px;
-  --radius-lg: 8px;
-  --radius-xl: 15px;
+  /* 🔲 Border radius moderno */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
   
-  /* Fuentes */
-  --font-family-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  --font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  /* 📱 Fuentes modernas */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Inter', sans-serif;
+  --font-family-mono: 'SF Mono', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  
+  /* 🎯 Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-blur: blur(10px);
+}
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  /* 📱 Fuentes modernas */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Inter', sans-serif;
+  --font-family-mono: 'SF Mono', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  
+  /* 🎯 Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-blur: blur(10px);
 }
 
 body {
@@ -63,9 +98,136 @@ body {
   font-size: 16px;
   line-height: 1.6;
   color: var(--text-primary);
-  background-color: var(--bg-secondary);
+  background: linear-gradient(180deg, #fafbfc 0%, #f0f2f5 100%);
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ✨ Animaciones globales */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 🖼️ Sistema de imágenes con aspect ratio */
+.img-container {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+}
+
+.img-container--16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.img-container--4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.img-container--1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+.img-container--21-9 {
+  aspect-ratio: 21 / 9;
+}
+
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.img-container:hover img {
+  transform: scale(1.05);
+}
+
+/* 💀 Skeleton loader para imágenes */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #e0e0e0 50%,
+    #f0f0f0 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-lg);
+}
+
+.skeleton-text {
+  height: 1rem;
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #e0e0e0 50%,
+    #f0f0f0 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-text--short {
+  width: 60%;
+}
+
+.skeleton-text--medium {
+  width: 80%;
+}
+
+.skeleton-text--long {
+  width: 100%;
 }
 
 /* Estilos de enlaces */

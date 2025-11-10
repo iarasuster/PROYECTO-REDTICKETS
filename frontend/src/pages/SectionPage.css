@@ -1,39 +1,61 @@
-/* SectionPage.css - Estilos para páginas de secciones */
+/* 🎨 SectionPage - Estilo LangChain + RedTickets */
 
 .section-page {
   min-height: calc(100vh - 200px);
-  padding: 2rem 0;
+  padding: var(--spacing-xl) 0;
+  padding-top: calc(80px + var(--spacing-lg));
+  background: var(--dark);
+  animation: fadeIn 0.6s ease;
 }
 
 .section-hero {
   text-align: center;
-  padding: 3rem 0;
-  margin-bottom: 3rem;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-  color: var(--text-light);
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(255, 102, 0, 0.2);
+  padding: var(--spacing-lg) 2rem;
+  margin-bottom: var(--spacing-xl);
+  background: transparent;
+  position: relative;
+}
+
+.section-hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(197, 248, 42, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.section-hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .section-title {
-  font-size: 3rem;
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 700;
   margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  letter-spacing: -0.04em;
 }
 
 .section-description {
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   max-width: 700px;
   margin: 0 auto;
-  line-height: 1.6;
-  opacity: 0.95;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
 }
 
 /* Loading State */
 .loading-spinner {
   text-align: center;
   padding: 4rem 2rem;
+  background: var(--dark);
 }
 
 .spinner {
@@ -96,6 +118,11 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .section-page {
+    padding: 1rem 0;
+    padding-top: calc(73px + 2rem); /* Header height + spacing */
+  }
+
   .section-hero {
     padding: 2rem 1rem;
     margin-bottom: 2rem;
@@ -107,9 +134,5 @@
 
   .section-description {
     font-size: 1.1rem;
-  }
-
-  .section-page {
-    padding: 1rem 0;
   }
 }

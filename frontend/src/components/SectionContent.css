@@ -1,57 +1,118 @@
-/* Diseño moderno inspirado en RedTickets Figma */
+/* 🎨 Diseño tipo LangChain - Contenido de Secciones */
 
 .section-content {
   padding: 0;
+  background: var(--dark);
+  color: #ffffff;
 }
 
 .content-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: var(--spacing-xl);
   margin: 0 auto;
-  max-width: 1200px;
-  padding: 0 1.25rem;
+  max-width: 1280px;
+  padding: 0 2rem;
 }
 
-/* ========== TEXTO DESTACADO / INTRO ========== */
+/* ========== ✨ TEXTO DESTACADO / INTRO ========== */
 .content-item.texto {
-  text-align: center;
-  padding: 2rem 0;
+  padding: var(--spacing-lg) 0;
   max-width: 900px;
   margin: 0 auto;
+  animation: fadeIn 0.8s ease;
 }
 
 .content-item.texto h3 {
-  font-size: 2rem;
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 700;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-  line-height: 1.3;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
 }
 
 .content-item.texto h4 {
-  font-size: 1.15rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
-  color: var(--text-secondary);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+  letter-spacing: -0.02em;
 }
 
 .content-item.texto p {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.8;
   max-width: 800px;
-  margin: 0 auto;
+  margin: 0 auto 1.5rem;
 }
 
-/* ========== HERO / BANNER GRANDE ========== */
+/* ========== 🃏 CARDS MODERNAS TIPO LANGCHAIN ========== */
+.content-item.card {
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(26, 26, 26, 0.4) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.content-item.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--green-lime) 100%);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.content-item.card:hover::before {
+  opacity: 1;
+}
+
+.content-item.card:hover {
+  border-color: rgba(255, 102, 0, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.content-item.card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.content-item.card p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.content-item.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+}
+
+/* ========== 🖼️ HERO / BANNER GRANDE ========== */
 .content-item.hero,
 .content-item.banner {
   position: relative;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  height: 400px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  height: 500px;
+  transition: var(--transition);
 }
 
 .content-item.hero img,
@@ -59,6 +120,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.content-item.hero:hover img,
+.content-item.banner:hover img {
+  transform: scale(1.05);
 }
 
 .hero-content,
@@ -67,81 +134,24 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 2rem;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 3rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
   color: white;
 }
 
 .hero-content h2,
 .banner-content h2 {
-  font-size: 2rem;
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.03em;
 }
 
 .hero-content p,
 .banner-content p {
-  font-size: 1.1rem;
-  opacity: 0.95;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-}
-
-/* ========== TARJETAS DE EVENTOS ========== */
-.content-item.tarjeta,
-.content-item.card {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.content-item.tarjeta:hover,
-.content-item.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.content-item.tarjeta img,
-.content-item.card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-}
-
-.card-body {
-  padding: 1.25rem;
-}
-
-.card-body h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--text-primary);
-}
-
-.card-body p {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 0.75rem;
-}
-
-.card-meta {
-  display: flex;
-  gap: 1rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 1rem;
-}
-
-.card-meta span {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+  font-size: 1.125rem;
+  opacity: 0.9;
+  line-height: 1.7;
 }
 
 /* ========== GALERÍA ========== */
