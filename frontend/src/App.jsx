@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  NavLink,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import SectionPage from "./pages/SectionPage";
@@ -20,8 +25,8 @@ function App() {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -56,7 +61,7 @@ function App() {
 
             {/* Botón CTA principal */}
             <button className="cta-button">Ver eventos</button>
-            
+
             {/* Hamburger para móvil */}
             <button
               className={`hamburger ${isMenuOpen ? "active" : ""}`}
@@ -70,23 +75,32 @@ function App() {
           </div>
 
           {/* Navegación móvil - Sidebar */}
-          <nav className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
+          <nav className={`mobile-menu ${isMenuOpen ? "open" : ""}`}>
             <NavLink
               to="/seccion/sobre-nosotros"
               onClick={() => setIsMenuOpen(false)}
             >
               Sobre Nosotros
             </NavLink>
-            <NavLink to="/seccion/servicios" onClick={() => setIsMenuOpen(false)}>
+            <NavLink
+              to="/seccion/servicios"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Servicios
             </NavLink>
-            <NavLink to="/seccion/comunidad" onClick={() => setIsMenuOpen(false)}>
+            <NavLink
+              to="/seccion/comunidad"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Comunidad
             </NavLink>
             <NavLink to="/seccion/ayuda" onClick={() => setIsMenuOpen(false)}>
               Ayuda
             </NavLink>
-            <NavLink to="/seccion/contacto" onClick={() => setIsMenuOpen(false)}>
+            <NavLink
+              to="/seccion/contacto"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Contacto
             </NavLink>
           </nav>

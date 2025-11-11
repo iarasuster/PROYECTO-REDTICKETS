@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import {
   getContentBySection,
   getContentByTypeAndSection,
 } from "../services/api";
 import { defaultContent } from "../data/defaultContent";
+import loaderAnimation from "../assets/loader.lottie";
 import "./SectionContent.css";
 
 const SectionContent = ({ seccion, tipo = null, className = "" }) => {
@@ -81,7 +83,16 @@ const SectionContent = ({ seccion, tipo = null, className = "" }) => {
   }, [content]);
 
   if (loading) {
-    return <div className="section-loading">Cargando contenido...</div>;
+    return (
+      <div className="section-loading">
+        <DotLottieReact
+          src={loaderAnimation}
+          loop
+          autoplay
+          style={{ width: 200, height: 200 }}
+        />
+      </div>
+    );
   }
 
   if (!content.length) {

@@ -37,12 +37,12 @@ NODE_ENV=production
 2. Click en **"Environment"** en el menú lateral
 3. Agregar las siguientes variables:
 
-| Variable Name | Value |
-|--------------|-------|
-| `DATABASE_URI` | Tu connection string de MongoDB Atlas |
-| `PAYLOAD_SECRET` | Una clave secreta larga y única |
-| `GROQ_API_KEY` | Tu API key de Groq Cloud |
-| `NODE_ENV` | `production` |
+| Variable Name    | Value                                 |
+| ---------------- | ------------------------------------- |
+| `DATABASE_URI`   | Tu connection string de MongoDB Atlas |
+| `PAYLOAD_SECRET` | Una clave secreta larga y única       |
+| `GROQ_API_KEY`   | Tu API key de Groq Cloud              |
+| `NODE_ENV`       | `production`                          |
 
 4. Click en **"Save Changes"**
 5. El servicio se reiniciará automáticamente
@@ -79,6 +79,7 @@ curl -X POST https://redtickets-backend.onrender.com/api/chat \
 ### 3. Ver Logs en Render
 
 **Backend:**
+
 - Ve a **redtickets-backend** → **Logs**
 - Busca:
   ```
@@ -87,6 +88,7 @@ curl -X POST https://redtickets-backend.onrender.com/api/chat \
   ```
 
 **Frontend:**
+
 - Abre DevTools (F12) → Console
 - Busca:
   ```
@@ -104,6 +106,7 @@ curl -X POST https://redtickets-backend.onrender.com/api/chat \
 **Causa:** La variable `GROQ_API_KEY` no está en Render
 
 **Solución:**
+
 1. Obtén tu API key de: https://console.groq.com/keys
 2. Agrégala en Render: Environment → `GROQ_API_KEY`
 3. Guarda y espera el redeploy
@@ -111,11 +114,13 @@ curl -X POST https://redtickets-backend.onrender.com/api/chat \
 ### Error: "Responde en blanco"
 
 **Posibles causas:**
+
 1. ❌ GROQ_API_KEY no configurada → Ver logs del backend
 2. ❌ CORS bloqueado → Verificar headers en Network tab
 3. ❌ Stream no se lee correctamente → Verificar Content-Type
 
 **Solución:**
+
 - Revisa los logs del backend en Render
 - Abre DevTools → Network → Busca la request a `/api/chat`
 - Verifica que el status sea 200 y que haya un Response body
@@ -123,6 +128,7 @@ curl -X POST https://redtickets-backend.onrender.com/api/chat \
 ### Error: "CORS policy"
 
 **Solución:** Ya está configurado en el código con:
+
 ```typescript
 'Access-Control-Allow-Origin': '*'
 ```

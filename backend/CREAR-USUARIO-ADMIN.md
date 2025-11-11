@@ -41,6 +41,7 @@ Si **NO existe ningún usuario** en la base de datos:
 **Causa:** No has iniciado sesión o tu sesión expiró
 
 **Solución:**
+
 1. Ve a: `/admin/logout` para cerrar sesión
 2. Luego ve a: `/admin/login`
 3. Ingresa tus credenciales

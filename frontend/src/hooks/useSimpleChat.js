@@ -76,8 +76,8 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
       try {
         abortControllerRef.current = new AbortController();
 
-        console.log('📤 Enviando mensaje a:', api);
-        console.log('📝 Mensajes:', [...messages, userMessage]);
+        console.log("📤 Enviando mensaje a:", api);
+        console.log("📝 Mensajes:", [...messages, userMessage]);
 
         const response = await fetch(api, {
           method: "POST",
@@ -90,17 +90,23 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
           signal: abortControllerRef.current.signal,
         });
 
-        console.log('📨 Respuesta recibida:', response.status, response.statusText);
+        console.log(
+          "📨 Respuesta recibida:",
+          response.status,
+          response.statusText
+        );
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('❌ Error del servidor:', errorText);
-          throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+          console.error("❌ Error del servidor:", errorText);
+          throw new Error(
+            `HTTP error! status: ${response.status} - ${errorText}`
+          );
         }
 
         // Verificar que el content-type es text/event-stream o text/plain
-        const contentType = response.headers.get('content-type');
-        console.log('📦 Content-Type:', contentType);
+        const contentType = response.headers.get("content-type");
+        console.log("📦 Content-Type:", contentType);
 
         setStatus("streaming"); // 🌊 Stream comenzó
 

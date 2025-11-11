@@ -635,30 +635,18 @@
 /* ========== ESTADOS - DARK MODE ========== */
 .section-loading,
 .loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   padding: 3rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 1.1rem;
-  animation: pulse 2s ease-in-out infinite;
+  min-height: 400px;
 }
 
-.section-loading::after,
-.loading::after {
-  content: '';
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  margin-left: 1rem;
-  border: 3px solid rgba(255, 102, 0, 0.2);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.section-loading > div {
+  /* Contenedor de Lottie */
+  filter: drop-shadow(0 0 20px rgba(255, 102, 0, 0.3));
 }
 
 .no-content {
