@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     sections: Section;
+    'contenido-blog': ContenidoBlog;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -79,6 +80,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     sections: SectionsSelect<false> | SectionsSelect<true>;
+    'contenido-blog': ContenidoBlogSelect<false> | ContenidoBlogSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -224,6 +226,163 @@ export interface Section {
   createdAt: string;
 }
 /**
+ * Contenido estructurado de todas las secciones del sitio web
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contenido-blog".
+ */
+export interface ContenidoBlog {
+  id: string;
+  seccion: 'inicio' | 'sobre_nosotros' | 'servicios' | 'comunidad' | 'ayuda' | 'contacto';
+  inicio?: {
+    titulo?: string | null;
+    descripcion?: string | null;
+    estadisticas?: {
+      transacciones?: number | null;
+      eventos_realizados?: number | null;
+      productores?: number | null;
+    };
+    noticias?: string | null;
+  };
+  sobre_nosotros?: {
+    titulo?: string | null;
+    descripcion?: string | null;
+    fundadores?:
+      | {
+          nombre?: string | null;
+          cargo?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    equipo?:
+      | {
+          nombre?: string | null;
+          area?: string | null;
+          detalle?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    notas?:
+      | {
+          nota?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  servicios?: {
+    descripcion?: string | null;
+    principales?:
+      | {
+          servicio?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    notas?:
+      | {
+          nota?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  comunidad?: {
+    descripcion?: string | null;
+    testimonios?:
+      | {
+          texto?: string | null;
+          autor?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    notas?:
+      | {
+          nota?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  ayuda?: {
+    descripcion_general?: string | null;
+    como_comprar?: {
+      introduccion?: string | null;
+      video?: string | null;
+      pasos?:
+        | {
+            titulo?: string | null;
+            detalle?: string | null;
+            pagos_presenciales?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+    recepcion_tickets?: {
+      descripcion?: string | null;
+      instrucciones?:
+        | {
+            paso?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      nota?: string | null;
+      asistencia?: string | null;
+    };
+    acceso_evento?: {
+      descripcion?: string | null;
+    };
+    como_vender?: {
+      introduccion?: string | null;
+      video?: string | null;
+      pasos?:
+        | {
+            titulo?: string | null;
+            detalle?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+    politicas?: {
+      cancelacion_eventos?: string | null;
+      reprogramacion?: string | null;
+      imposibilidad_asistencia?: string | null;
+    };
+    ayuda_tecnica?: {
+      uso_totem?: {
+        descripcion?: string | null;
+        video?: string | null;
+      };
+      cambio_rollo?:
+        | {
+            paso?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      cancelar_compra_totem?: {
+        descripcion?: string | null;
+        campos?:
+          | {
+              campo?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+      };
+      solicitar_nuevos_rollos?: string | null;
+    };
+  };
+  contacto?: {
+    descripcion?: string | null;
+    formulario?:
+      | {
+          campo?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    email?: string | null;
+    telefono?: string | null;
+    nota?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
@@ -241,6 +400,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'sections';
         value: string | Section;
+      } | null)
+    | ({
+        relationTo: 'contenido-blog';
+        value: string | ContenidoBlog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -345,6 +508,190 @@ export interface SectionsSelect<T extends boolean = true> {
         autor?: T;
         cargo?: T;
         calificacion?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contenido-blog_select".
+ */
+export interface ContenidoBlogSelect<T extends boolean = true> {
+  seccion?: T;
+  inicio?:
+    | T
+    | {
+        titulo?: T;
+        descripcion?: T;
+        estadisticas?:
+          | T
+          | {
+              transacciones?: T;
+              eventos_realizados?: T;
+              productores?: T;
+            };
+        noticias?: T;
+      };
+  sobre_nosotros?:
+    | T
+    | {
+        titulo?: T;
+        descripcion?: T;
+        fundadores?:
+          | T
+          | {
+              nombre?: T;
+              cargo?: T;
+              id?: T;
+            };
+        equipo?:
+          | T
+          | {
+              nombre?: T;
+              area?: T;
+              detalle?: T;
+              id?: T;
+            };
+        notas?:
+          | T
+          | {
+              nota?: T;
+              id?: T;
+            };
+      };
+  servicios?:
+    | T
+    | {
+        descripcion?: T;
+        principales?:
+          | T
+          | {
+              servicio?: T;
+              id?: T;
+            };
+        notas?:
+          | T
+          | {
+              nota?: T;
+              id?: T;
+            };
+      };
+  comunidad?:
+    | T
+    | {
+        descripcion?: T;
+        testimonios?:
+          | T
+          | {
+              texto?: T;
+              autor?: T;
+              id?: T;
+            };
+        notas?:
+          | T
+          | {
+              nota?: T;
+              id?: T;
+            };
+      };
+  ayuda?:
+    | T
+    | {
+        descripcion_general?: T;
+        como_comprar?:
+          | T
+          | {
+              introduccion?: T;
+              video?: T;
+              pasos?:
+                | T
+                | {
+                    titulo?: T;
+                    detalle?: T;
+                    pagos_presenciales?: T;
+                    id?: T;
+                  };
+            };
+        recepcion_tickets?:
+          | T
+          | {
+              descripcion?: T;
+              instrucciones?:
+                | T
+                | {
+                    paso?: T;
+                    id?: T;
+                  };
+              nota?: T;
+              asistencia?: T;
+            };
+        acceso_evento?:
+          | T
+          | {
+              descripcion?: T;
+            };
+        como_vender?:
+          | T
+          | {
+              introduccion?: T;
+              video?: T;
+              pasos?:
+                | T
+                | {
+                    titulo?: T;
+                    detalle?: T;
+                    id?: T;
+                  };
+            };
+        politicas?:
+          | T
+          | {
+              cancelacion_eventos?: T;
+              reprogramacion?: T;
+              imposibilidad_asistencia?: T;
+            };
+        ayuda_tecnica?:
+          | T
+          | {
+              uso_totem?:
+                | T
+                | {
+                    descripcion?: T;
+                    video?: T;
+                  };
+              cambio_rollo?:
+                | T
+                | {
+                    paso?: T;
+                    id?: T;
+                  };
+              cancelar_compra_totem?:
+                | T
+                | {
+                    descripcion?: T;
+                    campos?:
+                      | T
+                      | {
+                          campo?: T;
+                          id?: T;
+                        };
+                  };
+              solicitar_nuevos_rollos?: T;
+            };
+      };
+  contacto?:
+    | T
+    | {
+        descripcion?: T;
+        formulario?:
+          | T
+          | {
+              campo?: T;
+              id?: T;
+            };
+        email?: T;
+        telefono?: T;
+        nota?: T;
       };
   updatedAt?: T;
   createdAt?: T;
