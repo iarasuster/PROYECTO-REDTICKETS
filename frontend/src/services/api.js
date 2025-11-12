@@ -38,69 +38,71 @@ const fetchAPI = async (endpoint, options = {}) => {
   }
 };
 
-// ===== FUNCIONES PARA SECCIONES =====
+// ===== FUNCIONES PARA CONTENIDO DEL BLOG =====
 
-// Función para obtener TODO el contenido (sin filtros, filtraremos en el frontend)
+// Función para obtener TODO el contenido del blog
 export const getAllContent = async () => {
-  return fetchAPI("/sections?limit=1000&sort=orden");
+  return fetchAPI("/contenido-blog?limit=100");
 };
 
-// Función para obtener contenido por sección (filtrando en frontend)
+// Función para obtener contenido por sección desde ContenidoBlog
 export const getContentBySection = async (seccion) => {
-  const result = await getAllContent();
-  const filtered =
-    result.docs?.filter(
-      (item) => item.seccion === seccion && item.publicado === true
-    ) || [];
+  // seccion puede ser: inicio, sobre-nosotros, servicios, comunidad, ayuda, contacto
+  const query = new URLSearchParams({
+    where: JSON.stringify({ seccion: { equals: seccion } }),
+    limit: "1",
+  });
+
+  const result = await fetchAPI(`/contenido-blog?${query}`);
+  
+  // Retornar el documento de la sección si existe
+  if (result.docs && result.docs.length > 0) {
+    const doc = result.docs[0];
+    // El contenido específico está en doc[seccion]
+    // Por ejemplo: doc.servicios, doc.inicio, etc.
+    return {
+      success: true,
+      data: doc[seccion.replace("-", "_")] || {},
+      fullDoc: doc,
+    };
+  }
 
   return {
-    ...result,
-    docs: filtered,
-    totalDocs: filtered.length,
+    success: false,
+    data: {},
   };
 };
 
-// Función para obtener todo el contenido de secciones
+// Función para obtener todas las secciones
 export const getAllSections = async () => {
-  const query = new URLSearchParams({
-    where: JSON.stringify({ publicado: { equals: true } }),
-    sort: "orden",
-  });
-
-  return fetchAPI(`/sections?${query}`);
+  return fetchAPI("/contenido-blog?limit=100");
 };
 
 // Función para obtener una sección por su slug
 export const getSectionBySlug = async (slug) => {
   const query = new URLSearchParams({
     where: JSON.stringify({
-      slug: { equals: slug },
-      publicado: { equals: true },
+      seccion: { equals: slug },
     }),
     limit: "1",
   });
 
-  const response = await fetchAPI(`/sections?${query}`);
+  const response = await fetchAPI(`/contenido-blog?${query}`);
   return response.docs?.[0] || null;
 };
 
 // Función para obtener contenido específico por tipo y sección
-// Función para obtener contenido por sección y tipo (filtrando en frontend)
+// NOTA: Con la nueva estructura ContenidoBlog, el contenido está organizado por sección
+// Esta función ahora retorna el contenido completo de una sección
 export const getContentByTypeAndSection = async (tipoContenido, seccion) => {
-  const result = await getAllContent();
-  const filtered =
-    result.docs?.filter(
-      (item) =>
-        item.seccion === seccion &&
-        item.tipo === tipoContenido &&
-        item.publicado === true
-    ) || [];
-
-  return {
-    ...result,
-    docs: filtered,
-    totalDocs: filtered.length,
-  };
+  // Mapear el nombre de sección a slug (ej: "sobre-nosotros")
+  const seccionSlug = seccion.toLowerCase().replace(/\s+/g, "-");
+  
+  const result = await getContentBySection(seccionSlug);
+  
+  // Retornar el contenido de la sección
+  // El tipo ya no es relevante con la nueva estructura
+  return result;
 };
 
 // ===== FUNCIONES DEL CHATBOT CON IA =====

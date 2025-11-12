@@ -69,7 +69,6 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
-    sections: Section;
     'contenido-blog': ContenidoBlog;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -79,7 +78,6 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    sections: SectionsSelect<false> | SectionsSelect<true>;
     'contenido-blog': ContenidoBlogSelect<false> | ContenidoBlogSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -159,71 +157,6 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-}
-/**
- * Contenido de las diferentes secciones del sitio web
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "sections".
- */
-export interface Section {
-  id: string;
-  titulo: string;
-  seccion: 'inicio' | 'sobre-nosotros' | 'servicios' | 'comunidad' | 'ayuda' | 'contacto' | 'footer';
-  tipo:
-    | 'hero'
-    | 'experiencias'
-    | 'historia'
-    | 'equipo'
-    | 'servicio'
-    | 'guia'
-    | 'testimonio'
-    | 'noticia'
-    | 'faq'
-    | 'tutorial'
-    | 'politica'
-    | 'contacto'
-    | 'formulario';
-  contenido: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  subtitulo?: string | null;
-  imagen?: (string | null) | Media;
-  /**
-   * Para botones o enlaces
-   */
-  enlace?: string | null;
-  /**
-   * Texto que aparece en el botón/enlace
-   */
-  textoEnlace?: string | null;
-  /**
-   * Número que determina el orden en que aparece el contenido
-   */
-  orden: number;
-  /**
-   * Marcar para hacer visible en el frontend
-   */
-  publicado?: boolean | null;
-  metadata?: {
-    autor?: string | null;
-    cargo?: string | null;
-    calificacion?: number | null;
-  };
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * Contenido estructurado de todas las secciones del sitio web
@@ -398,10 +331,6 @@ export interface PayloadLockedDocument {
         value: string | Media;
       } | null)
     | ({
-        relationTo: 'sections';
-        value: string | Section;
-      } | null)
-    | ({
         relationTo: 'contenido-blog';
         value: string | ContenidoBlog;
       } | null);
@@ -486,31 +415,6 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "sections_select".
- */
-export interface SectionsSelect<T extends boolean = true> {
-  titulo?: T;
-  seccion?: T;
-  tipo?: T;
-  contenido?: T;
-  subtitulo?: T;
-  imagen?: T;
-  enlace?: T;
-  textoEnlace?: T;
-  orden?: T;
-  publicado?: T;
-  metadata?:
-    | T
-    | {
-        autor?: T;
-        cargo?: T;
-        calificacion?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
