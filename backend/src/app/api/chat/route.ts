@@ -1,10 +1,94 @@
 import { streamText } from 'ai'
 import { createGroq } from '@ai-sdk/groq'
+import { getPayload } from 'payload'
+import config from '@payload-config'
 
 // Configurar Groq con el provider oficial
 const groq = createGroq({
   apiKey: process.env.GROQ_API_KEY || '',
 })
+
+// Función para obtener contenido de Payload
+async function getPayloadContent() {
+  try {
+    const payload = await getPayload({ config })
+    const result = await payload.find({
+      collection: 'contenido-blog',
+      limit: 100,
+    })
+
+    // Formatear el contenido como texto para el contexto
+    let context = '\n\n📚 INFORMACIÓN DE REDTICKETS:\n\n'
+    
+    result.docs.forEach(doc => {
+      context += `\n━━━ ${doc.seccion?.toUpperCase()} ━━━\n`
+      context += `Título: ${doc.titulo || 'N/A'}\n`
+      
+      if (doc.descripcion) {
+        context += `${doc.descripcion}\n`
+      }
+      
+      if (doc.estadisticas) {
+        context += `📊 Estadísticas:\n`
+        context += `- ${doc.estadisticas.transacciones} transacciones\n`
+        context += `- ${doc.estadisticas.eventos_realizados} eventos realizados\n`
+        context += `- ${doc.estadisticas.productores} productores\n`
+      }
+      
+      if (doc.fundadores?.length) {
+        context += `👥 Fundadores: ${doc.fundadores.map(f => `${f.nombre} (${f.cargo})`).join(', ')}\n`
+      }
+      
+      if (doc.equipo?.length) {
+        context += `👨‍💼 Equipo (${doc.equipo.length} personas): ${doc.equipo.map(e => e.nombre).join(', ')}\n`
+      }
+      
+      if (doc.servicios_lista?.length) {
+        context += `🎯 Servicios: ${doc.servicios_lista.map(s => s.servicio).join(', ')}\n`
+      }
+      
+      if (doc.como_comprar?.introduccion) {
+        context += `💳 Comprar: ${doc.como_comprar.introduccion}\n`
+      }
+      
+      if (doc.como_vender?.introduccion) {
+        context += `💰 Vender: ${doc.como_vender.introduccion}\n`
+      }
+      
+      if (doc.politicas) {
+        context += `📋 Políticas:\n`
+        if (doc.politicas.cancelacion_eventos) {
+          context += `- Cancelación: ${doc.politicas.cancelacion_eventos.substring(0, 150)}...\n`
+        }
+        if (doc.politicas.reprogramacion) {
+          context += `- Reprogramación: ${doc.politicas.reprogramacion}\n`
+        }
+      }
+      
+      if (doc.ayuda_tecnica) {
+        context += `🔧 Ayuda Técnica Tótem:\n`
+        if (doc.ayuda_tecnica.uso_totem?.descripcion) {
+          context += `- ${doc.ayuda_tecnica.uso_totem.descripcion}\n`
+        }
+        if (doc.ayuda_tecnica.cambio_rollo?.length) {
+          context += `- Cambio de rollo: ${doc.ayuda_tecnica.cambio_rollo.length} pasos disponibles\n`
+        }
+        if (doc.ayuda_tecnica.solicitar_nuevos_rollos) {
+          context += `- Rollos: ${doc.ayuda_tecnica.solicitar_nuevos_rollos}\n`
+        }
+      }
+      
+      if (doc.email || doc.telefono) {
+        context += `📧 Contacto: ${doc.email || ''} ${doc.telefono || ''}\n`
+      }
+    })
+    
+    return context
+  } catch (error) {
+    console.error('❌ Error al obtener contenido de Payload:', error)
+    return ''
+  }
+}
 
 // Contexto del sistema optimizado según OpenAI Design Guidelines
 const SYSTEM_PROMPT = `Eres un asistente de RedTickets. Respuestas CORTAS, ESCANEABLES y ACCIONABLES.
@@ -87,10 +171,18 @@ export async function POST(req: Request) {
 
     console.log('📤 Enviando request a Groq con', messages.length, 'mensajes')
 
+    // 🔥 OBTENER CONTENIDO DE PAYLOAD
+    console.log('📚 Obteniendo contenido de Payload...')
+    const payloadContext = await getPayloadContent()
+    console.log('✅ Contenido de Payload obtenido:', payloadContext.substring(0, 200) + '...')
+
+    // Construir prompt del sistema con contexto de Payload
+    const systemPromptWithContext = SYSTEM_PROMPT + payloadContext
+
     // Usar streamText SIN tools (más simple y compatible)
     const result = await streamText({
       model: groq('llama-3.1-8b-instant'),
-      system: SYSTEM_PROMPT,
+      system: systemPromptWithContext,
       messages,
       temperature: 0.7,
     })

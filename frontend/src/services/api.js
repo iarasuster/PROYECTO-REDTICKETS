@@ -2,13 +2,13 @@
 // Detecta automáticamente si está en desarrollo o producción
 const API_BASE_URL =
   import.meta.env.MODE === "development"
-    ? "http://localhost:3000/api"
+    ? "http://localhost:3001/api"
     : "https://redtickets-backend.onrender.com/api";
 
 // Configuración del chatbot
 const CHATBOT_API_URL =
   import.meta.env.MODE === "development"
-    ? "http://localhost:3000/api"
+    ? "http://localhost:3001/api"
     : "https://redtickets-backend.onrender.com/api";
 
 // Función helper para hacer peticiones HTTP
@@ -47,26 +47,31 @@ export const getAllContent = async () => {
 
 // Función para obtener contenido por sección desde ContenidoBlog
 export const getContentBySection = async (seccion) => {
-  // seccion puede ser: inicio, sobre-nosotros, servicios, comunidad, ayuda, contacto
-  const query = new URLSearchParams({
-    where: JSON.stringify({ seccion: { equals: seccion } }),
-    limit: "1",
-  });
-
-  const result = await fetchAPI(`/contenido-blog?${query}`);
+  console.log("🔍 API - getContentBySection llamada con:", seccion);
   
-  // Retornar el documento de la sección si existe
+  // IMPORTANTE: El filtro where de Payload tiene bugs
+  // Mejor estrategia: obtener TODOS los documentos y filtrar en el cliente
+  const result = await fetchAPI(`/contenido-blog?limit=100`);
+  console.log("🔍 API - Total documentos recibidos:", result.docs?.length);
+  
+  // Filtrar manualmente por sección
   if (result.docs && result.docs.length > 0) {
-    const doc = result.docs[0];
-    // El contenido específico está en doc[seccion]
-    // Por ejemplo: doc.servicios, doc.inicio, etc.
-    return {
-      success: true,
-      data: doc[seccion.replace("-", "_")] || {},
-      fullDoc: doc,
-    };
+    const doc = result.docs.find(d => d.seccion === seccion);
+    
+    if (doc) {
+      console.log("✅ API - Documento encontrado para sección:", seccion);
+      console.log("🔍 API - Fundadores:", doc.fundadores?.length || 0);
+      console.log("🔍 API - Equipo:", doc.equipo?.length || 0);
+      
+      return {
+        success: true,
+        data: doc,
+        fullDoc: doc,
+      };
+    }
   }
 
+  console.log("❌ API - No se encontró documento para sección:", seccion);
   return {
     success: false,
     data: {},
