@@ -12,6 +12,48 @@ import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 
+/**
+ * Transforma arrays de strings a arrays de objetos según el formato de Payload
+ */
+function transformarArrays(obj: any, nombreSeccion: string): any {
+  if (!obj || typeof obj !== 'object') return obj
+
+  const resultado: any = Array.isArray(obj) ? [] : {}
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (Array.isArray(value)) {
+      // Transformar arrays de strings a arrays de objetos
+      if (key === 'notas') {
+        resultado[key] = value.map((item: any) => 
+          typeof item === 'string' ? { nota: item } : item
+        )
+      } else if (key === 'principales') {
+        resultado[key] = value.map((item: any) => 
+          typeof item === 'string' ? { servicio: item } : item
+        )
+      } else if (key === 'instrucciones' || key === 'cambio_rollo') {
+        resultado[key] = value.map((item: any) => 
+          typeof item === 'string' ? { paso: item } : item
+        )
+      } else if (key === 'formulario' || key === 'campos') {
+        resultado[key] = value.map((item: any) => 
+          typeof item === 'string' ? { campo: item } : item
+        )
+      } else {
+        // Para otros arrays, intentar transformar recursivamente
+        resultado[key] = value.map((item: any) => transformarArrays(item, nombreSeccion))
+      }
+    } else if (value && typeof value === 'object') {
+      // Recursivamente transformar objetos anidados
+      resultado[key] = transformarArrays(value, nombreSeccion)
+    } else {
+      resultado[key] = value
+    }
+  }
+
+  return resultado
+}
+
 export async function POST(_req: NextRequest) {
   try {
     console.log('🌱 Iniciando seed de contenido del blog...\n')
@@ -60,6 +102,9 @@ export async function POST(_req: NextRequest) {
           continue
         }
 
+        // Transformar arrays de strings a objetos
+        const datosTransformados = transformarArrays(datosSeccion, nombreSeccion)
+
         // Verificar si ya existe la sección
         const existente = await payload.find({
           collection: 'contenido-blog' as any,
@@ -73,7 +118,7 @@ export async function POST(_req: NextRequest) {
         // Preparar el documento
         const documento: any = {
           seccion: slug,
-          [nombreSeccion]: datosSeccion,
+          [nombreSeccion]: datosTransformados,
         }
 
         if (existente.totalDocs > 0) {
