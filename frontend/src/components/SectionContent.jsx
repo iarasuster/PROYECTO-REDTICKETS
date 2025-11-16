@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { getContentBySection } from "../services/api";
+import ChromaGrid from "./ChromaGrid";
 import loaderAnimation from "../assets/loader.lottie";
 import "./SectionContent.css";
 
@@ -167,10 +168,12 @@ const SobreNosotrosContent = ({ data }) => (
         <h3>Fundadores</h3>
         <div className="team-grid">
           {data.fundadores.map((fundador, idx) => (
-            <div key={idx} className="team-member">
-              <h4>{fundador.nombre}</h4>
-              <p className="team-role">{fundador.cargo}</p>
-            </div>
+            <ChromaGrid key={idx} colors={['#ff6600', '#ff8833', '#ff9944']} intensity={0.4}>
+              <div className="team-member">
+                <h4>{fundador.nombre}</h4>
+                <p className="team-role">{fundador.cargo}</p>
+              </div>
+            </ChromaGrid>
           ))}
         </div>
       </div>
@@ -181,11 +184,13 @@ const SobreNosotrosContent = ({ data }) => (
         <h3>Nuestro Equipo</h3>
         <div className="team-grid">
           {data.equipo.map((miembro, idx) => (
-            <div key={idx} className="team-member">
-              <h4>{miembro.nombre}</h4>
-              <p className="team-role">{miembro.area}</p>
-              {miembro.detalle && <p className="team-detail">{miembro.detalle}</p>}
-            </div>
+            <ChromaGrid key={idx} colors={['#ff6600', '#ff8833', '#ff9944']} intensity={0.3}>
+              <div className="team-member">
+                <h4>{miembro.nombre}</h4>
+                <p className="team-role">{miembro.area}</p>
+                {miembro.detalle && <p className="team-detail">{miembro.detalle}</p>}
+              </div>
+            </ChromaGrid>
           ))}
         </div>
       </div>

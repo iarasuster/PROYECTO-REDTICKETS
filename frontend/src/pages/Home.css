@@ -52,20 +52,13 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: -200px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 800px;
-  height: 800px;
-  background: radial-gradient(circle, rgba(255, 102, 0, 0.3) 0%, rgba(255, 102, 0, 0.1) 40%, transparent 70%);
-  z-index: 0;
-  animation: glowPulse 4s ease-in-out infinite;
-}
+/* Removido el degradado anterior - ahora usa LiquidEther */
 
 .hero-section > * {
   position: relative;

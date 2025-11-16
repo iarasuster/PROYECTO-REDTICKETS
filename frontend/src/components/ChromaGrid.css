@@ -1,0 +1,50 @@
+.chroma-grid-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.chroma-grid-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 102, 0, 0.3), rgba(255, 136, 51, 0.1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.chroma-grid-card.chroma-active::before {
+  opacity: 1;
+}
+
+.chroma-glow {
+  position: absolute;
+  inset: -1px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chroma-grid-card.chroma-active .chroma-glow {
+  opacity: 1;
+}
+
+.chroma-content {
+  position: relative;
+  z-index: 1;
+  padding: 1.5rem;
+}
+
+.chroma-grid-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 102, 0, 0.15);
+}

@@ -798,18 +798,12 @@
 }
 
 .team-member {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 102, 0, 0.15);
-  border-radius: 12px;
-  padding: 1.5rem;
+  /* Los estilos de fondo y borde ahora los maneja ChromaGrid */
+  padding: 0; /* El padding lo maneja ChromaGrid internamente */
   transition: all 0.3s ease;
 }
 
-.team-member:hover {
-  background: rgba(255, 102, 0, 0.05);
-  border-color: rgba(255, 102, 0, 0.3);
-  transform: translateY(-3px);
-}
+/* Removemos el hover de team-member porque ChromaGrid lo maneja */
 
 .team-member h4 {
   color: #ff6600;
