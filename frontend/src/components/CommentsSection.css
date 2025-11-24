@@ -1,0 +1,54 @@
+/* 💬 Comments Section Container - Dark Mode */
+
+.comments-section {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.comments-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.comments-divider {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 102, 0, 0.3) 20%,
+    rgba(255, 102, 0, 0.5) 50%,
+    rgba(255, 102, 0, 0.3) 80%,
+    transparent 100%
+  );
+  margin: 3rem 0;
+  position: relative;
+}
+
+.comments-divider::before {
+  content: '💬';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #0a0a0a;
+  padding: 0 1rem;
+  font-size: 1.5rem;
+}
+
+/* Wrapper para integración en SectionContent */
+.comments-wrapper {
+  width: 100%;
+  grid-column: 1 / -1; /* Ocupar todo el ancho del grid */
+  margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .comments-divider {
+    margin: 2rem 0;
+  }
+
+  .comments-divider::before {
+    font-size: 1.25rem;
+  }
+}

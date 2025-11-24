@@ -64,12 +64,29 @@ function SectionPage() {
     );
   }
 
+  // Subtítulos para cada sección
+  const getSubtitle = (slug) => {
+    const subtitles = {
+      inicio:
+        "La plataforma líder en venta de entradas para eventos en Uruguay",
+      "sobre-nosotros": "Conectamos personas con experiencias únicas",
+      servicios: "Soluciones integrales para eventos de todo tipo",
+      comunidad: "Lo mejor de RedTickets está en quienes confían en nosotros",
+      ayuda: "Resolvemos tus dudas para que solo te preocupes por disfrutar",
+      contacto: "Estamos para ayudarte en lo que necesites",
+    };
+    return subtitles[slug] || "";
+  };
+
   return (
     <div className="section-page" data-section={seccionSlug}>
       <div className="container">
         {/* Hero de la sección */}
         <div className="section-hero">
           <h1 className="section-title">{seccionName}</h1>
+          {seccionSlug !== "inicio" && (
+            <p className="section-description">{getSubtitle(seccionSlug)}</p>
+          )}
         </div>
 
         {/* Renderizar el contenido dinámico usando el slug directamente */}

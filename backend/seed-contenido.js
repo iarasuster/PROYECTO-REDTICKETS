@@ -1,15 +1,15 @@
 /**
  * Script para cargar el contenido inicial del blog en MongoDB
- * 
+ *
  * Este script lee el archivo contenido_blog_redtickets.json y carga cada sección
  * como un documento separado en la colección ContenidoBlog de Payload CMS.
- * 
+ *
  * USO:
  * node seed-contenido.js
- * 
+ *
  * o agregar a package.json:
  * "seed": "node seed-contenido.js"
- * 
+ *
  * NOTA: El script NO elimina datos existentes, solo inserta o actualiza.
  */
 
@@ -118,7 +118,7 @@ async function seedContenido() {
     console.log('   2. Navega a: Contenido del Sitio → ContenidoBlog')
     console.log('   3. Selecciona la sección que desees editar')
     console.log('   4. Modifica los campos y guarda los cambios')
-    
+
     console.log('\n🔗 Acceso a los datos:')
     console.log('   - API REST: GET /api/contenido-blog')
     console.log('   - Por sección: GET /api/contenido-blog?where[seccion][equals]=inicio')

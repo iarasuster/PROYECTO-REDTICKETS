@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { getContentBySection } from "../services/api";
 import ChromaGrid from "./ChromaGrid";
+import CommentsForm from "./CommentsForm";
+import Counter from "./Counter";
 import loaderAnimation from "../assets/loader.lottie";
 import "./SectionContent.css";
 
@@ -17,14 +19,20 @@ const SectionContent = ({ seccion, className = "" }) => {
         const seccionField = seccion.replace(/-/g, "_");
         console.log("🔍 SectionContent - Slug recibido:", seccion);
         console.log("🔍 SectionContent - Campo BD:", seccionField);
-        
+
         const result = await getContentBySection(seccionField);
         console.log("🔍 SectionContent - Resultado API:", result);
 
         if (result.success && result.data) {
           console.log("✅ SectionContent - Data recibida:", result.data);
-          console.log("🔍 SectionContent - Keys disponibles:", Object.keys(result.data));
-          console.log("🔍 SectionContent - Estructura completa:", JSON.stringify(result.data, null, 2));
+          console.log(
+            "🔍 SectionContent - Keys disponibles:",
+            Object.keys(result.data)
+          );
+          console.log(
+            "🔍 SectionContent - Estructura completa:",
+            JSON.stringify(result.data, null, 2)
+          );
           setContent(result.data);
           setError(null);
         } else {
@@ -114,61 +122,127 @@ const renderSectionContent = (seccion, data) => {
 
 // Componente para la sección INICIO
 const InicioContent = ({ data }) => (
-  <div className="content-grid">
-    {data.titulo && (
-      <div className="content-item texto animate-item">
-        <h2>{data.titulo}</h2>
-        {data.descripcion && <p>{data.descripcion}</p>}
-      </div>
-    )}
-
+  <div className="inicio-content">
+    {/* Stats en fila */}
     {data.estadisticas && (
-      <div className="content-item estadisticas animate-item">
-        <h3>Nuestros Números</h3>
-        <div className="stats-grid">
+      <div className="inicio-stats animate-item">
+        <div className="stats-row">
           {data.estadisticas.transacciones && (
-            <div className="stat-card">
-              <div className="stat-number">
-                {data.estadisticas.transacciones.toLocaleString()}
-              </div>
+            <div className="stat-item">
+              <Counter
+                end={data.estadisticas.transacciones}
+                duration={2000}
+                suffix="+"
+              />
               <div className="stat-label">Transacciones</div>
             </div>
           )}
           {data.estadisticas.eventos_realizados && (
-            <div className="stat-card">
-              <div className="stat-number">
-                {data.estadisticas.eventos_realizados.toLocaleString()}
-              </div>
+            <div className="stat-item">
+              <Counter
+                end={data.estadisticas.eventos_realizados}
+                duration={2000}
+                suffix="+"
+              />
               <div className="stat-label">Eventos Realizados</div>
             </div>
           )}
           {data.estadisticas.productores && (
-            <div className="stat-card">
-              <div className="stat-number">
-                {data.estadisticas.productores.toLocaleString()}
-              </div>
+            <div className="stat-item">
+              <Counter
+                end={data.estadisticas.productores}
+                duration={2000}
+                suffix="+"
+              />
               <div className="stat-label">Productores</div>
             </div>
           )}
         </div>
       </div>
     )}
+
+    {/* Preview de Secciones */}
+    <div className="sections-preview animate-item">
+      <h2 className="preview-title">Descubre RedTickets</h2>
+
+      <div className="preview-grid">
+        {/* Sobre Nosotros Preview */}
+        <a href="/seccion/sobre-nosotros" className="preview-card">
+          <div className="preview-icon">
+            <i className="fas fa-users"></i>
+          </div>
+          <h3>Sobre Nosotros</h3>
+          <p>
+            Más de 10 años conectando personas con experiencias únicas. Conoce
+            nuestro equipo y trayectoria.
+          </p>
+          <span className="preview-link">
+            Ver más <i className="fas fa-arrow-right"></i>
+          </span>
+        </a>
+
+        {/* Servicios Preview */}
+        <a href="/seccion/servicios" className="preview-card">
+          <div className="preview-icon">
+            <i className="fas fa-cogs"></i>
+          </div>
+          <h3>Servicios</h3>
+          <p>
+            Venta de entradas, control de acceso, hard ticketing y más.
+            Soluciones completas para tu evento.
+          </p>
+          <span className="preview-link">
+            Ver más <i className="fas fa-arrow-right"></i>
+          </span>
+        </a>
+
+        {/* Comunidad Preview */}
+        <a href="/seccion/comunidad" className="preview-card">
+          <div className="preview-icon">
+            <i className="fas fa-heart"></i>
+          </div>
+          <h3>Comunidad</h3>
+          <p>
+            Lee testimonios de productores y asistentes que confían en
+            RedTickets para sus eventos.
+          </p>
+          <span className="preview-link">
+            Ver más <i className="fas fa-arrow-right"></i>
+          </span>
+        </a>
+
+        {/* Ayuda Preview */}
+        <a href="/seccion/ayuda" className="preview-card">
+          <div className="preview-icon">
+            <i className="fas fa-question-circle"></i>
+          </div>
+          <h3>Centro de Ayuda</h3>
+          <p>
+            ¿Dudas sobre cómo comprar o vender? Encuentra respuestas a las
+            preguntas más frecuentes.
+          </p>
+          <span className="preview-link">
+            Ver más <i className="fas fa-arrow-right"></i>
+          </span>
+        </a>
+      </div>
+    </div>
   </div>
 );
 
 const SobreNosotrosContent = ({ data }) => (
-  <div className="content-grid">
-    <div className="content-item texto animate-item">
-      <h2>{data.titulo}</h2>
-      <p>{data.descripcion}</p>
-    </div>
-
+  <div className="sobre-nosotros-container">
+    {/* FILA 1: Fundadores */}
     {data.fundadores && data.fundadores.length > 0 && (
-      <div className="content-item fundadores animate-item">
-        <h3>Fundadores</h3>
+      <div className="sobre-row fundadores-row">
+        <h3 className="section-title">Fundadores</h3>
         <div className="team-grid">
           {data.fundadores.map((fundador, idx) => (
-            <ChromaGrid key={idx} colors={['#ff6600', '#ff8833', '#ff9944']} intensity={0.4}>
+            <ChromaGrid
+              key={idx}
+              colors={["#ff6600", "#ff8833", "#ff9944"]}
+              intensity={0.4}
+            >
               <div className="team-member">
                 <h4>{fundador.nombre}</h4>
                 <p className="team-role">{fundador.cargo}</p>
@@ -179,255 +253,507 @@ const SobreNosotrosContent = ({ data }) => (
       </div>
     )}
 
+    {/* FILA 2: Equipo */}
     {data.equipo && data.equipo.length > 0 && (
-      <div className="content-item equipo animate-item">
-        <h3>Nuestro Equipo</h3>
+      <div className="sobre-row equipo-row">
+        <h3 className="section-title">Nuestro Equipo</h3>
         <div className="team-grid">
           {data.equipo.map((miembro, idx) => (
-            <ChromaGrid key={idx} colors={['#ff6600', '#ff8833', '#ff9944']} intensity={0.3}>
+            <ChromaGrid
+              key={idx}
+              colors={["#ff6600", "#ff8833", "#ff9944"]}
+              intensity={0.3}
+            >
               <div className="team-member">
                 <h4>{miembro.nombre}</h4>
                 <p className="team-role">{miembro.area}</p>
-                {miembro.detalle && <p className="team-detail">{miembro.detalle}</p>}
+                {miembro.detalle && (
+                  <p className="team-detail">{miembro.detalle}</p>
+                )}
               </div>
             </ChromaGrid>
           ))}
         </div>
       </div>
     )}
-  </div>
-);
 
-const ServiciosContent = ({ data }) => (
-  <div className="content-grid">
-    {data.titulo && (
-      <div className="content-item texto animate-item">
-        <h2>{data.titulo}</h2>
-      </div>
-    )}
+    {/* FILA 3: Socios Comerciales */}
+    {data.socios_comerciales && (
+      <div className="sobre-row socios-row">
+        <h3 className="section-title">Socios Comerciales</h3>
+        {data.socios_comerciales.descripcion && (
+          <p className="socios-intro">{data.socios_comerciales.descripcion}</p>
+        )}
 
-    {data.descripcion && (
-      <div className="content-item texto animate-item">
-        <p>{data.descripcion}</p>
-      </div>
-    )}
-
-    {data.servicios_lista && data.servicios_lista.length > 0 && (
-      <div className="content-item servicios-lista animate-item">
-        <h3>Nuestros Servicios</h3>
-        <ul className="servicios-list">
-          {data.servicios_lista.map((item, idx) => (
-            <li key={idx} className="servicio-item">
-              {item.servicio || item}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
-  </div>
-);
-
-const ComunidadContent = ({ data }) => (
-  <div className="content-grid">
-    {data.descripcion && (
-      <div className="content-item texto animate-item">
-        <p>{data.descripcion}</p>
-      </div>
-    )}
-
-    {data.testimonios && data.testimonios.length > 0 && (
-      <div className="content-item testimonios animate-item">
-        <h3>Lo que dicen nuestros clientes</h3>
-        <div className="testimonios-grid">
-          {data.testimonios.map((testimonio, idx) => (
-            <div key={idx} className="testimonio">
-              <p className="testimonio-texto">"{testimonio.texto}"</p>
-              <p className="testimonio-autor">— {testimonio.autor}</p>
+        <div className="socios-grid">
+          {/* Productores */}
+          {data.socios_comerciales.productores && (
+            <div className="socios-category">
+              <h4>
+                {data.socios_comerciales.productores.titulo ||
+                  "Amigos Productores"}
+              </h4>
+              {data.socios_comerciales.productores.descripcion && (
+                <p className="category-desc">
+                  {data.socios_comerciales.productores.descripcion}
+                </p>
+              )}
+              {data.socios_comerciales.productores.logos &&
+                data.socios_comerciales.productores.logos.length > 0 && (
+                  <div className="logos-grid">
+                    {data.socios_comerciales.productores.logos.map(
+                      (logo, idx) => (
+                        <div key={idx} className="logo-item">
+                          {logo.imagen &&
+                            typeof logo.imagen === "object" &&
+                            logo.imagen.url && (
+                              <img
+                                src={logo.imagen.url}
+                                alt={logo.nombre || "Logo"}
+                              />
+                            )}
+                          {logo.nombre && (
+                            <span className="logo-name">{logo.nombre}</span>
+                          )}
+                        </div>
+                      )
+                    )}
+                  </div>
+                )}
             </div>
-          ))}
+          )}
+
+          {/* Partners Tecnológicos */}
+          {data.socios_comerciales.partners_tecnologicos && (
+            <div className="socios-category">
+              <h4>
+                {data.socios_comerciales.partners_tecnologicos.titulo ||
+                  "Partners Tecnológicos"}
+              </h4>
+              {data.socios_comerciales.partners_tecnologicos.descripcion && (
+                <p className="category-desc">
+                  {data.socios_comerciales.partners_tecnologicos.descripcion}
+                </p>
+              )}
+              {data.socios_comerciales.partners_tecnologicos.logos &&
+                data.socios_comerciales.partners_tecnologicos.logos.length >
+                  0 && (
+                  <div className="logos-grid">
+                    {data.socios_comerciales.partners_tecnologicos.logos.map(
+                      (logo, idx) => (
+                        <div key={idx} className="logo-item">
+                          {logo.imagen &&
+                            typeof logo.imagen === "object" &&
+                            logo.imagen.url && (
+                              <img
+                                src={logo.imagen.url}
+                                alt={logo.nombre || "Logo"}
+                              />
+                            )}
+                          {logo.nombre && (
+                            <span className="logo-name">{logo.nombre}</span>
+                          )}
+                        </div>
+                      )
+                    )}
+                  </div>
+                )}
+            </div>
+          )}
+
+          {/* Amigos E-commerce */}
+          {data.socios_comerciales.amigos_ecommerce && (
+            <div className="socios-category">
+              <h4>
+                {data.socios_comerciales.amigos_ecommerce.titulo ||
+                  "Amigos E-commerce"}
+              </h4>
+              {data.socios_comerciales.amigos_ecommerce.descripcion && (
+                <p className="category-desc">
+                  {data.socios_comerciales.amigos_ecommerce.descripcion}
+                </p>
+              )}
+              {data.socios_comerciales.amigos_ecommerce.logos &&
+                data.socios_comerciales.amigos_ecommerce.logos.length > 0 && (
+                  <div className="logos-grid">
+                    {data.socios_comerciales.amigos_ecommerce.logos.map(
+                      (logo, idx) => (
+                        <div key={idx} className="logo-item">
+                          {logo.imagen &&
+                            typeof logo.imagen === "object" &&
+                            logo.imagen.url && (
+                              <img
+                                src={logo.imagen.url}
+                                alt={logo.nombre || "Logo"}
+                              />
+                            )}
+                          {logo.nombre && (
+                            <span className="logo-name">{logo.nombre}</span>
+                          )}
+                        </div>
+                      )
+                    )}
+                  </div>
+                )}
+            </div>
+          )}
+
+          {/* Partners Publicitarios */}
+          {data.socios_comerciales.partners_publicitarios && (
+            <div className="socios-category">
+              <h4>
+                {data.socios_comerciales.partners_publicitarios.titulo ||
+                  "Partners Publicitarios"}
+              </h4>
+              {data.socios_comerciales.partners_publicitarios.descripcion && (
+                <p className="category-desc">
+                  {data.socios_comerciales.partners_publicitarios.descripcion}
+                </p>
+              )}
+              {data.socios_comerciales.partners_publicitarios.logos &&
+                data.socios_comerciales.partners_publicitarios.logos.length >
+                  0 && (
+                  <div className="logos-grid">
+                    {data.socios_comerciales.partners_publicitarios.logos.map(
+                      (logo, idx) => (
+                        <div key={idx} className="logo-item">
+                          {logo.imagen &&
+                            typeof logo.imagen === "object" &&
+                            logo.imagen.url && (
+                              <img
+                                src={logo.imagen.url}
+                                alt={logo.nombre || "Logo"}
+                              />
+                            )}
+                          {logo.nombre && (
+                            <span className="logo-name">{logo.nombre}</span>
+                          )}
+                        </div>
+                      )
+                    )}
+                  </div>
+                )}
+            </div>
+          )}
         </div>
       </div>
     )}
   </div>
 );
 
-const AyudaContent = ({ data }) => (
-  <div className="content-grid">
-    {data.descripcion_general && (
-      <div className="content-item texto animate-item">
-        <p>{data.descripcion_general}</p>
-      </div>
-    )}
+const ServiciosContent = ({ data }) => {
+  // Mapeo de servicios a iconos específicos
+  const getServiceIcon = (servicio) => {
+    const texto = (servicio.servicio || servicio || "").toLowerCase();
 
-    {data.como_comprar && (
-      <div className="content-item faq-section animate-item">
-        <h3>Cómo Comprar</h3>
-        <p>{data.como_comprar.introduccion}</p>
-        {data.como_comprar.pasos && (
-          <div className="pasos-lista">
-            {data.como_comprar.pasos.map((paso, idx) => (
-              <div key={idx} className="paso-item">
-                <h4>{idx + 1}. {paso.titulo}</h4>
-                <p>{paso.detalle}</p>
+    if (texto.includes("venta") || texto.includes("gestión"))
+      return "fa-shopping-cart";
+    if (texto.includes("compra") || texto.includes("pago"))
+      return "fa-credit-card";
+    if (texto.includes("app") || texto.includes("billetera"))
+      return "fa-mobile-alt";
+    if (
+      texto.includes("diseño") ||
+      texto.includes("e-ticket") ||
+      texto.includes("personalizado")
+    )
+      return "fa-palette";
+    if (
+      texto.includes("hard") ||
+      texto.includes("impresión") ||
+      texto.includes("físicas")
+    )
+      return "fa-print";
+    if (
+      texto.includes("control") ||
+      texto.includes("acceso") ||
+      texto.includes("seguridad")
+    )
+      return "fa-shield-alt";
+    if (
+      texto.includes("configuración") ||
+      texto.includes("descuento") ||
+      texto.includes("promoción")
+    )
+      return "fa-cog";
+    if (texto.includes("integración") || texto.includes("sistema"))
+      return "fa-plug";
+    if (
+      texto.includes("atención") ||
+      texto.includes("cliente") ||
+      texto.includes("soporte")
+    )
+      return "fa-headset";
+    if (texto.includes("seguro") || texto.includes("metlife"))
+      return "fa-umbrella";
+    if (texto.includes("acreditaciones") || texto.includes("credenciales"))
+      return "fa-id-card";
+
+    return "fa-ticket-alt"; // Default
+  };
+
+  return (
+    <div className="servicios-container">
+      {data.servicios_lista && data.servicios_lista.length > 0 && (
+        <div className="servicios-grid-container">
+          {data.servicios_lista.map((item, idx) => (
+            <div key={idx} className="servicio-card animate-item">
+              <div className="servicio-icon">
+                <i className={`fas ${getServiceIcon(item)}`}></i>
               </div>
-            ))}
-          </div>
-        )}
+              <h4>{item.servicio || item}</h4>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ComunidadContent = ({ data }) => {
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [dynamicTestimonios, setDynamicTestimonios] = useState([]);
+
+  const handleCommentSubmitted = (newComment) => {
+    console.log("✅ Nuevo testimonio enviado:", newComment);
+
+    // Si el comentario fue publicado automáticamente, recargar la lista
+    if (newComment.status === "publicado") {
+      setRefreshTrigger((prev) => prev + 1);
+    }
+  };
+
+  return (
+    <div className="comunidad-container">
+      {/* Testimonios: Estáticos del CMS + Dinámicos de la DB */}
+      <div className="content-item testimonios animate-item">
+        <h3>Lo que dicen nuestros clientes</h3>
+
+        {/* CommentsList interno que pasa los testimonios al padre */}
+        <TestimoniosUnified
+          staticTestimonios={data.testimonios || []}
+          refreshTrigger={refreshTrigger}
+        />
       </div>
-    )}
 
-    {data.recepcion_tickets && (
-      <div className="content-item faq-section animate-item">
-        <h3>Recepción de Tickets</h3>
-        <p>{data.recepcion_tickets.descripcion}</p>
-        {data.recepcion_tickets.instrucciones && (
-          <ol className="instrucciones-lista">
-            {data.recepcion_tickets.instrucciones.map((instruccion, idx) => (
-              <li key={idx}>{typeof instruccion === "string" ? instruccion : instruccion.paso}</li>
-            ))}
-          </ol>
-        )}
+      {/* Formulario para agregar testimonios dinámicos */}
+      <div className="content-item comments-form-wrapper animate-item">
+        <CommentsForm onCommentSubmitted={handleCommentSubmitted} />
       </div>
-    )}
+    </div>
+  );
+};
 
-    {data.como_vender && (
-      <div className="content-item faq-section animate-item">
-        <h3>Cómo Vender</h3>
-        <p>{data.como_vender.introduccion}</p>
-        {data.como_vender.pasos && (
-          <div className="pasos-lista">
-            {data.como_vender.pasos.map((paso, idx) => (
-              <div key={idx} className="paso-item">
-                <h4>{idx + 1}. {paso.titulo}</h4>
-                <p>{paso.detalle}</p>
-              </div>
-            ))}
-          </div>
-        )}
+// Componente unificado que combina testimonios estáticos y dinámicos
+const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
+  const [dynamicTestimonios, setDynamicTestimonios] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const API_BASE_URL =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:3000/api"
+      : "https://redtickets-backend.onrender.com/api";
+
+  useEffect(() => {
+    const fetchDynamicTestimonios = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `${API_BASE_URL}/comments?where[status][equals]=publicado&sort=-createdAt&limit=50`
+        );
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.docs) {
+            setDynamicTestimonios(result.docs);
+          }
+        }
+      } catch (err) {
+        console.error("❌ Error fetching dynamic testimonios:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDynamicTestimonios();
+  }, [refreshTrigger]);
+
+  // Combinar testimonios estáticos y dinámicos
+  const allTestimonios = [
+    ...staticTestimonios.map((t) => ({
+      texto: t.texto,
+      autor: t.autor,
+      tipo: "estatico",
+    })),
+    ...dynamicTestimonios.map((t) => ({
+      texto: t.comment,
+      autor: t.author,
+      tipo: "dinamico",
+      fecha: t.createdAt,
+    })),
+  ];
+
+  if (allTestimonios.length === 0 && !loading) {
+    return null; // No mostrar nada si no hay testimonios
+  }
+
+  return (
+    <div className="testimonios-grid">
+      {allTestimonios.map((testimonio, idx) => (
+        <div key={`${testimonio.tipo}-${idx}`} className="testimonio">
+          <p className="testimonio-texto">"{testimonio.texto}"</p>
+          <p className="testimonio-autor">— {testimonio.autor}</p>
+        </div>
+      ))}
+      {loading && (
+        <div className="testimonio loading-placeholder">
+          <p className="testimonio-texto">Cargando testimonios...</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const AyudaContent = ({ data }) => {
+  const [activeTab, setActiveTab] = useState("comprar");
+
+  const tabs = [
+    { id: "comprar", label: "Cómo Comprar", icon: "fa-shopping-cart" },
+    { id: "vender", label: "Cómo Vender", icon: "fa-money-bill-wave" },
+    { id: "recepcion", label: "Recepción", icon: "fa-envelope" },
+    { id: "politicas", label: "Políticas", icon: "fa-file-contract" },
+    { id: "tecnica", label: "Ayuda Técnica", icon: "fa-tools" },
+  ];
+
+  return (
+    <div className="ayuda-container">
+      {/* Tabs Navigation */}
+      <div className="ayuda-tabs">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            className={`tab-button ${activeTab === tab.id ? "active" : ""}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            <i className={`fas ${tab.icon} tab-icon`}></i>
+            {tab.label}
+          </button>
+        ))}
       </div>
-    )}
 
-    {data.politicas && (
-      <div className="content-item faq-section animate-item">
-        <h3>Políticas</h3>
-        {data.politicas.cancelacion_eventos && (
-          <div className="politica-item">
-            <h4>Cancelación de Eventos</h4>
-            <p>{data.politicas.cancelacion_eventos}</p>
-          </div>
-        )}
-        {data.politicas.reprogramacion && (
-          <div className="politica-item">
-            <h4>Reprogramación</h4>
-            <p>{data.politicas.reprogramacion}</p>
-          </div>
-        )}
-        {data.politicas.imposibilidad_asistencia && (
-          <div className="politica-item">
-            <h4>Imposibilidad de Asistencia</h4>
-            <p>{data.politicas.imposibilidad_asistencia}</p>
-          </div>
-        )}
-      </div>
-    )}
-
-    {data.ayuda_tecnica && (
-      <div className="content-item faq-section animate-item">
-        <h3>Ayuda Técnica - Tótem</h3>
-        
-        {data.ayuda_tecnica.uso_totem && (
-          <div className="ayuda-item">
-            <h4>Uso del Tótem</h4>
-            <p>{data.ayuda_tecnica.uso_totem.descripcion}</p>
-            {data.ayuda_tecnica.uso_totem.video && (
-              <p><strong>{data.ayuda_tecnica.uso_totem.video}</strong></p>
-            )}
-          </div>
-        )}
-
-        {data.ayuda_tecnica.cambio_rollo && data.ayuda_tecnica.cambio_rollo.length > 0 && (
-          <div className="ayuda-item">
-            <h4>Cambio de Rollo</h4>
-            <ol className="instrucciones-lista">
-              {data.ayuda_tecnica.cambio_rollo.map((item, idx) => (
-                <li key={idx}>{typeof item === "string" ? item : item.paso}</li>
-              ))}
-            </ol>
-          </div>
-        )}
-
-        {data.ayuda_tecnica.cancelar_compra_totem && (
-          <div className="ayuda-item">
-            <h4>Cancelar Compra en Tótem</h4>
-            <p>{data.ayuda_tecnica.cancelar_compra_totem.descripcion}</p>
-            {data.ayuda_tecnica.cancelar_compra_totem.campos && (
-              <form className="ayuda-form" onSubmit={(e) => e.preventDefault()}>
-                {data.ayuda_tecnica.cancelar_compra_totem.campos.map((item, idx) => {
-                  const fieldName = typeof item === "string" ? item : item.campo;
-                  return (
-                    <div key={idx} className="form-group">
-                      <label>{fieldName}</label>
-                      <input
-                        type="text"
-                        placeholder={`Ingresa ${fieldName.toLowerCase()}`}
-                        required
-                      />
+      {/* Tab Content */}
+      <div className="ayuda-content">
+        {activeTab === "comprar" && data.como_comprar && (
+          <div className="tab-panel animate-in">
+            <h3>Cómo Comprar</h3>
+            <p className="intro-text">{data.como_comprar.introduccion}</p>
+            {data.como_comprar.pasos && (
+              <div className="pasos-lista">
+                {data.como_comprar.pasos.map((paso, idx) => (
+                  <div key={idx} className="paso-item">
+                    <div className="paso-number">{idx + 1}</div>
+                    <div className="paso-content">
+                      <h4>{paso.titulo}</h4>
+                      <p>{paso.detalle}</p>
                     </div>
-                  );
-                })}
-                <button type="submit" className="btn btn-primary">Enviar solicitud</button>
-              </form>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         )}
 
-        {data.ayuda_tecnica.solicitar_nuevos_rollos && (
-          <div className="ayuda-item">
-            <h4>Solicitar Nuevos Rollos</h4>
-            <p>{data.ayuda_tecnica.solicitar_nuevos_rollos}</p>
-            <form className="ayuda-form" onSubmit={(e) => e.preventDefault()}>
-              <div className="form-group">
-                <label>Cantidad de rollos</label>
-                <input
-                  type="number"
-                  placeholder="Ingresa la cantidad"
-                  min="1"
-                  required
-                />
+        {activeTab === "vender" && data.como_vender && (
+          <div className="tab-panel animate-in">
+            <h3>Cómo Vender</h3>
+            <p className="intro-text">{data.como_vender.introduccion}</p>
+            {data.como_vender.pasos && (
+              <div className="pasos-lista">
+                {data.como_vender.pasos.map((paso, idx) => (
+                  <div key={idx} className="paso-item">
+                    <div className="paso-number">{idx + 1}</div>
+                    <div className="paso-content">
+                      <h4>{paso.titulo}</h4>
+                      <p>{paso.detalle}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="form-group">
-                <label>Lugar de entrega</label>
-                <input
-                  type="text"
-                  placeholder="Ingresa el lugar"
-                  required
-                />
+            )}
+          </div>
+        )}
+
+        {activeTab === "recepcion" && data.recepcion_tickets && (
+          <div className="tab-panel animate-in">
+            <h3>Recepción de Tickets</h3>
+            <p className="intro-text">{data.recepcion_tickets.descripcion}</p>
+            {data.recepcion_tickets.instrucciones && (
+              <ol className="instrucciones-lista">
+                {data.recepcion_tickets.instrucciones.map(
+                  (instruccion, idx) => (
+                    <li key={idx}>
+                      {typeof instruccion === "string"
+                        ? instruccion
+                        : instruccion.paso}
+                    </li>
+                  )
+                )}
+              </ol>
+            )}
+          </div>
+        )}
+
+        {activeTab === "politicas" && data.politicas && (
+          <div className="tab-panel animate-in">
+            <h3>Políticas</h3>
+            {data.politicas.cancelacion_eventos && (
+              <div className="politica-item">
+                <h4>Cancelación de Eventos</h4>
+                <p>{data.politicas.cancelacion_eventos}</p>
               </div>
-              <div className="form-group">
-                <label>Correo de contacto</label>
-                <input
-                  type="email"
-                  placeholder="tu@email.com"
-                  required
-                />
+            )}
+            {data.politicas.reprogramacion && (
+              <div className="politica-item">
+                <h4>Reprogramación</h4>
+                <p>{data.politicas.reprogramacion}</p>
               </div>
-              <button type="submit" className="btn btn-primary">Solicitar rollos</button>
-            </form>
+            )}
+            {data.politicas.reembolsos && (
+              <div className="politica-item">
+                <h4>Reembolsos</h4>
+                <p>{data.politicas.reembolsos}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "tecnica" && data.ayuda_tecnica && (
+          <div className="tab-panel animate-in">
+            <h3>Ayuda Técnica</h3>
+            <p className="intro-text">{data.ayuda_tecnica.descripcion}</p>
+            {data.ayuda_tecnica.contacto && (
+              <div className="ayuda-item">
+                <h4>Contacto</h4>
+                <p>
+                  <strong>Email:</strong> {data.ayuda_tecnica.contacto.email}
+                </p>
+                {data.ayuda_tecnica.contacto.telefono && (
+                  <p>
+                    <strong>Teléfono:</strong>{" "}
+                    {data.ayuda_tecnica.contacto.telefono}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
-    )}
-  </div>
-);
+    </div>
+  );
+};
 
 const ContactoContent = ({ data }) => (
   <div className="content-grid">
-    {data.descripcion && (
-      <div className="content-item texto animate-item">
-        <p>{data.descripcion}</p>
-      </div>
-    )}
-
     {data.formulario && data.formulario.length > 0 && (
       <div className="content-item formulario animate-item">
         <h3>Contáctanos</h3>
@@ -439,17 +765,25 @@ const ContactoContent = ({ data }) => (
               <div key={idx} className="form-group">
                 <label>{fieldName}</label>
                 {isTextarea ? (
-                  <textarea placeholder={`Ingresa tu ${fieldName.toLowerCase()}`} />
+                  <textarea
+                    placeholder={`Ingresa tu ${fieldName.toLowerCase()}`}
+                  />
                 ) : (
                   <input
-                    type={fieldName.toLowerCase().includes("email") ? "email" : "text"}
+                    type={
+                      fieldName.toLowerCase().includes("email")
+                        ? "email"
+                        : "text"
+                    }
                     placeholder={`Ingresa tu ${fieldName.toLowerCase()}`}
                   />
                 )}
               </div>
             );
           })}
-          <button type="submit" className="btn btn-large">Enviar mensaje</button>
+          <button type="submit" className="btn btn-large">
+            Enviar mensaje
+          </button>
         </form>
       </div>
     )}

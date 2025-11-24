@@ -2,33 +2,33 @@
  * Script para limpiar documentos antiguos y crear uno de prueba
  */
 
-import payload from 'payload';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import payload from 'payload'
+import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config({ path: path.resolve(__dirname, '.env') })
 
 async function limpiarYCrearTest() {
   try {
-    console.log('\n🚀 Iniciando Payload...');
+    console.log('\n🚀 Iniciando Payload...')
     await payload.init({
       secret: process.env.PAYLOAD_SECRET,
       mongoURL: process.env.DATABASE_URI,
       local: true,
-    });
+    })
 
-    console.log('\n🗑️  Eliminando documentos antiguos...');
+    console.log('\n🗑️  Eliminando documentos antiguos...')
     const deleteResult = await payload.delete({
       collection: 'contenido-blog',
       where: {},
-    });
-    console.log(`✅ Eliminados: ${deleteResult.docs.length} documentos`);
+    })
+    console.log(`✅ Eliminados: ${deleteResult.docs.length} documentos`)
 
-    console.log('\n📝 Creando documento de prueba para "Sobre Nosotros"...');
+    console.log('\n📝 Creando documento de prueba para "Sobre Nosotros"...')
     const testDoc = await payload.create({
       collection: 'contenido-blog',
       data: {
@@ -91,7 +91,7 @@ async function limpiarYCrearTest() {
           },
         ],
       },
-    });
+    })
 
     console.log('✅ Documento creado:', {
       id: testDoc.id,
@@ -99,14 +99,14 @@ async function limpiarYCrearTest() {
       titulo: testDoc.titulo,
       fundadores: testDoc.fundadores.length,
       equipo: testDoc.equipo.length,
-    });
+    })
 
-    console.log('\n✨ ¡Listo! Recarga el frontend (F5) para ver los cambios.');
-    process.exit(0);
+    console.log('\n✨ ¡Listo! Recarga el frontend (F5) para ver los cambios.')
+    process.exit(0)
   } catch (error) {
-    console.error('❌ Error:', error);
-    process.exit(1);
+    console.error('❌ Error:', error)
+    process.exit(1)
   }
 }
 
-limpiarYCrearTest();
+limpiarYCrearTest()

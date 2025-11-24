@@ -8,9 +8,17 @@ const Home = () => {
     <div className="home-page">
       {/* Hero Section */}
       <section className="hero-section">
-        <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+        >
           <LiquidEther
-            colors={['#ff6600', '#ff8833', '#ff9944']}
+            colors={["#ff6600", "#ff8833", "#ff9944"]}
             mouseForce={20}
             cursorSize={100}
             isViscous={false}

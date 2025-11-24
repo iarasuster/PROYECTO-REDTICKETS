@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     'contenido-blog': ContenidoBlog;
+    comments: Comment;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -79,6 +80,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'contenido-blog': ContenidoBlogSelect<false> | ContenidoBlogSelect<true>;
+    comments: CommentsSelect<false> | CommentsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -189,6 +191,56 @@ export interface ContenidoBlog {
         id?: string | null;
       }[]
     | null;
+  socios_comerciales?: {
+    /**
+     * Texto introductorio de la sección de socios
+     */
+    descripcion?: string | null;
+    productores?: {
+      titulo?: string | null;
+      descripcion?: string | null;
+      logos?:
+        | {
+            nombre?: string | null;
+            imagen?: (string | null) | Media;
+            id?: string | null;
+          }[]
+        | null;
+    };
+    partners_tecnologicos?: {
+      titulo?: string | null;
+      descripcion?: string | null;
+      logos?:
+        | {
+            nombre?: string | null;
+            imagen?: (string | null) | Media;
+            id?: string | null;
+          }[]
+        | null;
+    };
+    amigos_ecommerce?: {
+      titulo?: string | null;
+      descripcion?: string | null;
+      logos?:
+        | {
+            nombre?: string | null;
+            imagen?: (string | null) | Media;
+            id?: string | null;
+          }[]
+        | null;
+    };
+    partners_publicitarios?: {
+      titulo?: string | null;
+      descripcion?: string | null;
+      logos?:
+        | {
+            nombre?: string | null;
+            imagen?: (string | null) | Media;
+            id?: string | null;
+          }[]
+        | null;
+    };
+  };
   servicios_lista?:
     | {
         servicio?: string | null;
@@ -275,6 +327,33 @@ export interface ContenidoBlog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "comments".
+ */
+export interface Comment {
+  id: string;
+  author: string;
+  comment: string;
+  /**
+   * Rango: -1 (negativo) a 1 (positivo)
+   */
+  sentimentScore?: number | null;
+  /**
+   * Rango: 0 (limpio) a 1 (tóxico)
+   */
+  toxicityScore?: number | null;
+  /**
+   * Estado de moderación del comentario
+   */
+  status: 'publicado' | 'pendiente' | 'rechazado';
+  /**
+   * ID o nombre del evento relacionado
+   */
+  eventRef?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -291,6 +370,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'contenido-blog';
         value: string | ContenidoBlog;
+      } | null)
+    | ({
+        relationTo: 'comments';
+        value: string | Comment;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -404,6 +487,63 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
         detalle?: T;
         id?: T;
       };
+  socios_comerciales?:
+    | T
+    | {
+        descripcion?: T;
+        productores?:
+          | T
+          | {
+              titulo?: T;
+              descripcion?: T;
+              logos?:
+                | T
+                | {
+                    nombre?: T;
+                    imagen?: T;
+                    id?: T;
+                  };
+            };
+        partners_tecnologicos?:
+          | T
+          | {
+              titulo?: T;
+              descripcion?: T;
+              logos?:
+                | T
+                | {
+                    nombre?: T;
+                    imagen?: T;
+                    id?: T;
+                  };
+            };
+        amigos_ecommerce?:
+          | T
+          | {
+              titulo?: T;
+              descripcion?: T;
+              logos?:
+                | T
+                | {
+                    nombre?: T;
+                    imagen?: T;
+                    id?: T;
+                  };
+            };
+        partners_publicitarios?:
+          | T
+          | {
+              titulo?: T;
+              descripcion?: T;
+              logos?:
+                | T
+                | {
+                    nombre?: T;
+                    imagen?: T;
+                    id?: T;
+                  };
+            };
+      };
   servicios_lista?:
     | T
     | {
@@ -496,6 +636,20 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
   email?: T;
   telefono?: T;
   notas?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "comments_select".
+ */
+export interface CommentsSelect<T extends boolean = true> {
+  author?: T;
+  comment?: T;
+  sentimentScore?: T;
+  toxicityScore?: T;
+  status?: T;
+  eventRef?: T;
   updatedAt?: T;
   createdAt?: T;
 }

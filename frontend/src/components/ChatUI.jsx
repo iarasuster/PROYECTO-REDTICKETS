@@ -6,7 +6,6 @@
 import { useSimpleChat } from "../hooks/useSimpleChat";
 import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import GenerativeRenderer from "./GenerativeRenderer";
 import "./ChatUI.css";
 
 const ChatUI = ({ isOpen, onClose }) => {
@@ -173,15 +172,6 @@ const ChatUI = ({ isOpen, onClose }) => {
                       ))}
                     </div>
                   )}
-
-                {/* Generative UI - solo para mensajes del asistente (legacy) */}
-                {message.role === "assistant" && message.intent && (
-                  <GenerativeRenderer
-                    intent={message.intent}
-                    relatedContent={message.relatedContent}
-                    onQuickAction={handleQuickAction}
-                  />
-                )}
               </div>
 
               {message.role === "user" && (

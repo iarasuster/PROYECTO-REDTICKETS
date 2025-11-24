@@ -48,21 +48,21 @@ export const getAllContent = async () => {
 // Función para obtener contenido por sección desde ContenidoBlog
 export const getContentBySection = async (seccion) => {
   console.log("🔍 API - getContentBySection llamada con:", seccion);
-  
+
   // IMPORTANTE: El filtro where de Payload tiene bugs
   // Mejor estrategia: obtener TODOS los documentos y filtrar en el cliente
   const result = await fetchAPI(`/contenido-blog?limit=100`);
   console.log("🔍 API - Total documentos recibidos:", result.docs?.length);
-  
+
   // Filtrar manualmente por sección
   if (result.docs && result.docs.length > 0) {
-    const doc = result.docs.find(d => d.seccion === seccion);
-    
+    const doc = result.docs.find((d) => d.seccion === seccion);
+
     if (doc) {
       console.log("✅ API - Documento encontrado para sección:", seccion);
       console.log("🔍 API - Fundadores:", doc.fundadores?.length || 0);
       console.log("🔍 API - Equipo:", doc.equipo?.length || 0);
-      
+
       return {
         success: true,
         data: doc,
@@ -102,9 +102,9 @@ export const getSectionBySlug = async (slug) => {
 export const getContentByTypeAndSection = async (tipoContenido, seccion) => {
   // Mapear el nombre de sección a slug (ej: "sobre-nosotros")
   const seccionSlug = seccion.toLowerCase().replace(/\s+/g, "-");
-  
+
   const result = await getContentBySection(seccionSlug);
-  
+
   // Retornar el contenido de la sección
   // El tipo ya no es relevante con la nueva estructura
   return result;

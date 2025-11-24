@@ -37,6 +37,7 @@ npm run seed
 ```
 
 El script:
+
 - ✅ Lee el archivo `contenido_blog_redtickets.json`
 - ✅ Verifica si cada sección ya existe en la base de datos
 - ✅ **Inserta** nuevos documentos si no existen
@@ -100,11 +101,13 @@ Los campos se muestran **solo si seleccionas la sección correspondiente**. Por 
 ### REST API
 
 #### Obtener todas las secciones:
+
 ```http
 GET /api/contenido-blog
 ```
 
 #### Obtener una sección específica:
+
 ```http
 GET /api/contenido-blog?where[seccion][equals]=inicio
 GET /api/contenido-blog?where[seccion][equals]=servicios
@@ -112,6 +115,7 @@ GET /api/contenido-blog?where[seccion][equals]=ayuda
 ```
 
 #### Ejemplo de respuesta (Inicio):
+
 ```json
 {
   "docs": [
@@ -143,6 +147,7 @@ GET /api/contenido-blog?where[seccion][equals]=ayuda
 Endpoint: `/api/graphql`
 
 #### Query para obtener una sección:
+
 ```graphql
 query {
   ContenidoBlogs(where: { seccion: { equals: "inicio" } }) {
@@ -170,6 +175,7 @@ query {
 El chatbot puede consultar esta información para responder preguntas sobre RedTickets. Ejemplo:
 
 ### Consulta desde el backend del chat:
+
 ```javascript
 // En route.ts del chatbot
 const payload = await getPayload({ config })
@@ -178,13 +184,11 @@ const payload = await getPayload({ config })
 const servicios = await payload.find({
   collection: 'contenido-blog',
   where: {
-    seccion: { equals: 'servicios' }
-  }
+    seccion: { equals: 'servicios' },
+  },
 })
 
-const listaServicios = servicios.docs[0].servicios.principales
-  .map(s => s.servicio)
-  .join('\n- ')
+const listaServicios = servicios.docs[0].servicios.principales.map((s) => s.servicio).join('\n- ')
 
 // Usar en el prompt del chatbot
 const context = `Servicios de RedTickets:\n- ${listaServicios}`
@@ -194,22 +198,24 @@ const context = `Servicios de RedTickets:\n- ${listaServicios}`
 
 ## 📁 Archivos Importantes
 
-| Archivo | Descripción |
-|---------|-------------|
-| `contenido_blog_redtickets.json` | Datos fuente en formato JSON |
-| `seed-contenido.js` | Script para cargar datos en MongoDB |
-| `src/collections/ContenidoBlog.ts` | Definición de la colección en Payload |
-| `src/payload.config.ts` | Configuración que incluye la colección |
+| Archivo                            | Descripción                            |
+| ---------------------------------- | -------------------------------------- |
+| `contenido_blog_redtickets.json`   | Datos fuente en formato JSON           |
+| `seed-contenido.js`                | Script para cargar datos en MongoDB    |
+| `src/collections/ContenidoBlog.ts` | Definición de la colección en Payload  |
+| `src/payload.config.ts`            | Configuración que incluye la colección |
 
 ---
 
 ## 🔄 Actualizar el Contenido
 
 ### Desde el panel de Payload (Recomendado)
+
 1. Edita directamente en el admin panel
 2. Los cambios se reflejan inmediatamente en la API
 
 ### Modificando el JSON y re-seeding
+
 1. Edita `contenido_blog_redtickets.json`
 2. Ejecuta `npm run seed`
 3. El script **actualizará** los documentos existentes
@@ -234,6 +240,7 @@ Esto permite que el frontend y el chatbot consuman los datos sin autenticación,
 ### Error: "Cannot find module './dist/payload.config.js'"
 
 **Solución**: Compila el backend primero
+
 ```bash
 npm run build
 ```
@@ -241,6 +248,7 @@ npm run build
 ### Error: "Collection 'contenido-blog' not found"
 
 **Solución**: Asegúrate que Payload esté inicializado y la colección esté en el config
+
 ```bash
 npm run generate:types
 ```
@@ -248,6 +256,7 @@ npm run generate:types
 ### Los datos no se muestran en el panel
 
 **Solución**: Verifica que el seed se ejecutó correctamente
+
 ```bash
 npm run seed
 ```
@@ -281,6 +290,7 @@ npm run seed
 ## 📞 Soporte
 
 Si tienes problemas con el seed o la colección, revisa:
+
 1. Los logs del backend (`npm run dev`)
 2. La conexión a MongoDB Atlas
 3. Los permisos de usuario en Payload

@@ -45,6 +45,18 @@
   background: transparent;
 }
 
+/* Hero más pequeño para secciones no-inicio */
+.section-page:not([data-section="inicio"]) .section-hero {
+  padding: var(--spacing-md) 2rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+.section-page:not([data-section="inicio"]) .section-hero::before {
+  width: 500px;
+  height: 500px;
+  top: -100px;
+}
+
 .section-hero::before {
   content: '';
   position: absolute;
@@ -66,11 +78,17 @@
 .section-title {
   font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   color: #ffffff;
   letter-spacing: -0.04em;
   animation: fadeInUp 0.8s ease both;
   transition: all 0.4s ease;
+}
+
+/* Título más pequeño en secciones no-inicio */
+.section-page:not([data-section="inicio"]) .section-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 0.75rem;
 }
 
 .section-title:hover {
@@ -119,6 +137,13 @@
   font-weight: 400;
   animation: fadeInUp 1s ease both;
   animation-delay: 0.2s;
+}
+
+/* Descripción más compacta en secciones no-inicio */
+.section-page:not([data-section="inicio"]) .section-description {
+  font-size: 1rem;
+  max-width: 600px;
+  margin-top: 0.5rem;
 }
 
 /* Loading State */

@@ -59,6 +59,9 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'estadisticas',
       type: 'group',
       label: 'Estadísticas',
+      admin: {
+        condition: (data) => data.seccion === 'inicio',
+      },
       fields: [
         { name: 'transacciones', type: 'number', label: 'Transacciones' },
         { name: 'eventos_realizados', type: 'number', label: 'Eventos Realizados' },
@@ -71,6 +74,9 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'fundadores',
       type: 'array',
       label: 'Fundadores',
+      admin: {
+        condition: (data) => data.seccion === 'sobre_nosotros',
+      },
       fields: [
         { name: 'nombre', type: 'text', label: 'Nombre', required: true },
         { name: 'cargo', type: 'text', label: 'Cargo' },
@@ -80,10 +86,143 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'equipo',
       type: 'array',
       label: 'Equipo',
+      admin: {
+        condition: (data) => data.seccion === 'sobre_nosotros',
+      },
       fields: [
         { name: 'nombre', type: 'text', label: 'Nombre', required: true },
         { name: 'area', type: 'text', label: 'Área' },
         { name: 'detalle', type: 'textarea', label: 'Detalle', required: false },
+      ],
+    },
+    {
+      name: 'socios_comerciales',
+      type: 'group',
+      label: 'Socios Comerciales',
+      admin: {
+        condition: (data) => data.seccion === 'sobre_nosotros',
+      },
+      fields: [
+        { 
+          name: 'descripcion', 
+          type: 'textarea', 
+          label: 'Descripción General',
+          admin: {
+            description: 'Texto introductorio de la sección de socios',
+          },
+        },
+        {
+          name: 'productores',
+          type: 'group',
+          label: 'Productores',
+          fields: [
+            { 
+              name: 'titulo', 
+              type: 'text', 
+              label: 'Título de la Sección',
+              defaultValue: 'Amigos Productores',
+            },
+            { name: 'descripcion', type: 'textarea', label: 'Descripción' },
+            {
+              name: 'logos',
+              type: 'array',
+              label: 'Logos',
+              fields: [
+                { name: 'nombre', type: 'text', label: 'Nombre' },
+                { 
+                  name: 'imagen', 
+                  type: 'upload', 
+                  relationTo: 'media',
+                  label: 'Logo/Imagen',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'partners_tecnologicos',
+          type: 'group',
+          label: 'Partners Tecnológicos',
+          fields: [
+            { 
+              name: 'titulo', 
+              type: 'text', 
+              label: 'Título de la Sección',
+              defaultValue: 'Partners Tecnológicos',
+            },
+            { name: 'descripcion', type: 'textarea', label: 'Descripción' },
+            {
+              name: 'logos',
+              type: 'array',
+              label: 'Logos',
+              fields: [
+                { name: 'nombre', type: 'text', label: 'Nombre' },
+                { 
+                  name: 'imagen', 
+                  type: 'upload', 
+                  relationTo: 'media',
+                  label: 'Logo/Imagen',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'amigos_ecommerce',
+          type: 'group',
+          label: 'Amigos E-commerce',
+          fields: [
+            { 
+              name: 'titulo', 
+              type: 'text', 
+              label: 'Título de la Sección',
+              defaultValue: 'Amigos E-commerce',
+            },
+            { name: 'descripcion', type: 'textarea', label: 'Descripción' },
+            {
+              name: 'logos',
+              type: 'array',
+              label: 'Logos',
+              fields: [
+                { name: 'nombre', type: 'text', label: 'Nombre' },
+                { 
+                  name: 'imagen', 
+                  type: 'upload', 
+                  relationTo: 'media',
+                  label: 'Logo/Imagen',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'partners_publicitarios',
+          type: 'group',
+          label: 'Partners Publicitarios',
+          fields: [
+            { 
+              name: 'titulo', 
+              type: 'text', 
+              label: 'Título de la Sección',
+              defaultValue: 'Partners Publicitarios',
+            },
+            { name: 'descripcion', type: 'textarea', label: 'Descripción' },
+            {
+              name: 'logos',
+              type: 'array',
+              label: 'Logos',
+              fields: [
+                { name: 'nombre', type: 'text', label: 'Nombre' },
+                { 
+                  name: 'imagen', 
+                  type: 'upload', 
+                  relationTo: 'media',
+                  label: 'Logo/Imagen',
+                },
+              ],
+            },
+          ],
+        },
       ],
     },
 
@@ -92,6 +231,9 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'servicios_lista',
       type: 'array',
       label: 'Lista de Servicios',
+      admin: {
+        condition: (data) => data.seccion === 'servicios',
+      },
       fields: [
         { name: 'servicio', type: 'textarea', label: 'Servicio' },
       ],
@@ -102,6 +244,9 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'testimonios',
       type: 'array',
       label: 'Testimonios',
+      admin: {
+        condition: (data) => data.seccion === 'comunidad',
+      },
       fields: [
         { name: 'texto', type: 'textarea', label: 'Texto del Testimonio', required: true },
         { name: 'autor', type: 'text', label: 'Autor', required: true },
@@ -113,6 +258,9 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'como_comprar',
       type: 'group',
       label: 'Cómo Comprar',
+      admin: {
+        condition: (data) => data.seccion === 'ayuda',
+      },
       fields: [
         { name: 'introduccion', type: 'textarea', label: 'Introducción' },
         {
@@ -132,6 +280,9 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'recepcion_tickets',
       type: 'group',
       label: 'Recepción de Tickets',
+      admin: {
+        condition: (data) => data.seccion === 'ayuda',
+      },
       fields: [
         { name: 'descripcion', type: 'textarea', label: 'Descripción' },
         {
@@ -150,6 +301,9 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'como_vender',
       type: 'group',
       label: 'Cómo Vender',
+      admin: {
+        condition: (data) => data.seccion === 'ayuda',
+      },
       fields: [
         { name: 'introduccion', type: 'textarea', label: 'Introducción' },
         {
@@ -169,6 +323,9 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'politicas',
       type: 'group',
       label: 'Políticas',
+      admin: {
+        condition: (data) => data.seccion === 'ayuda',
+      },
       fields: [
         { name: 'cancelacion_eventos', type: 'textarea', label: 'Cancelación de Eventos' },
         { name: 'reprogramacion', type: 'textarea', label: 'Reprogramación' },
@@ -181,6 +338,9 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'ayuda_tecnica',
       type: 'group',
       label: 'Ayuda Técnica',
+      admin: {
+        condition: (data) => data.seccion === 'ayuda',
+      },
       fields: [
         {
           name: 'uso_totem',
@@ -224,6 +384,9 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'formulario',
       type: 'array',
       label: 'Campos del Formulario',
+      admin: {
+        condition: (data) => data.seccion === 'contacto',
+      },
       fields: [
         { name: 'campo', type: 'text', label: 'Nombre del Campo' },
       ],
@@ -232,11 +395,17 @@ export const ContenidoBlog: CollectionConfig = {
       name: 'email',
       type: 'email',
       label: 'Email de Contacto',
+      admin: {
+        condition: (data) => data.seccion === 'contacto',
+      },
     },
     {
       name: 'telefono',
       type: 'text',
       label: 'Teléfono',
+      admin: {
+        condition: (data) => data.seccion === 'contacto',
+      },
     },
 
     // ===== NOTAS INTERNAS =====
