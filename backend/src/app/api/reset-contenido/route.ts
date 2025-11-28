@@ -48,32 +48,26 @@ export async function POST() {
           {
             nombre: 'Juan Pérez',
             area: 'Desarrollo',
-            detalle: 'Full Stack Developer',
           },
           {
             nombre: 'Ana López',
             area: 'Diseño',
-            detalle: 'UI/UX Designer',
           },
           {
             nombre: 'Carlos Rodríguez',
             area: 'Marketing',
-            detalle: 'Content Manager',
           },
           {
             nombre: 'Laura Fernández',
             area: 'Soporte',
-            detalle: 'Customer Success',
           },
           {
             nombre: 'Diego Martínez',
             area: 'Desarrollo',
-            detalle: 'Backend Developer',
           },
           {
             nombre: 'Sofía García',
             area: 'Ventas',
-            detalle: 'Account Manager',
           },
         ],
       },
