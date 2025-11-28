@@ -12,7 +12,7 @@ import "./SectionContent.css";
 const getImageUrl = (imageObj) => {
   if (!imageObj?.url) return null;
   // Si ya empieza con http, usar directamente
-  if (imageObj.url.startsWith('http')) return imageObj.url;
+  if (imageObj.url.startsWith("http")) return imageObj.url;
   // Si es ruta relativa, agregar SERVER_URL
   return `${SERVER_URL}${imageObj.url}`;
 };
@@ -680,7 +680,6 @@ const AyudaContent = ({ data }) => {
                     <div className="paso-number">{idx + 1}</div>
                     <div className="paso-content">
                       <h4>{paso.titulo}</h4>
-                      <p>{paso.detalle}</p>
                     </div>
                   </div>
                 ))}
