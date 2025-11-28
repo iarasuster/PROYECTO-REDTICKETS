@@ -1,0 +1,132 @@
+/* 🎠 Logo Carousel - Infinite Loop Animation */
+
+.logo-carousel {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 2rem 0;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+}
+
+.logo-carousel__track {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  animation: scroll var(--animation-duration, 30s) linear infinite;
+  will-change: transform;
+  width: fit-content;
+}
+
+.logo-carousel__track:hover {
+  animation-play-state: paused;
+}
+
+.logo-carousel__item {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  min-width: 120px;
+  max-width: 180px;
+  padding: 0 1rem;
+  transition: transform 0.3s ease;
+}
+
+.logo-carousel__item:hover {
+  transform: scale(1.1);
+}
+
+.logo-carousel__image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  
+  /* 🎨 FILTRO PARA CONVERTIR LOGOS A BLANCO */
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.logo-carousel__item:hover .logo-carousel__image {
+  opacity: 1;
+  filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.logo-carousel__placeholder {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Animación de scroll infinito */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% / 2));
+  }
+}
+
+/* Variante con fondo Glass */
+.logo-carousel--glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+/* Variante compacta */
+.logo-carousel--compact .logo-carousel__track {
+  gap: 2rem;
+}
+
+.logo-carousel--compact .logo-carousel__item {
+  height: 40px;
+  min-width: 80px;
+  max-width: 120px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .logo-carousel__track {
+    gap: 2rem;
+  }
+  
+  .logo-carousel__item {
+    height: 50px;
+    min-width: 100px;
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-carousel__track {
+    gap: 1.5rem;
+  }
+  
+  .logo-carousel__item {
+    height: 40px;
+    min-width: 80px;
+    max-width: 120px;
+  }
+}

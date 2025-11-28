@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { getContentBySection } from "../services/api";
+import { getContentBySection, SERVER_URL } from "../services/api";
 import ChromaGrid from "./ChromaGrid";
 import CommentsForm from "./CommentsForm";
 import Counter from "./Counter";
+import LogoCarousel from "./LogoCarousel";
 import loaderAnimation from "../assets/loader.lottie";
 import "./SectionContent.css";
 
@@ -121,114 +122,144 @@ const renderSectionContent = (seccion, data) => {
 };
 
 // Componente para la sección INICIO
-const InicioContent = ({ data }) => (
-  <div className="inicio-content">
-    {/* Stats en fila */}
-    {data.estadisticas && (
-      <div className="inicio-stats animate-item">
-        <div className="stats-row">
-          {data.estadisticas.transacciones && (
-            <div className="stat-item">
-              <Counter
-                end={data.estadisticas.transacciones}
-                duration={2000}
-                suffix="+"
-              />
-              <div className="stat-label">Transacciones</div>
+const InicioContent = ({ data }) => {
+  // Hook para cargar logos de productores desde la sección "sobre_nosotros"
+  const [logosProductores, setLogosProductores] = useState([]);
+
+  useEffect(() => {
+    const fetchLogos = async () => {
+      try {
+        const result = await getContentBySection("sobre_nosotros");
+        if (
+          result.success &&
+          result.data?.socios_comerciales?.productores?.logos
+        ) {
+          setLogosProductores(result.data.socios_comerciales.productores.logos);
+        }
+      } catch (err) {
+        console.error("Error cargando logos:", err);
+      }
+    };
+    fetchLogos();
+  }, []);
+
+  return (
+    <div className="inicio-content">
+      {/* Carousel de Logos de Productores */}
+      {logosProductores.length > 0 && (
+        <div className="inicio-logos animate-item">
+          <h3 className="logos-title">Confían en nosotros</h3>
+          <LogoCarousel logos={logosProductores} speed={40} />
+        </div>
+      )}
+
+      {/* Stats en fila */}
+      {data.estadisticas && (
+        <div className="inicio-stats animate-item">
+          <div className="stats-row">
+            {data.estadisticas.transacciones && (
+              <div className="stat-item">
+                <Counter
+                  end={data.estadisticas.transacciones}
+                  duration={2000}
+                  suffix="+"
+                />
+                <div className="stat-label">Transacciones</div>
+              </div>
+            )}
+            {data.estadisticas.eventos_realizados && (
+              <div className="stat-item">
+                <Counter
+                  end={data.estadisticas.eventos_realizados}
+                  duration={2000}
+                  suffix="+"
+                />
+                <div className="stat-label">Eventos Realizados</div>
+              </div>
+            )}
+            {data.estadisticas.productores && (
+              <div className="stat-item">
+                <Counter
+                  end={data.estadisticas.productores}
+                  duration={2000}
+                  suffix="+"
+                />
+                <div className="stat-label">Productores</div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Preview de Secciones */}
+      <div className="sections-preview animate-item">
+        <h2 className="preview-title">Descubre RedTickets</h2>
+
+        <div className="preview-grid">
+          {/* Sobre Nosotros Preview */}
+          <a href="/seccion/sobre-nosotros" className="preview-card">
+            <div className="preview-icon">
+              <i className="fas fa-users"></i>
             </div>
-          )}
-          {data.estadisticas.eventos_realizados && (
-            <div className="stat-item">
-              <Counter
-                end={data.estadisticas.eventos_realizados}
-                duration={2000}
-                suffix="+"
-              />
-              <div className="stat-label">Eventos Realizados</div>
+            <h3>Sobre Nosotros</h3>
+            <p>
+              Más de 10 años conectando personas con experiencias únicas. Conoce
+              nuestro equipo y trayectoria.
+            </p>
+            <span className="preview-link">
+              Ver más <i className="fas fa-arrow-right"></i>
+            </span>
+          </a>
+
+          {/* Servicios Preview */}
+          <a href="/seccion/servicios" className="preview-card">
+            <div className="preview-icon">
+              <i className="fas fa-cogs"></i>
             </div>
-          )}
-          {data.estadisticas.productores && (
-            <div className="stat-item">
-              <Counter
-                end={data.estadisticas.productores}
-                duration={2000}
-                suffix="+"
-              />
-              <div className="stat-label">Productores</div>
+            <h3>Servicios</h3>
+            <p>
+              Venta de entradas, control de acceso, hard ticketing y más.
+              Soluciones completas para tu evento.
+            </p>
+            <span className="preview-link">
+              Ver más <i className="fas fa-arrow-right"></i>
+            </span>
+          </a>
+
+          {/* Comunidad Preview */}
+          <a href="/seccion/comunidad" className="preview-card">
+            <div className="preview-icon">
+              <i className="fas fa-heart"></i>
             </div>
-          )}
+            <h3>Comunidad</h3>
+            <p>
+              Lee testimonios de productores y asistentes que confían en
+              RedTickets para sus eventos.
+            </p>
+            <span className="preview-link">
+              Ver más <i className="fas fa-arrow-right"></i>
+            </span>
+          </a>
+
+          {/* Ayuda Preview */}
+          <a href="/seccion/ayuda" className="preview-card">
+            <div className="preview-icon">
+              <i className="fas fa-question-circle"></i>
+            </div>
+            <h3>Centro de Ayuda</h3>
+            <p>
+              ¿Dudas sobre cómo comprar o vender? Encuentra respuestas a las
+              preguntas más frecuentes.
+            </p>
+            <span className="preview-link">
+              Ver más <i className="fas fa-arrow-right"></i>
+            </span>
+          </a>
         </div>
       </div>
-    )}
-
-    {/* Preview de Secciones */}
-    <div className="sections-preview animate-item">
-      <h2 className="preview-title">Descubre RedTickets</h2>
-
-      <div className="preview-grid">
-        {/* Sobre Nosotros Preview */}
-        <a href="/seccion/sobre-nosotros" className="preview-card">
-          <div className="preview-icon">
-            <i className="fas fa-users"></i>
-          </div>
-          <h3>Sobre Nosotros</h3>
-          <p>
-            Más de 10 años conectando personas con experiencias únicas. Conoce
-            nuestro equipo y trayectoria.
-          </p>
-          <span className="preview-link">
-            Ver más <i className="fas fa-arrow-right"></i>
-          </span>
-        </a>
-
-        {/* Servicios Preview */}
-        <a href="/seccion/servicios" className="preview-card">
-          <div className="preview-icon">
-            <i className="fas fa-cogs"></i>
-          </div>
-          <h3>Servicios</h3>
-          <p>
-            Venta de entradas, control de acceso, hard ticketing y más.
-            Soluciones completas para tu evento.
-          </p>
-          <span className="preview-link">
-            Ver más <i className="fas fa-arrow-right"></i>
-          </span>
-        </a>
-
-        {/* Comunidad Preview */}
-        <a href="/seccion/comunidad" className="preview-card">
-          <div className="preview-icon">
-            <i className="fas fa-heart"></i>
-          </div>
-          <h3>Comunidad</h3>
-          <p>
-            Lee testimonios de productores y asistentes que confían en
-            RedTickets para sus eventos.
-          </p>
-          <span className="preview-link">
-            Ver más <i className="fas fa-arrow-right"></i>
-          </span>
-        </a>
-
-        {/* Ayuda Preview */}
-        <a href="/seccion/ayuda" className="preview-card">
-          <div className="preview-icon">
-            <i className="fas fa-question-circle"></i>
-          </div>
-          <h3>Centro de Ayuda</h3>
-          <p>
-            ¿Dudas sobre cómo comprar o vender? Encuentra respuestas a las
-            preguntas más frecuentes.
-          </p>
-          <span className="preview-link">
-            Ver más <i className="fas fa-arrow-right"></i>
-          </span>
-        </a>
-      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const SobreNosotrosContent = ({ data }) => (
   <div className="sobre-nosotros-container">
@@ -237,18 +268,45 @@ const SobreNosotrosContent = ({ data }) => (
       <div className="sobre-row fundadores-row">
         <h3 className="section-title">Fundadores</h3>
         <div className="team-grid">
-          {data.fundadores.map((fundador, idx) => (
-            <ChromaGrid
-              key={idx}
-              colors={["#ff6600", "#ff8833", "#ff9944"]}
-              intensity={0.4}
-            >
-              <div className="team-member">
-                <h4>{fundador.nombre}</h4>
-                <p className="team-role">{fundador.cargo}</p>
-              </div>
-            </ChromaGrid>
-          ))}
+          {data.fundadores.map((fundador, idx) => {
+            console.log(
+              "🔍 Fundador:",
+              fundador.nombre,
+              "Imagen:",
+              fundador.imagen
+            );
+            return (
+              <ChromaGrid
+                key={idx}
+                colors={["#ff6600", "#ff8833", "#ff9944"]}
+                intensity={0.4}
+              >
+                <div className="team-member">
+                  {fundador.imagen?.url ? (
+                    <div className="team-photo">
+                      <img
+                        src={`${SERVER_URL}${fundador.imagen.url}`}
+                        alt={fundador.nombre}
+                        loading="lazy"
+                        onError={(e) => {
+                          console.error(
+                            "Error cargando imagen:",
+                            fundador.imagen.url
+                          );
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="team-photo placeholder">
+                      <i className="fas fa-user"></i>
+                    </div>
+                  )}
+                  <h4>{fundador.nombre}</h4>
+                  <p className="team-role">{fundador.cargo}</p>
+                </div>
+              </ChromaGrid>
+            );
+          })}
         </div>
       </div>
     )}
@@ -258,184 +316,143 @@ const SobreNosotrosContent = ({ data }) => (
       <div className="sobre-row equipo-row">
         <h3 className="section-title">Nuestro Equipo</h3>
         <div className="team-grid">
-          {data.equipo.map((miembro, idx) => (
-            <ChromaGrid
-              key={idx}
-              colors={["#ff6600", "#ff8833", "#ff9944"]}
-              intensity={0.3}
-            >
-              <div className="team-member">
-                <h4>{miembro.nombre}</h4>
-                <p className="team-role">{miembro.area}</p>
-                {miembro.detalle && (
-                  <p className="team-detail">{miembro.detalle}</p>
-                )}
-              </div>
-            </ChromaGrid>
-          ))}
+          {data.equipo.map((miembro, idx) => {
+            console.log(
+              "🔍 Miembro equipo:",
+              miembro.nombre,
+              "Imagen:",
+              miembro.imagen
+            );
+            return (
+              <ChromaGrid
+                key={idx}
+                colors={["#ff6600", "#ff8833", "#ff9944"]}
+                intensity={0.3}
+              >
+                <div className="team-member">
+                  {miembro.imagen?.url ? (
+                    <div className="team-photo">
+                      <img
+                        src={`${SERVER_URL}${miembro.imagen.url}`}
+                        alt={miembro.nombre}
+                        loading="lazy"
+                        onError={(e) => {
+                          console.error(
+                            "Error cargando imagen:",
+                            miembro.imagen.url
+                          );
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="team-photo placeholder">
+                      <i className="fas fa-user"></i>
+                    </div>
+                  )}
+                  <h4>{miembro.nombre}</h4>
+                  <p className="team-role">{miembro.area}</p>
+                </div>
+              </ChromaGrid>
+            );
+          })}
         </div>
       </div>
     )}
 
-    {/* FILA 3: Socios Comerciales */}
+    {/* FILA 3: Socios Comerciales - Título General */}
     {data.socios_comerciales && (
-      <div className="sobre-row socios-row">
+      <div className="sobre-row socios-header-row">
         <h3 className="section-title">Socios Comerciales</h3>
         {data.socios_comerciales.descripcion && (
           <p className="socios-intro">{data.socios_comerciales.descripcion}</p>
         )}
+      </div>
+    )}
 
-        <div className="socios-grid">
-          {/* Productores */}
-          {data.socios_comerciales.productores && (
-            <div className="socios-category">
-              <h4>
-                {data.socios_comerciales.productores.titulo ||
-                  "Amigos Productores"}
-              </h4>
-              {data.socios_comerciales.productores.descripcion && (
-                <p className="category-desc">
-                  {data.socios_comerciales.productores.descripcion}
-                </p>
-              )}
-              {data.socios_comerciales.productores.logos &&
-                data.socios_comerciales.productores.logos.length > 0 && (
-                  <div className="logos-grid">
-                    {data.socios_comerciales.productores.logos.map(
-                      (logo, idx) => (
-                        <div key={idx} className="logo-item">
-                          {logo.imagen &&
-                            typeof logo.imagen === "object" &&
-                            logo.imagen.url && (
-                              <img
-                                src={logo.imagen.url}
-                                alt={logo.nombre || "Logo"}
-                              />
-                            )}
-                          {logo.nombre && (
-                            <span className="logo-name">{logo.nombre}</span>
-                          )}
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
-            </div>
+    {/* FILA 4: Productores */}
+    {data.socios_comerciales?.productores && (
+      <div className="sobre-row socios-category-row">
+        <h4 className="socios-category-title">
+          {data.socios_comerciales.productores.titulo || "Amigos Productores"}
+        </h4>
+        {data.socios_comerciales.productores.descripcion && (
+          <p className="category-desc">
+            {data.socios_comerciales.productores.descripcion}
+          </p>
+        )}
+        {data.socios_comerciales.productores.logos &&
+          data.socios_comerciales.productores.logos.length > 0 && (
+            <LogoCarousel
+              logos={data.socios_comerciales.productores.logos}
+              speed={35}
+            />
           )}
+      </div>
+    )}
 
-          {/* Partners Tecnológicos */}
-          {data.socios_comerciales.partners_tecnologicos && (
-            <div className="socios-category">
-              <h4>
-                {data.socios_comerciales.partners_tecnologicos.titulo ||
-                  "Partners Tecnológicos"}
-              </h4>
-              {data.socios_comerciales.partners_tecnologicos.descripcion && (
-                <p className="category-desc">
-                  {data.socios_comerciales.partners_tecnologicos.descripcion}
-                </p>
-              )}
-              {data.socios_comerciales.partners_tecnologicos.logos &&
-                data.socios_comerciales.partners_tecnologicos.logos.length >
-                  0 && (
-                  <div className="logos-grid">
-                    {data.socios_comerciales.partners_tecnologicos.logos.map(
-                      (logo, idx) => (
-                        <div key={idx} className="logo-item">
-                          {logo.imagen &&
-                            typeof logo.imagen === "object" &&
-                            logo.imagen.url && (
-                              <img
-                                src={logo.imagen.url}
-                                alt={logo.nombre || "Logo"}
-                              />
-                            )}
-                          {logo.nombre && (
-                            <span className="logo-name">{logo.nombre}</span>
-                          )}
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
-            </div>
+    {/* FILA 5: Partners Tecnológicos */}
+    {data.socios_comerciales?.partners_tecnologicos && (
+      <div className="sobre-row socios-category-row">
+        <h4 className="socios-category-title">
+          {data.socios_comerciales.partners_tecnologicos.titulo ||
+            "Partners Tecnológicos"}
+        </h4>
+        {data.socios_comerciales.partners_tecnologicos.descripcion && (
+          <p className="category-desc">
+            {data.socios_comerciales.partners_tecnologicos.descripcion}
+          </p>
+        )}
+        {data.socios_comerciales.partners_tecnologicos.logos &&
+          data.socios_comerciales.partners_tecnologicos.logos.length > 0 && (
+            <LogoCarousel
+              logos={data.socios_comerciales.partners_tecnologicos.logos}
+              speed={38}
+            />
           )}
+      </div>
+    )}
 
-          {/* Amigos E-commerce */}
-          {data.socios_comerciales.amigos_ecommerce && (
-            <div className="socios-category">
-              <h4>
-                {data.socios_comerciales.amigos_ecommerce.titulo ||
-                  "Amigos E-commerce"}
-              </h4>
-              {data.socios_comerciales.amigos_ecommerce.descripcion && (
-                <p className="category-desc">
-                  {data.socios_comerciales.amigos_ecommerce.descripcion}
-                </p>
-              )}
-              {data.socios_comerciales.amigos_ecommerce.logos &&
-                data.socios_comerciales.amigos_ecommerce.logos.length > 0 && (
-                  <div className="logos-grid">
-                    {data.socios_comerciales.amigos_ecommerce.logos.map(
-                      (logo, idx) => (
-                        <div key={idx} className="logo-item">
-                          {logo.imagen &&
-                            typeof logo.imagen === "object" &&
-                            logo.imagen.url && (
-                              <img
-                                src={logo.imagen.url}
-                                alt={logo.nombre || "Logo"}
-                              />
-                            )}
-                          {logo.nombre && (
-                            <span className="logo-name">{logo.nombre}</span>
-                          )}
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
-            </div>
+    {/* FILA 6: Amigos E-commerce */}
+    {data.socios_comerciales?.amigos_ecommerce && (
+      <div className="sobre-row socios-category-row">
+        <h4 className="socios-category-title">
+          {data.socios_comerciales.amigos_ecommerce.titulo ||
+            "Amigos E-commerce"}
+        </h4>
+        {data.socios_comerciales.amigos_ecommerce.descripcion && (
+          <p className="category-desc">
+            {data.socios_comerciales.amigos_ecommerce.descripcion}
+          </p>
+        )}
+        {data.socios_comerciales.amigos_ecommerce.logos &&
+          data.socios_comerciales.amigos_ecommerce.logos.length > 0 && (
+            <LogoCarousel
+              logos={data.socios_comerciales.amigos_ecommerce.logos}
+              speed={42}
+            />
           )}
+      </div>
+    )}
 
-          {/* Partners Publicitarios */}
-          {data.socios_comerciales.partners_publicitarios && (
-            <div className="socios-category">
-              <h4>
-                {data.socios_comerciales.partners_publicitarios.titulo ||
-                  "Partners Publicitarios"}
-              </h4>
-              {data.socios_comerciales.partners_publicitarios.descripcion && (
-                <p className="category-desc">
-                  {data.socios_comerciales.partners_publicitarios.descripcion}
-                </p>
-              )}
-              {data.socios_comerciales.partners_publicitarios.logos &&
-                data.socios_comerciales.partners_publicitarios.logos.length >
-                  0 && (
-                  <div className="logos-grid">
-                    {data.socios_comerciales.partners_publicitarios.logos.map(
-                      (logo, idx) => (
-                        <div key={idx} className="logo-item">
-                          {logo.imagen &&
-                            typeof logo.imagen === "object" &&
-                            logo.imagen.url && (
-                              <img
-                                src={logo.imagen.url}
-                                alt={logo.nombre || "Logo"}
-                              />
-                            )}
-                          {logo.nombre && (
-                            <span className="logo-name">{logo.nombre}</span>
-                          )}
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
-            </div>
+    {/* FILA 7: Partners Publicitarios */}
+    {data.socios_comerciales?.partners_publicitarios && (
+      <div className="sobre-row socios-category-row">
+        <h4 className="socios-category-title">
+          {data.socios_comerciales.partners_publicitarios.titulo ||
+            "Partners Publicitarios"}
+        </h4>
+        {data.socios_comerciales.partners_publicitarios.descripcion && (
+          <p className="category-desc">
+            {data.socios_comerciales.partners_publicitarios.descripcion}
+          </p>
+        )}
+        {data.socios_comerciales.partners_publicitarios.logos &&
+          data.socios_comerciales.partners_publicitarios.logos.length > 0 && (
+            <LogoCarousel
+              logos={data.socios_comerciales.partners_publicitarios.logos}
+              speed={45}
+            />
           )}
-        </div>
       </div>
     )}
   </div>

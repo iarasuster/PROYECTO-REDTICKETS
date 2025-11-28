@@ -165,6 +165,23 @@
   letter-spacing: -0.02em;
 }
 
+/* Logos Section en Inicio */
+.inicio-logos {
+  width: 100%;
+  margin: 3rem 0;
+}
+
+.logos-title {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  text-transform: none;
+  letter-spacing: -0.02em;
+}
+
 .preview-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1030,8 +1047,13 @@
     grid-template-columns: 1fr;
   }
   
-  .socios-category {
-    padding: 1.5rem;
+  .socios-category-row {
+    padding: 0 1rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  .socios-category-title {
+    font-size: 1.2rem;
   }
   
   .ayuda-form .btn-primary {
@@ -1117,12 +1139,50 @@
   padding: 2rem;
   text-align: center;
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .team-member:hover {
   background: rgba(255, 255, 255, 0.05);
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(255, 102, 0, 0.2);
+}
+
+.team-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border: 3px solid rgba(255, 102, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.team-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-photo.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 102, 0, 0.1);
+  border: 2px dashed rgba(255, 102, 0, 0.3);
+}
+
+.team-photo.placeholder i {
+  font-size: 3rem;
+  color: rgba(255, 102, 0, 0.4);
+}
+
+.team-member:hover .team-photo {
+  border-color: rgba(255, 102, 0, 0.6);
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(255, 102, 0, 0.3);
 }
 
 .team-member h4 {
@@ -1138,12 +1198,6 @@
   margin-bottom: 0.5rem;
 }
 
-.team-detail {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.85rem;
-  font-style: italic;
-}
-
 /* ========== 🤝 SOCIOS COMERCIALES - PURE GLASS ========== */
 .socios-comerciales {
   margin-top: 3rem;
@@ -1157,27 +1211,21 @@
   max-width: 800px;
 }
 
-.socios-category {
-  margin-bottom: 3rem;
-  padding: 2.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  transition: all 0.3s ease;
+/* Socios Category Row - No boxes, just spacing */
+.socios-category-row {
+  margin-bottom: 4rem;
+  padding: 0;
+  width: 100%;
 }
 
-.socios-category:hover {
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 30px rgba(255, 102, 0, 0.15);
-  transform: translateY(-2px);
-}
-
-.socios-category h4 {
-  color: #ff6600;
+.socios-category-title {
+  color: #ffffff;
   font-size: 1.5rem;
   margin-bottom: 0.75rem;
   text-align: center;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .category-desc {
@@ -1683,6 +1731,16 @@
     grid-template-columns: 1fr;
   }
   
+  .team-photo {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1rem;
+  }
+  
+  .team-photo.placeholder i {
+    font-size: 2.5rem;
+  }
+  
   .testimonios-grid {
     grid-template-columns: 1fr;
   }
@@ -1732,11 +1790,19 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.socios-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+/* Socios header row */
+.socios-header-row {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.socios-intro {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 1rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ========== 🎯 SERVICIOS GRID MODERNO ========== */
@@ -1977,7 +2043,11 @@
     font-size: 1rem;
   }
 
-  .socios-grid {
-    grid-template-columns: 1fr;
+  .socios-category-row {
+    margin-bottom: 3rem;
+  }
+
+  .socios-category-title {
+    font-size: 1.3rem;
   }
 }

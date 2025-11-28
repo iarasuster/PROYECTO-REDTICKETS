@@ -180,6 +180,10 @@ export interface ContenidoBlog {
     | {
         nombre: string;
         cargo?: string | null;
+        /**
+         * Imagen circular del fundador
+         */
+        imagen?: (string | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -187,7 +191,10 @@ export interface ContenidoBlog {
     | {
         nombre: string;
         area?: string | null;
-        detalle?: string | null;
+        /**
+         * Imagen circular del miembro del equipo
+         */
+        imagen?: (string | null) | Media;
         id?: string | null;
       }[]
     | null;
@@ -477,6 +484,7 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
     | {
         nombre?: T;
         cargo?: T;
+        imagen?: T;
         id?: T;
       };
   equipo?:
@@ -484,7 +492,7 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
     | {
         nombre?: T;
         area?: T;
-        detalle?: T;
+        imagen?: T;
         id?: T;
       };
   socios_comerciales?:

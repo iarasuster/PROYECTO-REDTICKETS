@@ -80,6 +80,15 @@ export const ContenidoBlog: CollectionConfig = {
       fields: [
         { name: 'nombre', type: 'text', label: 'Nombre', required: true },
         { name: 'cargo', type: 'text', label: 'Cargo' },
+        { 
+          name: 'imagen', 
+          type: 'upload', 
+          relationTo: 'media', 
+          label: 'Foto de Perfil',
+          admin: {
+            description: 'Imagen circular del fundador',
+          },
+        },
       ],
     },
     {
@@ -92,7 +101,15 @@ export const ContenidoBlog: CollectionConfig = {
       fields: [
         { name: 'nombre', type: 'text', label: 'Nombre', required: true },
         { name: 'area', type: 'text', label: 'Área' },
-        { name: 'detalle', type: 'textarea', label: 'Detalle', required: false },
+        { 
+          name: 'imagen', 
+          type: 'upload', 
+          relationTo: 'media', 
+          label: 'Foto de Perfil',
+          admin: {
+            description: 'Imagen circular del miembro del equipo',
+          },
+        },
       ],
     },
     {

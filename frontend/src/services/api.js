@@ -5,6 +5,12 @@ const API_BASE_URL =
     ? "http://localhost:3000/api"
     : "https://redtickets-backend.onrender.com/api";
 
+// URL base del servidor (sin /api) para archivos media
+export const SERVER_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000"
+    : "https://redtickets-backend.onrender.com";
+
 // Configuración del chatbot
 const CHATBOT_API_URL =
   import.meta.env.MODE === "development"
@@ -42,7 +48,7 @@ const fetchAPI = async (endpoint, options = {}) => {
 
 // Función para obtener TODO el contenido del blog
 export const getAllContent = async () => {
-  return fetchAPI("/contenido-blog?limit=100");
+  return fetchAPI("/contenido-blog?limit=100&depth=2");
 };
 
 // Función para obtener contenido por sección desde ContenidoBlog
@@ -51,7 +57,8 @@ export const getContentBySection = async (seccion) => {
 
   // IMPORTANTE: El filtro where de Payload tiene bugs
   // Mejor estrategia: obtener TODOS los documentos y filtrar en el cliente
-  const result = await fetchAPI(`/contenido-blog?limit=100`);
+  // depth=2 permite cargar las relaciones de imágenes (upload fields)
+  const result = await fetchAPI(`/contenido-blog?limit=100&depth=2`);
   console.log("🔍 API - Total documentos recibidos:", result.docs?.length);
 
   // Filtrar manualmente por sección
@@ -80,7 +87,7 @@ export const getContentBySection = async (seccion) => {
 
 // Función para obtener todas las secciones
 export const getAllSections = async () => {
-  return fetchAPI("/contenido-blog?limit=100");
+  return fetchAPI("/contenido-blog?limit=100&depth=2");
 };
 
 // Función para obtener una sección por su slug
@@ -90,6 +97,7 @@ export const getSectionBySlug = async (slug) => {
       seccion: { equals: slug },
     }),
     limit: "1",
+    depth: "2",
   });
 
   const response = await fetchAPI(`/contenido-blog?${query}`);
