@@ -8,6 +8,15 @@ import LogoCarousel from "./LogoCarousel";
 import loaderAnimation from "../assets/loader.lottie";
 import "./SectionContent.css";
 
+// Helper para obtener URL correcta de imagen
+const getImageUrl = (imageObj) => {
+  if (!imageObj?.url) return null;
+  // Si ya empieza con http, usar directamente
+  if (imageObj.url.startsWith('http')) return imageObj.url;
+  // Si es ruta relativa, agregar SERVER_URL
+  return `${SERVER_URL}${imageObj.url}`;
+};
+
 const SectionContent = ({ seccion, className = "" }) => {
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -285,7 +294,7 @@ const SobreNosotrosContent = ({ data }) => (
                   {fundador.imagen?.url ? (
                     <div className="team-photo">
                       <img
-                        src={`${SERVER_URL}${fundador.imagen.url}`}
+                        src={getImageUrl(fundador.imagen)}
                         alt={fundador.nombre}
                         loading="lazy"
                         onError={(e) => {
@@ -333,7 +342,7 @@ const SobreNosotrosContent = ({ data }) => (
                   {miembro.imagen?.url ? (
                     <div className="team-photo">
                       <img
-                        src={`${SERVER_URL}${miembro.imagen.url}`}
+                        src={getImageUrl(miembro.imagen)}
                         alt={miembro.nombre}
                         loading="lazy"
                         onError={(e) => {
