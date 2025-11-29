@@ -758,12 +758,14 @@ const AyudaContent = ({ data }) => {
             )}
 
             {/* Cambio de Rollo */}
-            {data.ayuda_tecnica.cambio_rollo && (
+            {data.ayuda_tecnica.cambio_rollo && Array.isArray(data.ayuda_tecnica.cambio_rollo) && (
               <div className="ayuda-item">
                 <h4>Cambio de Rollo</h4>
                 <ol className="instrucciones-lista">
-                  {data.ayuda_tecnica.cambio_rollo.map((paso, idx) => (
-                    <li key={idx}>{paso}</li>
+                  {data.ayuda_tecnica.cambio_rollo.map((item, idx) => (
+                    <li key={item.id || idx}>
+                      {typeof item === 'string' ? item : item.paso}
+                    </li>
                   ))}
                 </ol>
               </div>
@@ -774,12 +776,32 @@ const AyudaContent = ({ data }) => {
               <div className="ayuda-item">
                 <h4>Cancelar Compra en Tótem</h4>
                 <p>{data.ayuda_tecnica.cancelar_compra_totem.descripcion}</p>
-                {data.ayuda_tecnica.cancelar_compra_totem.campos && (
-                  <ul className="campos-lista">
-                    {data.ayuda_tecnica.cancelar_compra_totem.campos.map((campo, idx) => (
-                      <li key={idx}>{campo}</li>
-                    ))}
-                  </ul>
+                {data.ayuda_tecnica.cancelar_compra_totem.campos && Array.isArray(data.ayuda_tecnica.cancelar_compra_totem.campos) && (
+                  <form className="ayuda-form" onSubmit={(e) => e.preventDefault()}>
+                    {data.ayuda_tecnica.cancelar_compra_totem.campos.map((item, idx) => {
+                      const fieldName = typeof item === 'string' ? item : item.campo;
+                      const isTextarea = fieldName.toLowerCase().includes('motivo');
+                      return (
+                        <div key={item.id || idx} className="form-group">
+                          <label>{fieldName}</label>
+                          {isTextarea ? (
+                            <textarea 
+                              placeholder={`Ingresa ${fieldName.toLowerCase()}`}
+                              rows="3"
+                            />
+                          ) : (
+                            <input 
+                              type="text" 
+                              placeholder={`Ingresa ${fieldName.toLowerCase()}`}
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
+                    <button type="submit" className="btn-primary">
+                      Enviar Solicitud
+                    </button>
+                  </form>
                 )}
               </div>
             )}
@@ -789,6 +811,26 @@ const AyudaContent = ({ data }) => {
               <div className="ayuda-item">
                 <h4>Solicitar Nuevos Rollos</h4>
                 <p>{data.ayuda_tecnica.solicitar_nuevos_rollos}</p>
+                <form className="ayuda-form" onSubmit={(e) => e.preventDefault()}>
+                  <div className="form-group">
+                    <label>Cantidad de Rollos</label>
+                    <input 
+                      type="number" 
+                      min="1"
+                      placeholder="Ingresa la cantidad requerida"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Lugar o Evento</label>
+                    <input 
+                      type="text" 
+                      placeholder="Ingresa el lugar o nombre del evento"
+                    />
+                  </div>
+                  <button type="submit" className="btn-primary">
+                    Solicitar Rollos
+                  </button>
+                </form>
               </div>
             )}
           </div>
