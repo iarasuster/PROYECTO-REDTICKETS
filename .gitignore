@@ -70,12 +70,12 @@ Thumbs.db
 # PRODUCTION
 # ========================================
 *.pem
-/media
+# /media # COMENTADO: trackeamos imágenes en Git
 
 # ========================================
 # PAYLOAD CMS
 # ========================================
-/backend/media
+# /backend/media # COMENTADO: trackeamos imágenes en Git
 /backend/.next
 /backend/build
 
