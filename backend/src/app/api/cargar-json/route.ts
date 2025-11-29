@@ -93,13 +93,25 @@ export async function POST() {
             { titulo: "Paso 4", detalle: "Finalizar transacción y recibir tickets por email" }
           ]
         },
-        recepcion_tickets: {
-          descripcion: "Cuando la compra se confirme, recibirás un correo electrónico con un archivo PDF por cada entrada.",
-          instrucciones: [
-            { paso: "Iniciá sesión con tu usuario y contraseña" },
-            { paso: "En el menú superior, hacé clic en tu nombre" },
-            { paso: "Entrá a 'Mis Tickets' para ver todas tus entradas" },
-            { paso: "Podés descargarlas, imprimirlas o guardarlas en tu teléfono" }
+        datos_importantes: {
+          faqs: [
+            { 
+              pregunta: "¿Cómo recibo mis tickets?", 
+              respuesta: {
+                root: {
+                  type: 'root',
+                  children: [{
+                    type: 'paragraph',
+                    children: [{ text: "Cuando la compra se confirme, recibirás un correo electrónico con un archivo PDF por cada entrada.", type: 'text', version: 1 }],
+                    version: 1
+                  }],
+                  direction: 'ltr' as const,
+                  format: '' as const,
+                  indent: 0,
+                  version: 1
+                }
+              }
+            },
           ]
         },
         como_vender: {
@@ -194,7 +206,7 @@ export async function POST() {
         titulo: contenidoCompleto.ayuda.titulo,
         descripcion: contenidoCompleto.ayuda.descripcion,
         como_comprar: contenidoCompleto.ayuda.como_comprar,
-        recepcion_tickets: contenidoCompleto.ayuda.recepcion_tickets,
+        datos_importantes: contenidoCompleto.ayuda.datos_importantes,
         como_vender: contenidoCompleto.ayuda.como_vender,
       },
     })

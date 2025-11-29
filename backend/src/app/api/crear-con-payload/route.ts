@@ -134,13 +134,59 @@ export async function POST() {
             { titulo: 'Paso 4', detalle: 'Recibir tickets por email' },
           ],
         },
-        recepcion_tickets: {
-          descripcion: 'Recibirás un PDF por cada entrada.',
-          instrucciones: [
-            { paso: 'Iniciá sesión en tu cuenta' },
-            { paso: 'Hacé clic en tu nombre' },
-            { paso: 'Entrá a Mis Tickets' },
-            { paso: 'Descargá o imprimí' },
+        datos_importantes: {
+          faqs: [
+            { 
+              pregunta: '¿Cómo recibo mis tickets?', 
+              respuesta: {
+                root: {
+                  type: 'root',
+                  children: [{
+                    type: 'paragraph',
+                    children: [{ text: 'Recibirás un PDF por cada entrada en tu email.', type: 'text', version: 1 }],
+                    version: 1
+                  }],
+                  direction: 'ltr' as const,
+                  format: '' as const,
+                  indent: 0,
+                  version: 1
+                }
+              }
+            },
+            { 
+              pregunta: '¿Qué debo llevar al evento?', 
+              respuesta: {
+                root: {
+                  type: 'root',
+                  children: [{
+                    type: 'paragraph',
+                    children: [{ text: 'Puedes imprimir tu entrada o guardar el código en tu smartphone.', type: 'text', version: 1 }],
+                    version: 1
+                  }],
+                  direction: 'ltr' as const,
+                  format: '' as const,
+                  indent: 0,
+                  version: 1
+                }
+              }
+            },
+            { 
+              pregunta: '¿Qué pasa si se cancela?', 
+              respuesta: {
+                root: {
+                  type: 'root',
+                  children: [{
+                    type: 'paragraph',
+                    children: [{ text: 'Se reintegrará el importe de las entradas.', type: 'text', version: 1 }],
+                    version: 1
+                  }],
+                  direction: 'ltr' as const,
+                  format: '' as const,
+                  indent: 0,
+                  version: 1
+                }
+              }
+            },
           ],
         },
         como_vender: {
