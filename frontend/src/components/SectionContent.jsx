@@ -204,65 +204,53 @@ const InicioContent = ({ data }) => {
       <div className="sections-preview animate-item">
         <h2 className="preview-title">Descubre RedTickets</h2>
 
-        <div className="preview-grid">
-          {/* Sobre Nosotros Preview */}
-          <a href="/seccion/sobre-nosotros" className="preview-card">
-            <div className="preview-icon">
-              <i className="fas fa-users"></i>
+        <div className="preview-list">
+          {/* Sobre Nosotros */}
+          <a href="/seccion/sobre-nosotros" className="preview-item">
+            <div className="preview-header">
+              <h3>Sobre Nosotros</h3>
+              <span className="preview-arrow">→</span>
             </div>
-            <h3>Sobre Nosotros</h3>
             <p>
               Más de 10 años conectando personas con experiencias únicas. Conoce
-              nuestro equipo y trayectoria.
+              nuestro equipo, nuestra historia y la pasión que nos impulsa día a día.
             </p>
-            <span className="preview-link">
-              Ver más <i className="fas fa-arrow-right"></i>
-            </span>
           </a>
 
-          {/* Servicios Preview */}
-          <a href="/seccion/servicios" className="preview-card">
-            <div className="preview-icon">
-              <i className="fas fa-cogs"></i>
+          {/* Servicios */}
+          <a href="/seccion/servicios" className="preview-item">
+            <div className="preview-header">
+              <h3>Servicios</h3>
+              <span className="preview-arrow">→</span>
             </div>
-            <h3>Servicios</h3>
             <p>
-              Venta de entradas, control de acceso, hard ticketing y más.
-              Soluciones completas para tu evento.
+              Venta de entradas, control de acceso, hard ticketing, streaming y más.
+              Soluciones completas e integrales para tu evento.
             </p>
-            <span className="preview-link">
-              Ver más <i className="fas fa-arrow-right"></i>
-            </span>
           </a>
 
-          {/* Comunidad Preview */}
-          <a href="/seccion/comunidad" className="preview-card">
-            <div className="preview-icon">
-              <i className="fas fa-heart"></i>
+          {/* Comunidad */}
+          <a href="/seccion/comunidad" className="preview-item">
+            <div className="preview-header">
+              <h3>Comunidad</h3>
+              <span className="preview-arrow">→</span>
             </div>
-            <h3>Comunidad</h3>
             <p>
               Lee testimonios de productores y asistentes que confían en
-              RedTickets para sus eventos.
+              RedTickets para crear experiencias inolvidables.
             </p>
-            <span className="preview-link">
-              Ver más <i className="fas fa-arrow-right"></i>
-            </span>
           </a>
 
-          {/* Ayuda Preview */}
-          <a href="/seccion/ayuda" className="preview-card">
-            <div className="preview-icon">
-              <i className="fas fa-question-circle"></i>
+          {/* Ayuda */}
+          <a href="/seccion/ayuda" className="preview-item">
+            <div className="preview-header">
+              <h3>Centro de Ayuda</h3>
+              <span className="preview-arrow">→</span>
             </div>
-            <h3>Centro de Ayuda</h3>
             <p>
-              ¿Dudas sobre cómo comprar o vender? Encuentra respuestas a las
-              preguntas más frecuentes.
+              ¿Dudas sobre cómo comprar o vender entradas? Encuentra respuestas a las
+              preguntas más frecuentes y soporte personalizado.
             </p>
-            <span className="preview-link">
-              Ver más <i className="fas fa-arrow-right"></i>
-            </span>
           </a>
         </div>
       </div>
@@ -644,11 +632,11 @@ const AyudaContent = ({ data }) => {
   const [activeTab, setActiveTab] = useState("comprar");
 
   const tabs = [
-    { id: "comprar", label: "Cómo Comprar", icon: "fa-shopping-cart" },
-    { id: "vender", label: "Cómo Vender", icon: "fa-money-bill-wave" },
-    { id: "recepcion", label: "Recepción", icon: "fa-envelope" },
-    { id: "politicas", label: "Políticas", icon: "fa-file-contract" },
-    { id: "tecnica", label: "Ayuda Técnica", icon: "fa-tools" },
+    { id: "comprar", label: "Cómo Comprar" },
+    { id: "vender", label: "Cómo Vender" },
+    { id: "recepcion", label: "Recepción" },
+    { id: "politicas", label: "Políticas" },
+    { id: "tecnica", label: "Ayuda Técnica" },
   ];
 
   return (
@@ -661,7 +649,6 @@ const AyudaContent = ({ data }) => {
             className={`tab-button ${activeTab === tab.id ? "active" : ""}`}
             onClick={() => setActiveTab(tab.id)}
           >
-            <i className={`fas ${tab.icon} tab-icon`}></i>
             {tab.label}
           </button>
         ))}
@@ -680,6 +667,7 @@ const AyudaContent = ({ data }) => {
                     <div className="paso-number">{idx + 1}</div>
                     <div className="paso-content">
                       <h4>{paso.titulo}</h4>
+                      {paso.detalle && <p>{paso.detalle}</p>}
                     </div>
                   </div>
                 ))}
@@ -755,19 +743,52 @@ const AyudaContent = ({ data }) => {
         {activeTab === "tecnica" && data.ayuda_tecnica && (
           <div className="tab-panel animate-in">
             <h3>Ayuda Técnica</h3>
-            <p className="intro-text">{data.ayuda_tecnica.descripcion}</p>
-            {data.ayuda_tecnica.contacto && (
+            
+            {/* Uso del Tótem */}
+            {data.ayuda_tecnica.uso_totem && (
               <div className="ayuda-item">
-                <h4>Contacto</h4>
-                <p>
-                  <strong>Email:</strong> {data.ayuda_tecnica.contacto.email}
-                </p>
-                {data.ayuda_tecnica.contacto.telefono && (
-                  <p>
-                    <strong>Teléfono:</strong>{" "}
-                    {data.ayuda_tecnica.contacto.telefono}
+                <h4>Uso del Tótem</h4>
+                <p>{data.ayuda_tecnica.uso_totem.descripcion}</p>
+                {data.ayuda_tecnica.uso_totem.video && (
+                  <p className="video-link">
+                    <i className="fas fa-play-circle"></i> {data.ayuda_tecnica.uso_totem.video}
                   </p>
                 )}
+              </div>
+            )}
+
+            {/* Cambio de Rollo */}
+            {data.ayuda_tecnica.cambio_rollo && (
+              <div className="ayuda-item">
+                <h4>Cambio de Rollo</h4>
+                <ol className="instrucciones-lista">
+                  {data.ayuda_tecnica.cambio_rollo.map((paso, idx) => (
+                    <li key={idx}>{paso}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {/* Cancelar Compra en Tótem */}
+            {data.ayuda_tecnica.cancelar_compra_totem && (
+              <div className="ayuda-item">
+                <h4>Cancelar Compra en Tótem</h4>
+                <p>{data.ayuda_tecnica.cancelar_compra_totem.descripcion}</p>
+                {data.ayuda_tecnica.cancelar_compra_totem.campos && (
+                  <ul className="campos-lista">
+                    {data.ayuda_tecnica.cancelar_compra_totem.campos.map((campo, idx) => (
+                      <li key={idx}>{campo}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+
+            {/* Solicitar Rollos */}
+            {data.ayuda_tecnica.solicitar_nuevos_rollos && (
+              <div className="ayuda-item">
+                <h4>Solicitar Nuevos Rollos</h4>
+                <p>{data.ayuda_tecnica.solicitar_nuevos_rollos}</p>
               </div>
             )}
           </div>
