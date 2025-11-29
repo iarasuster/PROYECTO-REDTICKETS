@@ -292,22 +292,22 @@ export const ContenidoBlog: CollectionConfig = {
       ],
     },
 
-    // ===== AYUDA - RECEPCIÓN TICKETS =====
+    // ===== AYUDA - DATOS IMPORTANTES =====
     {
-      name: 'recepcion_tickets',
+      name: 'datos_importantes',
       type: 'group',
-      label: 'Recepción de Tickets',
+      label: 'Datos Importantes',
       admin: {
         condition: (data) => data.seccion === 'ayuda',
       },
       fields: [
-        { name: 'descripcion', type: 'textarea', label: 'Descripción' },
         {
-          name: 'instrucciones',
+          name: 'faqs',
           type: 'array',
-          label: 'Instrucciones',
+          label: 'Preguntas Frecuentes',
           fields: [
-            { name: 'paso', type: 'text', label: 'Paso' },
+            { name: 'pregunta', type: 'text', label: 'Pregunta' },
+            { name: 'respuesta', type: 'richText', label: 'Respuesta' },
           ],
         },
       ],
