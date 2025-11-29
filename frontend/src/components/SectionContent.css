@@ -1563,6 +1563,55 @@
   font-weight: 600;
 }
 
+/* ========== 📋 FAQ ITEMS ========== */
+.faq-item {
+  margin-bottom: 2.5rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border-left: 3px solid #ff6600;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-left-width: 5px;
+}
+
+.faq-item:last-child {
+  margin-bottom: 0;
+}
+
+.faq-item h4 {
+  color: #ff6600;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.faq-item p {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.faq-item p:last-child {
+  margin-bottom: 0;
+}
+
+.faq-item .nota {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(255, 102, 0, 0.1);
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.faq-item .nota strong {
+  color: #ff6600;
+}
+
 .campos-lista {
   list-style: none;
   padding-left: 0;
