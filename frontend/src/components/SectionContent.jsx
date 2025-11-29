@@ -696,51 +696,41 @@ const AyudaContent = ({ data }) => {
           </div>
         )}
 
-        {activeTab === "datos" && (
+        {activeTab === "datos" && data.datos_importantes && (
           <div className="tab-panel animate-in">
             <h3>Datos Importantes</h3>
             
-            <div className="faq-item">
-              <h4>¿Cómo recibo mis tickets?</h4>
-              <p>
-                Una vez que la compra se haya confirmado, recibirás un correo electrónico 
-                con un archivo PDF por entrada.
-              </p>
-              <p>
-                Además del correo, en cualquier momento puedes ingresar en RedTickets con 
-                el mail de compra y contraseña, entrar en tu menú de usuario (clickeando tu nombre) 
-                y dirigirte a «Mis Tickets». Allí encontrarás todos tus tickets, incluso los de 
-                los eventos pasados. Los puedes descargar, imprimir o guardar en tu teléfono.
-              </p>
-              <p className="nota">
-                <strong>Nota:</strong> el ticket se mostrará como un PDF en una ventana externa. 
-                Debes permitir las ventanas emergentes en tu navegador.
-              </p>
-            </div>
-
-            <div className="faq-item">
-              <h4>¿Qué debo llevar para poder entrar el día del evento?</h4>
-              <p>
-                Para ingresar al evento puedes imprimir tu entrada o guardar el código en tu smartphone.
-              </p>
-              <p>
-                De esta forma la persona responsable del acceso podrá escanear tu entrada. 
-                Ten en cuenta que cada código es único, y no podrás pasar dos veces con el mismo código, 
-                por lo que te recomendamos seas prudente con el mismo.
-              </p>
-            </div>
-
-            <div className="faq-item">
-              <h4>¿Qué pasa si el evento se cancela?</h4>
-              <p>
-                La producción del evento es responsabilidad del organizador.
-              </p>
-              <p>
-                Si el mismo se cancelara, se reintegrará el importe de las entradas. 
-                Nos comunicaremos por medio del correo electrónico con el que te hayas registrado 
-                en RedTickets para informarte de la forma en el que se realizará.
-              </p>
-            </div>
+            {data.datos_importantes.faqs && Array.isArray(data.datos_importantes.faqs) && data.datos_importantes.faqs.length > 0 ? (
+              data.datos_importantes.faqs.map((faq, idx) => (
+                <div key={idx} className="faq-item">
+                  <h4>{faq.pregunta}</h4>
+                  <div className="rich-text-content">
+                    {faq.respuesta && Array.isArray(faq.respuesta) && 
+                      faq.respuesta.map((block, blockIdx) => {
+                        if (block.type === 'paragraph' && block.children) {
+                          return (
+                            <p key={blockIdx}>
+                              {block.children.map((child, childIdx) => {
+                                if (child.bold) {
+                                  return <strong key={childIdx}>{child.text}</strong>;
+                                }
+                                return child.text;
+                              }).reduce((prev, curr, idx) => 
+                                idx === 0 ? [curr] : [...prev, curr], 
+                                []
+                              )}
+                            </p>
+                          );
+                        }
+                        return null;
+                      })
+                    }
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No hay datos importantes disponibles.</p>
+            )}
           </div>
         )}
 

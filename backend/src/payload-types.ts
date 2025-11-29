@@ -271,11 +271,25 @@ export interface ContenidoBlog {
         }[]
       | null;
   };
-  recepcion_tickets?: {
-    descripcion?: string | null;
-    instrucciones?:
+  datos_importantes?: {
+    faqs?:
       | {
-          paso?: string | null;
+          pregunta?: string | null;
+          respuesta?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
           id?: string | null;
         }[]
       | null;
@@ -577,14 +591,14 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
               id?: T;
             };
       };
-  recepcion_tickets?:
+  datos_importantes?:
     | T
     | {
-        descripcion?: T;
-        instrucciones?:
+        faqs?:
           | T
           | {
-              paso?: T;
+              pregunta?: T;
+              respuesta?: T;
               id?: T;
             };
       };

@@ -14,7 +14,6 @@
  */
 
 import { getPayload } from 'payload'
-import config from './src/payload.config.ts'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -26,8 +25,10 @@ async function seedContenido() {
   console.log('🌱 Iniciando seed de contenido del blog...\n')
 
   try {
-    // Inicializar Payload
-    const payload = await getPayload({ config })
+    // Inicializar Payload sin config (usa el del entorno)
+    const payload = await getPayload({
+      config: await import('./src/payload.config.ts').then(m => m.default)
+    })
     console.log('✅ Payload inicializado correctamente\n')
 
     // Leer el archivo JSON

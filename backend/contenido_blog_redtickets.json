@@ -175,16 +175,21 @@
         }
       ]
     },
-    "recepcion_tickets": {
-      "descripcion": "Cuando la compra se confirme, recibirás un correo electrónico con un archivo PDF por cada entrada. También podés acceder a tus tickets desde tu cuenta de RedTickets.",
-      "instrucciones": [
-        "Iniciá sesión con tu usuario y contraseña.",
-        "En el menú superior, hacé clic en tu nombre.",
-        "Entrá a 'Mis Tickets' para ver todas tus entradas, incluso las de eventos pasados.",
-        "Podés descargarlas, imprimirlas o guardarlas en tu teléfono."
-      ],
-      "nota": "El ticket se abrirá como un archivo PDF en una ventana externa, por lo que debés permitir las ventanas emergentes en tu navegador.",
-      "asistencia": "Si luego de confirmar el pago no recibís el ticket ni lo ves en tu cuenta, escribinos a hola@redtickets.uy para solicitar asistencia."
+    "datos_importantes": {
+      "faqs": [
+        {
+          "pregunta": "¿Cómo recibo mis tickets?",
+          "respuesta": "Una vez que la compra se haya confirmado, recibirás un correo electrónico con un archivo PDF por entrada.\n\nAdemás del correo, en cualquier momento puedes ingresar en RedTickets con el mail de compra y contraseña, entrar en tu menú de usuario (clickeando tu nombre) y dirigirte a «Mis Tickets». Allí encontrarás todos tus tickets, incluso los de los eventos pasados. Los puedes descargar, imprimir o guardar en tu teléfono.\n\n**Nota:** el ticket se mostrará como un PDF en una ventana externa. Debes permitir las ventanas emergentes en tu navegador."
+        },
+        {
+          "pregunta": "¿Qué debo llevar para poder entrar el día del evento?",
+          "respuesta": "Para ingresar al evento puedes imprimir tu entrada o guardar el código en tu smartphone.\n\nDe esta forma la persona responsable del acceso podrá escanear tu entrada. Ten en cuenta que cada código es único, y no podrás pasar dos veces con el mismo código, por lo que te recomendamos seas prudente con el mismo."
+        },
+        {
+          "pregunta": "¿Qué pasa si el evento se cancela?",
+          "respuesta": "La producción del evento es responsabilidad del organizador.\n\nSi el mismo se cancelara, se reintegrará el importe de las entradas. Nos comunicaremos por medio del correo electrónico con el que te hayas registrado en RedTickets para informarte de la forma en el que se realizará."
+        }
+      ]
     },
     "acceso_evento": {
       "descripcion": "Para ingresar al evento, presentá tu entrada en formato digital o impreso. Podés mostrar el código QR desde tu celular o llevar la entrada impresa. Cada código es único y solo puede usarse una vez. Te recomendamos no compartirlo."
