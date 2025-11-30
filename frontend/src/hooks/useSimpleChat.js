@@ -145,6 +145,15 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
         assistantMessage.content = parsedMessage.text;
         assistantMessage.actions = parsedMessage.actions;
 
+        // 🚫 Si el contenido está vacío y no hay acciones, no mostrar el mensaje
+        if (!parsedMessage.text.trim() && parsedMessage.actions.length === 0) {
+          console.warn("⚠️ Mensaje vacío recibido, no se mostrará");
+          // Remover el mensaje vacío
+          setMessages((prev) => prev.slice(0, -1));
+          setStatus("ready");
+          return;
+        }
+
         // Actualizar mensaje final con acciones parseadas
         setMessages((prev) => {
           const newMessages = [...prev];

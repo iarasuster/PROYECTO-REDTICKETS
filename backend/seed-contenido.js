@@ -27,7 +27,7 @@ async function seedContenido() {
   try {
     // Inicializar Payload sin config (usa el del entorno)
     const payload = await getPayload({
-      config: await import('./src/payload.config.ts').then(m => m.default)
+      config: await import('./src/payload.config.ts').then((m) => m.default),
     })
     console.log('✅ Payload inicializado correctamente\n')
 

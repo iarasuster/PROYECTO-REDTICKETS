@@ -30,7 +30,7 @@ export default async function HomePage() {
             Sistema de Gestión de Contenidos
           </h1>
           <p className="hero-subtitle">
-            Backend headless para el blog corporativo de RedTickets
+            Base de datos del blog corporativo de RedTickets
           </p>
           
           {user && (
@@ -59,7 +59,7 @@ export default async function HomePage() {
             </a>
             <a
               className="btn btn-secondary"
-              href="http://localhost:5173"
+              href="https://redtickets-frontend.onrender.com"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -68,7 +68,7 @@ export default async function HomePage() {
                 <polyline points="15 3 21 3 21 9"></polyline>
                 <line x1="10" y1="14" x2="21" y2="3"></line>
               </svg>
-              Ver Frontend
+              Ver Blog
             </a>
           </div>
         </div>
@@ -181,7 +181,7 @@ export default async function HomePage() {
             <img src="/ISOTIPO.svg" alt="RedTickets" />
           </div>
           <p className="footer-text">
-            © {new Date().getFullYear()} RedTickets. Sistema de gestión de contenidos headless.
+            © {new Date().getFullYear()} RedTickets. Sistema de gestión de contenidos.
           </p>
           <div className="footer-links">
             <a href="mailto:hola@redtickets.uy">hola@redtickets.uy</a>

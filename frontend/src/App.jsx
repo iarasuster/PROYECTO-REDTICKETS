@@ -60,7 +60,14 @@ function App() {
             </nav>
 
             {/* Botón CTA principal */}
-            <button className="cta-button">Ver eventos</button>
+            <a
+              className="cta-button"
+              href="https://redtickets.uy/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ver eventos
+            </a>
 
             {/* Hamburger para móvil */}
             <button

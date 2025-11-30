@@ -350,6 +350,21 @@ export const ContenidoBlog: CollectionConfig = {
       ],
     },
 
+    // ===== AYUDA - DEVOLUCIONES =====
+    {
+      name: 'devoluciones',
+      type: 'group',
+      label: 'Devoluciones',
+      admin: {
+        condition: (data) => data.seccion === 'ayuda',
+      },
+      fields: [
+        { name: 'condiciones', type: 'textarea', label: 'Condiciones' },
+        { name: 'medio_devolucion', type: 'textarea', label: 'Medio de Devolución' },
+        { name: 'tiempo_estimado', type: 'textarea', label: 'Tiempo Estimado' },
+      ],
+    },
+
     // ===== AYUDA - AYUDA TÉCNICA (TÓTEM) =====
     {
       name: 'ayuda_tecnica',

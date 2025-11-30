@@ -309,6 +309,11 @@ export interface ContenidoBlog {
     reprogramacion?: string | null;
     imposibilidad_asistencia?: string | null;
   };
+  devoluciones?: {
+    condiciones?: string | null;
+    medio_devolucion?: string | null;
+    tiempo_estimado?: string | null;
+  };
   ayuda_tecnica?: {
     uso_totem?: {
       descripcion?: string | null;
@@ -620,6 +625,13 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
         cancelacion_eventos?: T;
         reprogramacion?: T;
         imposibilidad_asistencia?: T;
+      };
+  devoluciones?:
+    | T
+    | {
+        condiciones?: T;
+        medio_devolucion?: T;
+        tiempo_estimado?: T;
       };
   ayuda_tecnica?:
     | T

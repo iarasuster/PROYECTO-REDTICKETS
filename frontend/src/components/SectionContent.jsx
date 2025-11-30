@@ -213,7 +213,8 @@ const InicioContent = ({ data }) => {
             </div>
             <p>
               Más de 10 años conectando personas con experiencias únicas. Conoce
-              nuestro equipo, nuestra historia y la pasión que nos impulsa día a día.
+              nuestro equipo, nuestra historia y la pasión que nos impulsa día a
+              día.
             </p>
           </a>
 
@@ -224,8 +225,8 @@ const InicioContent = ({ data }) => {
               <span className="preview-arrow">→</span>
             </div>
             <p>
-              Venta de entradas, control de acceso, hard ticketing, streaming y más.
-              Soluciones completas e integrales para tu evento.
+              Venta de entradas, control de acceso, hard ticketing, streaming y
+              más. Soluciones completas e integrales para tu evento.
             </p>
           </a>
 
@@ -248,8 +249,8 @@ const InicioContent = ({ data }) => {
               <span className="preview-arrow">→</span>
             </div>
             <p>
-              ¿Dudas sobre cómo comprar o vender entradas? Encuentra respuestas a las
-              preguntas más frecuentes y soporte personalizado.
+              ¿Dudas sobre cómo comprar o vender entradas? Encuentra respuestas
+              a las preguntas más frecuentes y soporte personalizado.
             </p>
           </a>
         </div>
@@ -636,6 +637,7 @@ const AyudaContent = ({ data }) => {
     { id: "vender", label: "Cómo Vender" },
     { id: "datos", label: "Datos Importantes" },
     { id: "politicas", label: "Políticas" },
+    { id: "devoluciones", label: "Devoluciones" },
     { id: "tecnica", label: "Ayuda Técnica" },
   ];
 
@@ -699,32 +701,34 @@ const AyudaContent = ({ data }) => {
         {activeTab === "datos" && data.datos_importantes && (
           <div className="tab-panel animate-in">
             <h3>Datos Importantes</h3>
-            
-            {data.datos_importantes.faqs && Array.isArray(data.datos_importantes.faqs) && data.datos_importantes.faqs.length > 0 ? (
+
+            {data.datos_importantes.faqs &&
+            Array.isArray(data.datos_importantes.faqs) &&
+            data.datos_importantes.faqs.length > 0 ? (
               data.datos_importantes.faqs.map((faq, idx) => (
                 <div key={idx} className="faq-item">
                   <h4>{faq.pregunta}</h4>
                   <div className="rich-text-content">
-                    {faq.respuesta && Array.isArray(faq.respuesta) && 
-                      faq.respuesta.map((block, blockIdx) => {
-                        if (block.type === 'paragraph' && block.children) {
+                    {faq.respuesta &&
+                      faq.respuesta.root &&
+                      faq.respuesta.root.children &&
+                      faq.respuesta.root.children.map((block, blockIdx) => {
+                        if (block.type === "paragraph" && block.children) {
                           return (
                             <p key={blockIdx}>
                               {block.children.map((child, childIdx) => {
                                 if (child.bold) {
-                                  return <strong key={childIdx}>{child.text}</strong>;
+                                  return (
+                                    <strong key={childIdx}>{child.text}</strong>
+                                  );
                                 }
-                                return child.text;
-                              }).reduce((prev, curr, idx) => 
-                                idx === 0 ? [curr] : [...prev, curr], 
-                                []
-                              )}
+                                return <span key={childIdx}>{child.text}</span>;
+                              })}
                             </p>
                           );
                         }
                         return null;
-                      })
-                    }
+                      })}
                   </div>
                 </div>
               ))
@@ -758,10 +762,34 @@ const AyudaContent = ({ data }) => {
           </div>
         )}
 
+        {activeTab === "devoluciones" && data.devoluciones && (
+          <div className="tab-panel animate-in">
+            <h3>Devoluciones</h3>
+            {data.devoluciones.condiciones && (
+              <div className="politica-item">
+                <h4>Condiciones</h4>
+                <p>{data.devoluciones.condiciones}</p>
+              </div>
+            )}
+            {data.devoluciones.medio_devolucion && (
+              <div className="politica-item">
+                <h4>Medio de Devolución</h4>
+                <p>{data.devoluciones.medio_devolucion}</p>
+              </div>
+            )}
+            {data.devoluciones.tiempo_estimado && (
+              <div className="politica-item">
+                <h4>Tiempo Estimado</h4>
+                <p>{data.devoluciones.tiempo_estimado}</p>
+              </div>
+            )}
+          </div>
+        )}
+
         {activeTab === "tecnica" && data.ayuda_tecnica && (
           <div className="tab-panel animate-in">
             <h3>Ayuda Técnica</h3>
-            
+
             {/* Uso del Tótem */}
             {data.ayuda_tecnica.uso_totem && (
               <div className="ayuda-item">
@@ -769,58 +797,71 @@ const AyudaContent = ({ data }) => {
                 <p>{data.ayuda_tecnica.uso_totem.descripcion}</p>
                 {data.ayuda_tecnica.uso_totem.video && (
                   <p className="video-link">
-                    <i className="fas fa-play-circle"></i> {data.ayuda_tecnica.uso_totem.video}
+                    <i className="fas fa-play-circle"></i>{" "}
+                    {data.ayuda_tecnica.uso_totem.video}
                   </p>
                 )}
               </div>
             )}
 
             {/* Cambio de Rollo */}
-            {data.ayuda_tecnica.cambio_rollo && Array.isArray(data.ayuda_tecnica.cambio_rollo) && (
-              <div className="ayuda-item">
-                <h4>Cambio de Rollo</h4>
-                <ol className="instrucciones-lista">
-                  {data.ayuda_tecnica.cambio_rollo.map((item, idx) => (
-                    <li key={item.id || idx}>
-                      {typeof item === 'string' ? item : item.paso}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            )}
+            {data.ayuda_tecnica.cambio_rollo &&
+              Array.isArray(data.ayuda_tecnica.cambio_rollo) && (
+                <div className="ayuda-item">
+                  <h4>Cambio de Rollo</h4>
+                  <ol className="instrucciones-lista">
+                    {data.ayuda_tecnica.cambio_rollo.map((item, idx) => (
+                      <li key={item.id || idx}>
+                        {typeof item === "string" ? item : item.paso}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
 
             {/* Cancelar Compra en Tótem */}
             {data.ayuda_tecnica.cancelar_compra_totem && (
               <div className="ayuda-item">
                 <h4>Cancelar Compra en Tótem</h4>
                 <p>{data.ayuda_tecnica.cancelar_compra_totem.descripcion}</p>
-                {data.ayuda_tecnica.cancelar_compra_totem.campos && Array.isArray(data.ayuda_tecnica.cancelar_compra_totem.campos) && (
-                  <form className="ayuda-form" onSubmit={(e) => e.preventDefault()}>
-                    {data.ayuda_tecnica.cancelar_compra_totem.campos.map((item, idx) => {
-                      const fieldName = typeof item === 'string' ? item : item.campo;
-                      const isTextarea = fieldName.toLowerCase().includes('motivo');
-                      return (
-                        <div key={item.id || idx} className="form-group">
-                          <label>{fieldName}</label>
-                          {isTextarea ? (
-                            <textarea 
-                              placeholder={`Ingresa ${fieldName.toLowerCase()}`}
-                              rows="3"
-                            />
-                          ) : (
-                            <input 
-                              type="text" 
-                              placeholder={`Ingresa ${fieldName.toLowerCase()}`}
-                            />
-                          )}
-                        </div>
-                      );
-                    })}
-                    <button type="submit" className="btn-primary">
-                      Enviar Solicitud
-                    </button>
-                  </form>
-                )}
+                {data.ayuda_tecnica.cancelar_compra_totem.campos &&
+                  Array.isArray(
+                    data.ayuda_tecnica.cancelar_compra_totem.campos
+                  ) && (
+                    <form
+                      className="ayuda-form"
+                      onSubmit={(e) => e.preventDefault()}
+                    >
+                      {data.ayuda_tecnica.cancelar_compra_totem.campos.map(
+                        (item, idx) => {
+                          const fieldName =
+                            typeof item === "string" ? item : item.campo;
+                          const isTextarea = fieldName
+                            .toLowerCase()
+                            .includes("motivo");
+                          return (
+                            <div key={item.id || idx} className="form-group">
+                              <label>{fieldName}</label>
+                              {isTextarea ? (
+                                <textarea
+                                  placeholder={`Ingresa ${fieldName.toLowerCase()}`}
+                                  rows="3"
+                                />
+                              ) : (
+                                <input
+                                  type="text"
+                                  placeholder={`Ingresa ${fieldName.toLowerCase()}`}
+                                />
+                              )}
+                            </div>
+                          );
+                        }
+                      )}
+                      <button type="submit" className="btn-primary">
+                        Enviar Solicitud
+                      </button>
+                    </form>
+                  )}
               </div>
             )}
 
@@ -829,19 +870,22 @@ const AyudaContent = ({ data }) => {
               <div className="ayuda-item">
                 <h4>Solicitar Nuevos Rollos</h4>
                 <p>{data.ayuda_tecnica.solicitar_nuevos_rollos}</p>
-                <form className="ayuda-form" onSubmit={(e) => e.preventDefault()}>
+                <form
+                  className="ayuda-form"
+                  onSubmit={(e) => e.preventDefault()}
+                >
                   <div className="form-group">
                     <label>Cantidad de Rollos</label>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       min="1"
                       placeholder="Ingresa la cantidad requerida"
                     />
                   </div>
                   <div className="form-group">
                     <label>Lugar o Evento</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="Ingresa el lugar o nombre del evento"
                     />
                   </div>
