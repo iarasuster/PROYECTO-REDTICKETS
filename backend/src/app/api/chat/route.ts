@@ -187,10 +187,12 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: Request) {
+  console.log('🔵 [CHAT] Request recibido:', new Date().toISOString());
+  
   try {
     // 🔍 Debug: verificar que la API key existe
     if (!process.env.GROQ_API_KEY) {
-      console.error('❌ GROQ_API_KEY no está configurada en las variables de entorno')
+      console.error('❌ [CHAT] GROQ_API_KEY no está configurada en las variables de entorno')
       return new Response(JSON.stringify({ 
         error: 'API key no configurada. Contacta al administrador.' 
       }), { 
@@ -200,35 +202,33 @@ export async function POST(req: Request) {
     }
 
     const { messages } = await req.json()
+    console.log('📝 [CHAT] Mensajes recibidos:', messages?.length || 0);
 
     // Verificar que hay mensajes
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      console.error('❌ No se recibieron mensajes')
+      console.error('❌ [CHAT] No se recibieron mensajes')
       return new Response(JSON.stringify({ error: 'No messages provided' }), { 
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
 
-    console.log('📤 Enviando request a Groq con', messages.length, 'mensajes')
+    console.log('📤 [CHAT] Enviando request a Groq...')
 
-    // 🔥 OBTENER CONTENIDO DE PAYLOAD
-    console.log('📚 Obteniendo contenido de Payload...')
-    const payloadContext = await getPayloadContent()
-    console.log('✅ Contenido de Payload obtenido:', payloadContext.substring(0, 200) + '...')
-
-    // Construir prompt del sistema con contexto de Payload
-    const systemPromptWithContext = SYSTEM_PROMPT + payloadContext
+    // 🔥 Usar solo SYSTEM_PROMPT estático (sin cargar Payload cada vez)
+    // Esto acelera la respuesta considerablemente
 
     // Usar streamText SIN tools (más simple y compatible)
+    const startTime = Date.now();
     const result = await streamText({
       model: groq('llama-3.1-8b-instant'),
-      system: systemPromptWithContext,
+      system: SYSTEM_PROMPT,
       messages,
       temperature: 0.7,
     })
 
-    console.log('✅ Stream iniciado correctamente')
+    const groqTime = Date.now() - startTime;
+    console.log(`✅ [CHAT] Stream iniciado en ${groqTime}ms`)
 
     // Retornar streaming de texto simple
     const response = result.toTextStreamResponse()
@@ -240,10 +240,13 @@ export async function POST(req: Request) {
     
     return response
   } catch (error) {
-    console.error('❌ Error in chat API:', error)
+    console.error('❌ [CHAT] Error:', error)
+    console.error('❌ [CHAT] Stack:', error instanceof Error ? error.stack : 'No stack')
+    
     return new Response(JSON.stringify({ 
       error: 'Error al procesar el chat',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
     }), { 
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
