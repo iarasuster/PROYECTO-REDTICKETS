@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import SectionPage from "./pages/SectionPage";
 import Chatbot from "./components/Chatbot";
+import { startKeepAlive, stopKeepAlive } from "./utils/keepalive";
 import "./App.css";
 
 function App() {
@@ -27,6 +28,12 @@ function App() {
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Keep-alive para mantener backend de Render despierto
+  useEffect(() => {
+    startKeepAlive();
+    return () => stopKeepAlive();
   }, []);
 
   return (

@@ -76,6 +76,11 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
       try {
         abortControllerRef.current = new AbortController();
 
+        // ⏱️ Timeout de 30 segundos
+        const timeoutId = setTimeout(() => {
+          abortControllerRef.current.abort();
+        }, 30000);
+
         console.log("📤 Enviando mensaje a:", api);
         console.log("📝 Mensajes:", [...messages, userMessage]);
 
@@ -89,6 +94,8 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
           }),
           signal: abortControllerRef.current.signal,
         });
+
+        clearTimeout(timeoutId); // Cancelar timeout si la respuesta llega a tiempo
 
         console.log(
           "📨 Respuesta recibida:",
@@ -173,10 +180,24 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
           });
         }
       } catch (err) {
-        if (err.name !== "AbortError") {
-          console.error("Chat error:", err);
+        if (err.name === "AbortError") {
+          console.warn("⏱️ Request abortado (timeout o cancelación manual)");
+          setStatus("ready");
+          
+          // Agregar mensaje de timeout
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: (Date.now() + 1).toString(),
+              role: "assistant",
+              content:
+                "⏱️ La solicitud tardó demasiado. El servidor puede estar ocupado. Intenta de nuevo.",
+            },
+          ]);
+        } else {
+          console.error("❌ Chat error:", err);
           setError(err);
-          setStatus("error"); // ❌ Estado de error
+          setStatus("error");
 
           // Agregar mensaje de error
           setMessages((prev) => [
@@ -185,12 +206,9 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
               id: (Date.now() + 1).toString(),
               role: "assistant",
               content:
-                "Lo siento, ocurrió un error. Por favor, intenta nuevamente.",
+                "❌ Error de conexión. Verifica tu internet e intenta nuevamente.",
             },
           ]);
-        } else {
-          // Si fue abortado, volver a ready
-          setStatus("ready");
         }
       } finally {
         abortControllerRef.current = null;
