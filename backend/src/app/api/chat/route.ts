@@ -2,93 +2,15 @@ import { streamText } from 'ai'
 import { createGroq } from '@ai-sdk/groq'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { z } from 'zod'
 
 // Configurar Groq con el provider oficial
 const groq = createGroq({
   apiKey: process.env.GROQ_API_KEY || '',
 })
 
-// Función para obtener contenido de Payload
-async function getPayloadContent() {
-  try {
-    const payload = await getPayload({ config })
-    const result = await payload.find({
-      collection: 'contenido-blog',
-      limit: 100,
-    })
-
-    // Formatear el contenido como texto para el contexto
-    let context = '\n\n📚 INFORMACIÓN DE REDTICKETS:\n\n'
-    
-    result.docs.forEach(doc => {
-      context += `\n━━━ ${doc.seccion?.toUpperCase()} ━━━\n`
-      context += `Título: ${doc.titulo || 'N/A'}\n`
-      
-      if (doc.descripcion) {
-        context += `${doc.descripcion}\n`
-      }
-      
-      if (doc.estadisticas) {
-        context += `📊 Estadísticas:\n`
-        context += `- ${doc.estadisticas.transacciones} transacciones\n`
-        context += `- ${doc.estadisticas.eventos_realizados} eventos realizados\n`
-        context += `- ${doc.estadisticas.productores} productores\n`
-      }
-      
-      if (doc.fundadores?.length) {
-        context += `👥 Fundadores: ${doc.fundadores.map(f => `${f.nombre} (${f.cargo})`).join(', ')}\n`
-      }
-      
-      if (doc.equipo?.length) {
-        context += `👨‍💼 Equipo (${doc.equipo.length} personas): ${doc.equipo.map(e => e.nombre).join(', ')}\n`
-      }
-      
-      if (doc.servicios_lista?.length) {
-        context += `🎯 Servicios: ${doc.servicios_lista.map(s => s.servicio).join(', ')}\n`
-      }
-      
-      if (doc.como_comprar?.introduccion) {
-        context += `💳 Comprar: ${doc.como_comprar.introduccion}\n`
-      }
-      
-      if (doc.como_vender?.introduccion) {
-        context += `💰 Vender: ${doc.como_vender.introduccion}\n`
-      }
-      
-      if (doc.politicas) {
-        context += `📋 Políticas:\n`
-        if (doc.politicas.cancelacion_eventos) {
-          context += `- Cancelación: ${doc.politicas.cancelacion_eventos.substring(0, 150)}...\n`
-        }
-        if (doc.politicas.reprogramacion) {
-          context += `- Reprogramación: ${doc.politicas.reprogramacion}\n`
-        }
-      }
-      
-      if (doc.ayuda_tecnica) {
-        context += `🔧 Ayuda Técnica Tótem:\n`
-        if (doc.ayuda_tecnica.uso_totem?.descripcion) {
-          context += `- ${doc.ayuda_tecnica.uso_totem.descripcion}\n`
-        }
-        if (doc.ayuda_tecnica.cambio_rollo?.length) {
-          context += `- Cambio de rollo: ${doc.ayuda_tecnica.cambio_rollo.length} pasos disponibles\n`
-        }
-        if (doc.ayuda_tecnica.solicitar_nuevos_rollos) {
-          context += `- Rollos: ${doc.ayuda_tecnica.solicitar_nuevos_rollos}\n`
-        }
-      }
-      
-      if (doc.email || doc.telefono) {
-        context += `📧 Contacto: ${doc.email || ''} ${doc.telefono || ''}\n`
-      }
-    })
-    
-    return context
-  } catch (error) {
-    console.error('❌ Error al obtener contenido de Payload:', error)
-    return ''
-  }
-}
+// Función helper para obtener contenido de Payload (usada por el tool buscarEnPayload)
+// No se llama en cada request, solo cuando el modelo detecta que necesita info específica
 
 // Contexto del sistema optimizado según OpenAI Design Guidelines
 const SYSTEM_PROMPT = `Eres un asistente de RedTickets, experto en venta de tickets y eventos en Uruguay.
@@ -165,8 +87,11 @@ Tú: "Ofrecemos venta online/presencial, control de acceso con app, hard ticketi
 Usuario: "quiero vender entradas"
 Tú: "Para vender: crea tu evento en redtickets.net, promociona, controla ventas y recibe liquidación. [ACTION:navigate:ayuda|Guía para Productores]"
 
-Usuario: "quienes estan en el equipo?"
-Tú: "Tenemos un equipo multidisciplinario: fundadores expertos, desarrolladores técnicos, comerciales, soporte 24/7 y logística para todo Uruguay. [ACTION:navigate:sobre-nosotros|Conocer el Equipo]"
+Usuario: "quienes estan en el equipo?" / "quienes son?" / "que equipo tienen?"
+Tú: "Somos un equipo multidisciplinario: fundadores expertos en tecnología y eventos, desarrolladores, comerciales, soporte 24/7 y logística en todo Uruguay. [ACTION:navigate:sobre-nosotros|Conocer el Equipo]"
+
+Usuario: "que es redtickets?" / "quienes son ustedes?"
+Tú: "Somos la plataforma líder de venta de tickets en Uruguay con 4M de transacciones, 20K eventos y 500+ productores. Ofrecemos venta online/presencial, control de acceso y más. [ACTION:navigate:sobre-nosotros|Conocer RedTickets]"
 
 Usuario: "gracias" / "ok" / "si"
 Tú: "¡Con gusto! Si necesitas algo más, aquí estoy. 😊"
@@ -182,7 +107,16 @@ Tú: "¡Con gusto! Si necesitas algo más, aquí estoy. 😊"
 2. Usa los datos que tienes arriba
 3. Máximo 3 líneas de texto
 4. Un botón [ACTION] cuando sea útil
-5. Sé directo y útil, no redirijas sin responder`
+5. Sé directo y útil, no redirijas sin responder
+
+🔧 TOOL DISPONIBLE:
+Tienes acceso al tool 'buscarEnPayload'. ÚSALO OBLIGATORIAMENTE cuando:
+- Te pregunten "quiénes son" / "quién es el equipo" / "equipo" / "fundadores" / "integrantes"
+- Necesites nombres exactos de personas
+- Te pidan políticas completas palabra por palabra
+- Requieras información técnica específica no incluida arriba
+
+NO intentes adivinar o inventar nombres. Si no los sabes, usa el tool.`
 
 // Configurar CORS
 const corsHeaders = {
@@ -228,16 +162,62 @@ export async function POST(req: Request) {
 
     console.log('📤 [CHAT] Enviando request a Groq...')
 
-    // 🔥 Usar solo SYSTEM_PROMPT estático (sin cargar Payload cada vez)
-    // Esto acelera la respuesta considerablemente
-
-    // Usar streamText SIN tools (más simple y compatible)
+    // 🔥 Sistema híbrido: Prompt estático + Tool para Payload cuando se necesite
     const startTime = Date.now();
     const result = await streamText({
       model: groq('llama-3.1-8b-instant'),
       system: SYSTEM_PROMPT,
       messages,
       temperature: 0.7,
+      tools: {
+        // Tool que se activa para obtener info detallada de Payload
+        buscarEnPayload: {
+          description: 'SIEMPRE usa esta herramienta cuando te pregunten sobre: el equipo de RedTickets, fundadores, quiénes son, nombres de personas, integrantes, políticas completas, detalles técnicos exactos, o cualquier información específica que no esté explícita en el SYSTEM_PROMPT.',
+          inputSchema: z.object({
+            seccion: z.string().describe('Sección a buscar: sobre_nosotros, servicios, ayuda, comunidad, inicio, contacto'),
+            tema: z.string().optional().describe('Tema específico: equipo, fundadores, politicas, ayuda_tecnica, como_comprar, etc.'),
+          }),
+          execute: async ({ seccion, tema }: { seccion: string; tema?: string }) => {
+            console.log(`🔍 [CHAT-TOOL] Buscando en Payload: seccion=${seccion}, tema=${tema}`)
+            try {
+              const payload = await getPayload({ config })
+              const result = await payload.find({
+                collection: 'contenido-blog',
+                where: {
+                  seccion: { equals: seccion }
+                },
+                limit: 1,
+              })
+
+              if (result.docs.length === 0) {
+                return { error: 'No se encontró información para esa sección' }
+              }
+
+              const doc = result.docs[0]
+              const info: Record<string, unknown> = {}
+
+              // Extraer solo lo relevante según el tema
+              if (tema === 'equipo' || tema === 'fundadores') {
+                info.fundadores = doc.fundadores || []
+                info.equipo = doc.equipo || []
+              } else if (tema === 'politicas') {
+                info.politicas = doc.politicas || {}
+              } else if (tema === 'ayuda_tecnica') {
+                info.ayuda_tecnica = doc.ayuda_tecnica || {}
+              } else {
+                // Retornar todo el documento si no se especifica tema
+                return doc
+              }
+
+              console.log(`✅ [CHAT-TOOL] Información encontrada`)
+              return info
+            } catch (error) {
+              console.error('❌ [CHAT-TOOL] Error:', error)
+              return { error: 'No pude acceder a la información en este momento' }
+            }
+          }
+        }
+      },
     })
 
     const groqTime = Date.now() - startTime;
