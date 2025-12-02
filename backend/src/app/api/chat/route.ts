@@ -36,30 +36,43 @@ async function getEquipoInfo() {
     if (result.docs.length === 0) return ''
 
     const doc = result.docs[0]
-    let info = '\n\n👥 EQUIPO REDTICKETS (info actualizada):\n'
     
-    // Contar fundadores
-    if (doc.fundadores?.length) {
-      info += `\n🌟 FUNDADORES (${doc.fundadores.length}): `
-      const nombres = doc.fundadores.map((f: { nombre: string; cargo?: string | null }) => f.nombre)
-      info += nombres.join(', ') + '\n'
-    }
+    // Pre-procesar información del equipo
+    const numFundadores = doc.fundadores?.length || 0
+    const nombresFundadores = doc.fundadores?.map((f: { nombre: string; cargo?: string | null }) => f.nombre) || []
     
     // Agrupar equipo por área
+    const porArea: Record<string, number> = {}
+    const areasTexto: string[] = []
+    
     if (doc.equipo?.length) {
-      const porArea: Record<string, string[]> = {}
-      
       doc.equipo.forEach((e: { nombre: string; area?: string | null }) => {
         const area = e.area || 'Otros'
-        if (!porArea[area]) porArea[area] = []
-        porArea[area].push(e.nombre)
+        porArea[area] = (porArea[area] || 0) + 1
       })
       
-      info += `\n👨‍💼 EQUIPO (${doc.equipo.length} personas):\n`
-      Object.entries(porArea).forEach(([area, nombres]) => {
-        info += `• ${area}: ${nombres.join(', ')}\n`
+      // Crear texto de áreas con contadores
+      Object.entries(porArea).forEach(([area, count]) => {
+        areasTexto.push(`${area} (${count})`)
       })
     }
+    
+    const numEquipo = doc.equipo?.length || 0
+    const totalPersonas = numFundadores + numEquipo
+    
+    // Crear respuesta pre-formateada para que el modelo la use directamente
+    let info = '\n\n👥 EQUIPO REDTICKETS:\n'
+    info += `Total: ${totalPersonas} personas (${numFundadores} fundadores + ${numEquipo} equipo)\n`
+    
+    if (numFundadores > 0) {
+      info += `Fundadores: ${nombresFundadores.join(', ')}\n`
+    }
+    
+    if (areasTexto.length > 0) {
+      info += `Áreas: ${areasTexto.join(', ')}\n`
+    }
+    
+    info += `\n💬 RESPUESTA SUGERIDA: "Somos ${numFundadores} fundadores y un equipo de ${numEquipo} personas en áreas como ${areasTexto.slice(0, 3).map(a => a.split(' (')[0]).join(', ')}. ¡Un gran equipo trabajando para eventos exitosos!"`
     
     // Actualizar cache
     equipoInfoCache = info
@@ -153,10 +166,10 @@ Usuario: "quiero vender entradas"
 Tú: "Para vender: crea tu evento en redtickets.net, promociona, controla ventas y recibe liquidación. [ACTION:navigate:ayuda|Guía para Productores]"
 
 Usuario: "quienes estan en el equipo?" / "quienes son?" / "que equipo tienen?"
-Tú: "Somos [X] fundadores y un equipo de [Y] personas en áreas como Comercial, Operaciones, Atención al Cliente y más. ¡Un gran equipo trabajando para eventos exitosos! [ACTION:navigate:sobre-nosotros|Conocer el Equipo]"
+Tú: Usa la RESPUESTA SUGERIDA de la sección EQUIPO REDTICKETS y agrega [ACTION:navigate:sobre-nosotros|Conocer el Equipo]
 
 Usuario: "nombres del equipo" / "quienes son exactamente"
-Tú: "Fundadores: [lista fundadores]. Equipo agrupado por área: Comercial (X personas), Operaciones (Y), etc. [ACTION:navigate:sobre-nosotros|Ver Todos]"
+Tú: Menciona los fundadores por nombre y resume las áreas con sus contadores. [ACTION:navigate:sobre-nosotros|Ver Todos]
 
 Usuario: "que es redtickets?" / "quienes son ustedes?"
 Tú: "Somos la plataforma líder de venta de tickets en Uruguay con 4M de transacciones, 20K eventos y 500+ productores. Ofrecemos venta online/presencial, control de acceso y más. [ACTION:navigate:sobre-nosotros|Conocer RedTickets]"
@@ -172,11 +185,10 @@ Tú: "¡Con gusto! Si necesitas algo más, aquí estoy. 😊"
 
 🔑 REGLAS CRÍTICAS:
 1. SIEMPRE responde con información específica
-2. Usa los datos del equipo de forma RESUMIDA (cuenta personas por área, no listes todos los nombres)
-3. Máximo 3 líneas de texto (NO pegues listas largas de nombres)
+2. Si preguntan por el equipo, USA LA RESPUESTA SUGERIDA (copia tal cual, reemplaza los números reales que están en la sección EQUIPO)
+3. Máximo 3 líneas de texto (NO inventes números ni uses placeholders como [X] o [Y])
 4. Un botón [ACTION] cuando sea útil
-5. Sé directo y útil, no redirijas sin responder
-6. Si preguntan por el equipo, di: "[X] fundadores y [Y] personas en [áreas principales]" + botón para ver más`
+5. Sé directo y útil, no redirijas sin responder`
 
 // Configurar CORS
 const corsHeaders = {
