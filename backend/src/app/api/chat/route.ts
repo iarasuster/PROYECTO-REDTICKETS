@@ -41,38 +41,43 @@ async function getEquipoInfo() {
     const numFundadores = doc.fundadores?.length || 0
     const nombresFundadores = doc.fundadores?.map((f: { nombre: string; cargo?: string | null }) => f.nombre) || []
     
-    // Agrupar equipo por área
-    const porArea: Record<string, number> = {}
+    // Agrupar equipo por área CON NOMBRES
+    const porArea: Record<string, string[]> = {}
     const areasTexto: string[] = []
     
     if (doc.equipo?.length) {
       doc.equipo.forEach((e: { nombre: string; area?: string | null }) => {
         const area = e.area || 'Otros'
-        porArea[area] = (porArea[area] || 0) + 1
+        if (!porArea[area]) porArea[area] = []
+        porArea[area].push(e.nombre)
       })
       
       // Crear texto de áreas con contadores
-      Object.entries(porArea).forEach(([area, count]) => {
-        areasTexto.push(`${area} (${count})`)
+      Object.entries(porArea).forEach(([area, nombres]) => {
+        areasTexto.push(`${area} (${nombres.length})`)
       })
     }
     
     const numEquipo = doc.equipo?.length || 0
     const totalPersonas = numFundadores + numEquipo
     
-    // Crear respuesta pre-formateada para que el modelo la use directamente
-    let info = '\n\n👥 EQUIPO REDTICKETS:\n'
+    // Crear respuesta pre-formateada CON DETALLES POR ÁREA
+    let info = '\n\n👥 EQUIPO REDTICKETS (info actualizada desde base de datos):\n'
     info += `Total: ${totalPersonas} personas (${numFundadores} fundadores + ${numEquipo} equipo)\n`
     
     if (numFundadores > 0) {
-      info += `Fundadores: ${nombresFundadores.join(', ')}\n`
+      info += `\n🌟 FUNDADORES (${numFundadores}): ${nombresFundadores.join(', ')}\n`
     }
     
-    if (areasTexto.length > 0) {
-      info += `Áreas: ${areasTexto.join(', ')}\n`
+    if (Object.keys(porArea).length > 0) {
+      info += `\n👨‍💼 EQUIPO POR ÁREA:\n`
+      Object.entries(porArea).forEach(([area, nombres]) => {
+        info += `• ${area} (${nombres.length}): ${nombres.join(', ')}\n`
+      })
     }
     
-    info += `\n💬 RESPUESTA SUGERIDA: "Somos ${numFundadores} fundadores y un equipo de ${numEquipo} personas en áreas como ${areasTexto.slice(0, 3).map(a => a.split(' (')[0]).join(', ')}. ¡Un gran equipo trabajando para eventos exitosos!"`
+    info += `\n💬 RESPUESTA SUGERIDA GENERAL: "Somos ${numFundadores} fundadores y un equipo de ${numEquipo} personas en áreas como ${areasTexto.slice(0, 3).map(a => a.split(' (')[0]).join(', ')}. ¡Un gran equipo trabajando para eventos exitosos!"`
+    info += `\n\n⚠️ IMPORTANTE: Si preguntan por un área específica (ej: Administración), USA LOS NOMBRES REALES de esa área listados arriba. NO inventes nombres.`
     
     // Actualizar cache
     equipoInfoCache = info
@@ -168,8 +173,8 @@ Tú: "Para vender: crea tu evento en redtickets.net, promociona, controla ventas
 Usuario: "quienes estan en el equipo?" / "quienes son?" / "que equipo tienen?"
 Tú: Usa la RESPUESTA SUGERIDA de la sección EQUIPO REDTICKETS y agrega [ACTION:navigate:sobre-nosotros|Conocer el Equipo]
 
-Usuario: "nombres del equipo" / "quienes son exactamente"
-Tú: Menciona los fundadores por nombre y resume las áreas con sus contadores. [ACTION:navigate:sobre-nosotros|Ver Todos]
+Usuario: "nombres del equipo" / "quienes son exactamente" / "quienes son de [área]"
+Tú: Consulta la sección EQUIPO POR ÁREA y menciona los nombres reales de esa área específica. Ejemplo: "El equipo de Administración está conformado por [nombres reales]. Ambos se encargan de la gestión interna."
 
 Usuario: "que es redtickets?" / "quienes son ustedes?"
 Tú: "Somos la plataforma líder de venta de tickets en Uruguay con 4M de transacciones, 20K eventos y 500+ productores. Ofrecemos venta online/presencial, control de acceso y más. [ACTION:navigate:sobre-nosotros|Conocer RedTickets]"
@@ -185,10 +190,17 @@ Tú: "¡Con gusto! Si necesitas algo más, aquí estoy. 😊"
 
 🔑 REGLAS CRÍTICAS:
 1. SIEMPRE responde con información específica
-2. Si preguntan por el equipo, USA LA RESPUESTA SUGERIDA (copia tal cual, reemplaza los números reales que están en la sección EQUIPO)
-3. Máximo 3 líneas de texto (NO inventes números ni uses placeholders como [X] o [Y])
-4. Un botón [ACTION] cuando sea útil
-5. Sé directo y útil, no redirijas sin responder`
+2. Si preguntan por el equipo GENERAL, USA LA RESPUESTA SUGERIDA GENERAL
+3. Si preguntan por un ÁREA ESPECÍFICA (ej: Administración), COPIA EXACTAMENTE los nombres de "EQUIPO POR ÁREA" para esa área
+4. Máximo 3 líneas de texto
+5. Un botón [ACTION] cuando sea útil
+6. Sé directo y útil, no redirijas sin responder
+
+⛔ PROHIBIDO ABSOLUTAMENTE:
+- Inventar nombres de personas que NO estén en "EQUIPO POR ÁREA"
+- Usar nombres genéricos como "María", "Juan", "Pedro"
+- Agregar apellidos si no están en los datos
+- SOLO usa los nombres EXACTOS que aparecen en la sección "EQUIPO POR ÁREA" arriba`
 
 // Configurar CORS
 const corsHeaders = {
@@ -243,7 +255,7 @@ export async function POST(req: Request) {
       model: groq('llama-3.1-8b-instant'),
       system: systemPromptWithEquipo,
       messages,
-      temperature: 0.7,
+      temperature: 0.1, // Temperatura baja para evitar alucinaciones de nombres
     })
 
     const groqTime = Date.now() - startTime;
