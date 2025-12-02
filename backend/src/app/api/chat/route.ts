@@ -2,15 +2,80 @@ import { streamText } from 'ai'
 import { createGroq } from '@ai-sdk/groq'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { z } from 'zod'
 
 // Configurar Groq con el provider oficial
 const groq = createGroq({
   apiKey: process.env.GROQ_API_KEY || '',
 })
 
-// Función helper para obtener contenido de Payload (usada por el tool buscarEnPayload)
-// No se llama en cada request, solo cuando el modelo detecta que necesita info específica
+// Cache de información del equipo (se actualiza cada 5 minutos)
+let equipoInfoCache = ''
+let equipoInfoCacheTime = 0
+const CACHE_DURATION = 5 * 60 * 1000 // 5 minutos
+
+// Función optimizada para obtener SOLO info del equipo (sobre_nosotros)
+async function getEquipoInfo() {
+  // Usar cache si está fresco (menos de 5 minutos)
+  const now = Date.now()
+  if (equipoInfoCache && (now - equipoInfoCacheTime) < CACHE_DURATION) {
+    console.log('✅ [CACHE] Usando equipo info desde cache')
+    return equipoInfoCache
+  }
+
+  console.log('🔄 [CACHE] Actualizando equipo info...')
+  try {
+    const payload = await getPayload({ config })
+    const result = await payload.find({
+      collection: 'contenido-blog',
+      where: {
+        seccion: { equals: 'sobre_nosotros' }
+      },
+      limit: 1,
+    })
+
+    if (result.docs.length === 0) return ''
+
+    const doc = result.docs[0]
+    let info = '\n\n👥 EQUIPO REDTICKETS (info actualizada):\n'
+    
+    // Contar fundadores
+    if (doc.fundadores?.length) {
+      info += `\n🌟 FUNDADORES (${doc.fundadores.length}): `
+      const nombres = doc.fundadores.map((f: { nombre: string; cargo?: string | null }) => f.nombre)
+      info += nombres.join(', ') + '\n'
+    }
+    
+    // Agrupar equipo por área
+    if (doc.equipo?.length) {
+      const porArea: Record<string, string[]> = {}
+      
+      doc.equipo.forEach((e: { nombre: string; area?: string | null }) => {
+        const area = e.area || 'Otros'
+        if (!porArea[area]) porArea[area] = []
+        porArea[area].push(e.nombre)
+      })
+      
+      info += `\n👨‍💼 EQUIPO (${doc.equipo.length} personas):\n`
+      Object.entries(porArea).forEach(([area, nombres]) => {
+        info += `• ${area}: ${nombres.join(', ')}\n`
+      })
+    }
+    
+    // Actualizar cache
+    equipoInfoCache = info
+    equipoInfoCacheTime = Date.now()
+    
+    return info
+  } catch (error) {
+    console.error('❌ Error al obtener equipo:', error)
+    // Si hay error pero tenemos cache viejo, usarlo
+    if (equipoInfoCache) {
+      console.log('⚠️ [CACHE] Usando cache antiguo por error')
+      return equipoInfoCache
+    }
+    return ''
+  }
+}
 
 // Contexto del sistema optimizado según OpenAI Design Guidelines
 const SYSTEM_PROMPT = `Eres un asistente de RedTickets, experto en venta de tickets y eventos en Uruguay.
@@ -88,7 +153,10 @@ Usuario: "quiero vender entradas"
 Tú: "Para vender: crea tu evento en redtickets.net, promociona, controla ventas y recibe liquidación. [ACTION:navigate:ayuda|Guía para Productores]"
 
 Usuario: "quienes estan en el equipo?" / "quienes son?" / "que equipo tienen?"
-Tú: "Somos un equipo multidisciplinario: fundadores expertos en tecnología y eventos, desarrolladores, comerciales, soporte 24/7 y logística en todo Uruguay. [ACTION:navigate:sobre-nosotros|Conocer el Equipo]"
+Tú: "Somos [X] fundadores y un equipo de [Y] personas en áreas como Comercial, Operaciones, Atención al Cliente y más. ¡Un gran equipo trabajando para eventos exitosos! [ACTION:navigate:sobre-nosotros|Conocer el Equipo]"
+
+Usuario: "nombres del equipo" / "quienes son exactamente"
+Tú: "Fundadores: [lista fundadores]. Equipo agrupado por área: Comercial (X personas), Operaciones (Y), etc. [ACTION:navigate:sobre-nosotros|Ver Todos]"
 
 Usuario: "que es redtickets?" / "quienes son ustedes?"
 Tú: "Somos la plataforma líder de venta de tickets en Uruguay con 4M de transacciones, 20K eventos y 500+ productores. Ofrecemos venta online/presencial, control de acceso y más. [ACTION:navigate:sobre-nosotros|Conocer RedTickets]"
@@ -104,19 +172,11 @@ Tú: "¡Con gusto! Si necesitas algo más, aquí estoy. 😊"
 
 🔑 REGLAS CRÍTICAS:
 1. SIEMPRE responde con información específica
-2. Usa los datos que tienes arriba
-3. Máximo 3 líneas de texto
+2. Usa los datos del equipo de forma RESUMIDA (cuenta personas por área, no listes todos los nombres)
+3. Máximo 3 líneas de texto (NO pegues listas largas de nombres)
 4. Un botón [ACTION] cuando sea útil
 5. Sé directo y útil, no redirijas sin responder
-
-🔧 TOOL DISPONIBLE:
-Tienes acceso al tool 'buscarEnPayload'. ÚSALO OBLIGATORIAMENTE cuando:
-- Te pregunten "quiénes son" / "quién es el equipo" / "equipo" / "fundadores" / "integrantes"
-- Necesites nombres exactos de personas
-- Te pidan políticas completas palabra por palabra
-- Requieras información técnica específica no incluida arriba
-
-NO intentes adivinar o inventar nombres. Si no los sabes, usa el tool.`
+6. Si preguntan por el equipo, di: "[X] fundadores y [Y] personas en [áreas principales]" + botón para ver más`
 
 // Configurar CORS
 const corsHeaders = {
@@ -162,62 +222,16 @@ export async function POST(req: Request) {
 
     console.log('📤 [CHAT] Enviando request a Groq...')
 
-    // 🔥 Sistema híbrido: Prompt estático + Tool para Payload cuando se necesite
+    // 🔥 Cargar info del equipo desde Payload (solo 1 documento, rápido)
+    const equipoInfo = await getEquipoInfo()
+    const systemPromptWithEquipo = SYSTEM_PROMPT + equipoInfo
+
     const startTime = Date.now();
     const result = await streamText({
       model: groq('llama-3.1-8b-instant'),
-      system: SYSTEM_PROMPT,
+      system: systemPromptWithEquipo,
       messages,
       temperature: 0.7,
-      tools: {
-        // Tool que se activa para obtener info detallada de Payload
-        buscarEnPayload: {
-          description: 'SIEMPRE usa esta herramienta cuando te pregunten sobre: el equipo de RedTickets, fundadores, quiénes son, nombres de personas, integrantes, políticas completas, detalles técnicos exactos, o cualquier información específica que no esté explícita en el SYSTEM_PROMPT.',
-          inputSchema: z.object({
-            seccion: z.string().describe('Sección a buscar: sobre_nosotros, servicios, ayuda, comunidad, inicio, contacto'),
-            tema: z.string().optional().describe('Tema específico: equipo, fundadores, politicas, ayuda_tecnica, como_comprar, etc.'),
-          }),
-          execute: async ({ seccion, tema }: { seccion: string; tema?: string }) => {
-            console.log(`🔍 [CHAT-TOOL] Buscando en Payload: seccion=${seccion}, tema=${tema}`)
-            try {
-              const payload = await getPayload({ config })
-              const result = await payload.find({
-                collection: 'contenido-blog',
-                where: {
-                  seccion: { equals: seccion }
-                },
-                limit: 1,
-              })
-
-              if (result.docs.length === 0) {
-                return { error: 'No se encontró información para esa sección' }
-              }
-
-              const doc = result.docs[0]
-              const info: Record<string, unknown> = {}
-
-              // Extraer solo lo relevante según el tema
-              if (tema === 'equipo' || tema === 'fundadores') {
-                info.fundadores = doc.fundadores || []
-                info.equipo = doc.equipo || []
-              } else if (tema === 'politicas') {
-                info.politicas = doc.politicas || {}
-              } else if (tema === 'ayuda_tecnica') {
-                info.ayuda_tecnica = doc.ayuda_tecnica || {}
-              } else {
-                // Retornar todo el documento si no se especifica tema
-                return doc
-              }
-
-              console.log(`✅ [CHAT-TOOL] Información encontrada`)
-              return info
-            } catch (error) {
-              console.error('❌ [CHAT-TOOL] Error:', error)
-              return { error: 'No pude acceder a la información en este momento' }
-            }
-          }
-        }
-      },
     })
 
     const groqTime = Date.now() - startTime;
