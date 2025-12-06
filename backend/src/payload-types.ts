@@ -176,14 +176,17 @@ export interface ContenidoBlog {
     eventos_realizados?: number | null;
     productores?: number | null;
   };
+  /**
+   * Foto grupal de los 4 fundadores en el auditorio
+   */
+  fundadores_foto?: (string | null) | Media;
+  /**
+   * Lista de fundadores (se mostrará debajo de la foto grupal)
+   */
   fundadores?:
     | {
         nombre: string;
-        cargo?: string | null;
-        /**
-         * Imagen circular del fundador
-         */
-        imagen?: (string | null) | Media;
+        cargo: string;
         id?: string | null;
       }[]
     | null;
@@ -498,12 +501,12 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
         eventos_realizados?: T;
         productores?: T;
       };
+  fundadores_foto?: T;
   fundadores?:
     | T
     | {
         nombre?: T;
         cargo?: T;
-        imagen?: T;
         id?: T;
       };
   equipo?:

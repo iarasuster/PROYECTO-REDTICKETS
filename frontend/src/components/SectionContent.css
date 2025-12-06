@@ -1175,11 +1175,12 @@
   margin-bottom: 0.5rem;
 }
 
-/* ========== 📸 FUNDADORES - FOTO GRUPAL + GRID ========== */
-.fundadores-photo-group {
+/* ========== 📸 FUNDADORES - FOTO INTERACTIVA MOBILE-FIRST ========== */
+.fundadores-photo-interactive {
+  position: relative;
   width: 100%;
-  max-width: 1200px;
-  margin: 2rem auto 3rem;
+  max-width: 1100px;
+  margin: 2rem auto 0;
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
@@ -1187,88 +1188,121 @@
   transition: all 0.3s ease;
 }
 
-.fundadores-photo-group:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 30px 80px rgba(255, 102, 0, 0.3);
-  border-color: rgba(255, 102, 0, 0.4);
-}
-
-.group-photo {
+.fundadores-photo-interactive .group-photo {
   width: 100%;
   height: auto;
+  max-height: 450px;
   display: block;
   object-fit: cover;
+  object-position: center 20%;
 }
 
-/* Grid de nombres de fundadores */
-.fundadores-names-grid {
+/* Capa de hotspots sobre la foto */
+.fundadores-hotspots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-  padding: 0 1rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
 }
 
-.fundador-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 102, 0, 0.2);
-  border-radius: 16px;
-  padding: 2rem 1.5rem;
-  text-align: center;
-  transition: all 0.3s ease;
+/* Área clickeable de cada fundador */
+.fundador-hotspot {
   position: relative;
-  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20%;
 }
 
-.fundador-card::before {
+/* Efecto sutil al tocar/click */
+.fundador-hotspot.active::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #ff6600, #ff8833);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
+  bottom: 0;
+  background: radial-gradient(circle at center, 
+    rgba(255, 102, 0, 0.2) 0%, 
+    transparent 70%
+  );
+  pointer-events: none;
 }
 
-.fundador-card:hover::before {
-  transform: scaleX(1);
-}
-
-.fundador-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 102, 0, 0.4);
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(255, 102, 0, 0.2);
-}
-
-.fundador-icon {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto 1rem;
-  background: linear-gradient(135deg, rgba(255, 102, 0, 0.2), rgba(255, 136, 51, 0.1));
+/* Isotipo (estrella) sobre cada persona */
+.fundador-star-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid rgba(255, 102, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 102, 0, 0.4);
+  transition: all 0.3s ease;
+  padding: 8px;
+}
+
+.isotipo-icon {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) invert(1);
   transition: all 0.3s ease;
 }
 
-.fundador-card:hover .fundador-icon {
-  background: linear-gradient(135deg, rgba(255, 102, 0, 0.3), rgba(255, 136, 51, 0.2));
-  border-color: rgba(255, 102, 0, 0.5);
-  transform: scale(1.1) rotate(5deg);
+.fundador-hotspot.active .fundador-star-icon {
+  background: rgba(255, 102, 0, 0.9);
+  border-color: #ff6600;
+  transform: scale(1.15);
+  box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6);
 }
 
-.fundador-icon i {
-  font-size: 2rem;
-  color: #ff6600;
+.fundador-hotspot.active .isotipo-icon {
+  filter: brightness(0) invert(1);
 }
 
-.fundador-name {
+/* Información debajo de la foto */
+.fundadores-info-below {
+  width: 100%;
+  max-width: 1100px;
+  margin: 1.5rem auto 0;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fundador-info-card {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 1.25rem 2rem;
+  border-radius: 16px;
+  border: 2px solid rgba(255, 102, 0, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  animation: slideInFromBottom 0.3s ease;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fundador-info-card strong {
+  display: block;
   color: #ffffff;
   font-size: 1.3rem;
   font-weight: 600;
@@ -1276,28 +1310,37 @@
   letter-spacing: 0.5px;
 }
 
-.fundador-cargo {
+.fundador-info-card span {
+  display: block;
   color: #ff6600;
   font-size: 1rem;
   font-weight: 500;
-  margin: 0;
-  letter-spacing: 0.5px;
+  line-height: 1.4;
 }
 
-/* Responsive para fundadores */
+/* Responsive */
 @media (max-width: 768px) {
-  .fundadores-names-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .fundadores-hotspots {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
   }
   
-  .fundador-card {
-    padding: 1.5rem 1rem;
+  .fundador-star-icon {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
   }
   
-  .fundadores-photo-group {
-    margin: 1.5rem auto 2rem;
-    border-radius: 16px;
+  .fundador-info-card {
+    padding: 1rem 1.5rem;
+  }
+  
+  .fundador-info-card strong {
+    font-size: 1.1rem;
+  }
+  
+  .fundador-info-card span {
+    font-size: 0.9rem;
   }
 }
 

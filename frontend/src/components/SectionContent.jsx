@@ -259,44 +259,64 @@ const InicioContent = ({ data }) => {
   );
 };
 
-const SobreNosotrosContent = ({ data }) => (
-  <div className="sobre-nosotros-container">
-    {/* FILA 1: Fundadores - Foto Grupal + Nombres */}
-    {(data.fundadores_foto || (data.fundadores && data.fundadores.length > 0)) && (
-      <div className="sobre-row fundadores-row">
-        <h3 className="section-title">Fundadores</h3>
-        
-        {/* Foto Grupal */}
-        {data.fundadores_foto?.url && (
-          <div className="fundadores-photo-group">
+const SobreNosotrosContent = ({ data }) => {
+  const [activeFounder, setActiveFounder] = useState(null);
+
+  return (
+    <div className="sobre-nosotros-container">
+      {/* FILA 1: Fundadores - Foto Grupal con Tooltips */}
+      {data.fundadores_foto?.url && (
+        <div className="sobre-row fundadores-row">
+          <h3 className="section-title">Fundadores</h3>
+          
+          <div className="fundadores-photo-interactive">
             <img
               src={getImageUrl(data.fundadores_foto)}
               alt="Fundadores de RedTickets"
               className="group-photo"
               loading="lazy"
             />
-          </div>
-        )}
-
-        {/* Grid de Nombres y Cargos */}
-        {data.fundadores && data.fundadores.length > 0 && (
-          <div className="fundadores-names-grid">
-            {data.fundadores.map((fundador, idx) => (
-              <div key={idx} className="fundador-card">
-                <div className="fundador-icon">
-                  <i className="fas fa-user-tie"></i>
-                </div>
-                <h4 className="fundador-name">{fundador.nombre}</h4>
-                <p className="fundador-cargo">{fundador.cargo}</p>
+            
+            {/* Áreas interactivas sobre cada fundador */}
+            {data.fundadores && data.fundadores.length === 4 && (
+              <div className="fundadores-hotspots">
+                {data.fundadores.map((fundador, idx) => (
+                  <div
+                    key={idx}
+                    className={`fundador-hotspot hotspot-${idx + 1} ${activeFounder === idx ? 'active' : ''}`}
+                    onClick={() => setActiveFounder(activeFounder === idx ? null : idx)}
+                  >
+                    <div className="fundador-star-icon">
+                      <img 
+                        src={`${SERVER_URL}/isotipo.svg`} 
+                        alt="Ver info"
+                        className="isotipo-icon"
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        )}
-      </div>
-    )}
+          
+          {/* Tooltips debajo de la foto */}
+          {data.fundadores && data.fundadores.length === 4 && (
+            <div className="fundadores-info-below">
+              {data.fundadores.map((fundador, idx) => (
+                activeFounder === idx && (
+                  <div key={idx} className="fundador-info-card">
+                    <strong>{fundador.nombre}</strong>
+                    <span>{fundador.cargo}</span>
+                  </div>
+                )
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
-    {/* FILA 2: Equipo */}
-    {data.equipo && data.equipo.length > 0 && (
+      {/* FILA 2: Equipo */}
+      {data.equipo && data.equipo.length > 0 && (
       <div className="sobre-row equipo-row">
         <h3 className="section-title">Nuestro Equipo</h3>
         <div className="team-grid">
@@ -440,7 +460,8 @@ const SobreNosotrosContent = ({ data }) => (
       </div>
     )}
   </div>
-);
+  );
+};
 
 const ServiciosContent = ({ data }) => {
   // Mapeo de servicios a iconos específicos
