@@ -131,7 +131,7 @@ Ver guía completa: [DEPLOY-GUIDE.md](./DEPLOY-GUIDE.md)
 1. **MongoDB Atlas**: Crear cluster gratuito y obtener connection string
 2. **Groq API**: Registrarse en https://console.groq.com y obtener API key
 3. **GitHub**: Subir proyecto a un repositorio
-4. **Render**: 
+4. **Render**:
    - Backend (Web Service) con variables: `DATABASE_URI`, `PAYLOAD_SECRET`, `GROQ_API_KEY`
    - Frontend (Static Site) con variables: `VITE_API_URL`, `VITE_CHAT_API_URL`
 
@@ -182,15 +182,19 @@ npm run preview      # Preview del build
 ## 🐛 Troubleshooting
 
 ### Error "Cannot connect to API"
+
 → Verificar que backend esté corriendo en puerto 3000
 
 ### Error de Node.js "You are using Node.js 18..."
+
 → Actualizar a Node.js 20.19.5+ con nvm
 
 ### Chatbot no responde
+
 → Verificar que `GROQ_API_KEY` esté configurada en backend/.env
 
 ### Posts no aparecen
+
 → Ejecutar `npm run seed` en backend para cargar contenido inicial
 
 ---

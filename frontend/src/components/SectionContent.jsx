@@ -268,7 +268,7 @@ const SobreNosotrosContent = ({ data }) => {
       {data.fundadores_foto?.url && (
         <div className="sobre-row fundadores-row">
           <h3 className="section-title">Fundadores</h3>
-          
+
           <div className="fundadores-photo-interactive">
             <img
               src={getImageUrl(data.fundadores_foto)}
@@ -276,19 +276,23 @@ const SobreNosotrosContent = ({ data }) => {
               className="group-photo"
               loading="lazy"
             />
-            
+
             {/* Áreas interactivas sobre cada fundador */}
             {data.fundadores && data.fundadores.length === 4 && (
               <div className="fundadores-hotspots">
                 {data.fundadores.map((fundador, idx) => (
                   <div
                     key={idx}
-                    className={`fundador-hotspot hotspot-${idx + 1} ${activeFounder === idx ? 'active' : ''}`}
-                    onClick={() => setActiveFounder(activeFounder === idx ? null : idx)}
+                    className={`fundador-hotspot hotspot-${idx + 1} ${
+                      activeFounder === idx ? "active" : ""
+                    }`}
+                    onClick={() =>
+                      setActiveFounder(activeFounder === idx ? null : idx)
+                    }
                   >
                     <div className="fundador-star-icon">
-                      <img 
-                        src={`${SERVER_URL}/isotipo.svg`} 
+                      <img
+                        src={`${SERVER_URL}/isotipo.svg`}
                         alt="Ver info"
                         className="isotipo-icon"
                       />
@@ -298,18 +302,19 @@ const SobreNosotrosContent = ({ data }) => {
               </div>
             )}
           </div>
-          
+
           {/* Tooltips debajo de la foto */}
           {data.fundadores && data.fundadores.length === 4 && (
             <div className="fundadores-info-below">
-              {data.fundadores.map((fundador, idx) => (
-                activeFounder === idx && (
-                  <div key={idx} className="fundador-info-card">
-                    <strong>{fundador.nombre}</strong>
-                    <span>{fundador.cargo}</span>
-                  </div>
-                )
-              ))}
+              {data.fundadores.map(
+                (fundador, idx) =>
+                  activeFounder === idx && (
+                    <div key={idx} className="fundador-info-card">
+                      <strong>{fundador.nombre}</strong>
+                      <span>{fundador.cargo}</span>
+                    </div>
+                  )
+              )}
             </div>
           )}
         </div>
@@ -317,149 +322,151 @@ const SobreNosotrosContent = ({ data }) => {
 
       {/* FILA 2: Equipo */}
       {data.equipo && data.equipo.length > 0 && (
-      <div className="sobre-row equipo-row">
-        <h3 className="section-title">Nuestro Equipo</h3>
-        <div className="team-grid">
-          {data.equipo.map((miembro, idx) => {
-            console.log(
-              "🔍 Miembro equipo:",
-              miembro.nombre,
-              "Imagen:",
-              miembro.imagen
-            );
-            return (
-              <ChromaGrid
-                key={idx}
-                colors={["#ff6600", "#ff8833", "#ff9944"]}
-                intensity={0.3}
-              >
-                <div className="team-member">
-                  {miembro.imagen?.url ? (
-                    <div className="team-photo">
-                      <img
-                        src={getImageUrl(miembro.imagen)}
-                        alt={miembro.nombre}
-                        loading="lazy"
-                        onError={(e) => {
-                          console.error(
-                            "Error cargando imagen:",
-                            miembro.imagen.url
-                          );
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="team-photo placeholder">
-                      <i className="fas fa-user"></i>
-                    </div>
-                  )}
-                  <h4>{miembro.nombre}</h4>
-                  <p className="team-role">{miembro.area}</p>
-                </div>
-              </ChromaGrid>
-            );
-          })}
+        <div className="sobre-row equipo-row">
+          <h3 className="section-title">Nuestro Equipo</h3>
+          <div className="team-grid">
+            {data.equipo.map((miembro, idx) => {
+              console.log(
+                "🔍 Miembro equipo:",
+                miembro.nombre,
+                "Imagen:",
+                miembro.imagen
+              );
+              return (
+                <ChromaGrid
+                  key={idx}
+                  colors={["#ff6600", "#ff8833", "#ff9944"]}
+                  intensity={0.3}
+                >
+                  <div className="team-member">
+                    {miembro.imagen?.url ? (
+                      <div className="team-photo">
+                        <img
+                          src={getImageUrl(miembro.imagen)}
+                          alt={miembro.nombre}
+                          loading="lazy"
+                          onError={(e) => {
+                            console.error(
+                              "Error cargando imagen:",
+                              miembro.imagen.url
+                            );
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="team-photo placeholder">
+                        <i className="fas fa-user"></i>
+                      </div>
+                    )}
+                    <h4>{miembro.nombre}</h4>
+                    <p className="team-role">{miembro.area}</p>
+                  </div>
+                </ChromaGrid>
+              );
+            })}
+          </div>
         </div>
-      </div>
-    )}
+      )}
 
-    {/* FILA 3: Socios Comerciales - Título General */}
-    {data.socios_comerciales && (
-      <div className="sobre-row socios-header-row">
-        <h3 className="section-title">Socios Comerciales</h3>
-        {data.socios_comerciales.descripcion && (
-          <p className="socios-intro">{data.socios_comerciales.descripcion}</p>
-        )}
-      </div>
-    )}
-
-    {/* FILA 4: Productores */}
-    {data.socios_comerciales?.productores && (
-      <div className="sobre-row socios-category-row">
-        <h4 className="socios-category-title">
-          {data.socios_comerciales.productores.titulo || "Amigos Productores"}
-        </h4>
-        {data.socios_comerciales.productores.descripcion && (
-          <p className="category-desc">
-            {data.socios_comerciales.productores.descripcion}
-          </p>
-        )}
-        {data.socios_comerciales.productores.logos &&
-          data.socios_comerciales.productores.logos.length > 0 && (
-            <LogoCarousel
-              logos={data.socios_comerciales.productores.logos}
-              speed={35}
-            />
+      {/* FILA 3: Socios Comerciales - Título General */}
+      {data.socios_comerciales && (
+        <div className="sobre-row socios-header-row">
+          <h3 className="section-title">Socios Comerciales</h3>
+          {data.socios_comerciales.descripcion && (
+            <p className="socios-intro">
+              {data.socios_comerciales.descripcion}
+            </p>
           )}
-      </div>
-    )}
+        </div>
+      )}
 
-    {/* FILA 5: Partners Tecnológicos */}
-    {data.socios_comerciales?.partners_tecnologicos && (
-      <div className="sobre-row socios-category-row">
-        <h4 className="socios-category-title">
-          {data.socios_comerciales.partners_tecnologicos.titulo ||
-            "Partners Tecnológicos"}
-        </h4>
-        {data.socios_comerciales.partners_tecnologicos.descripcion && (
-          <p className="category-desc">
-            {data.socios_comerciales.partners_tecnologicos.descripcion}
-          </p>
-        )}
-        {data.socios_comerciales.partners_tecnologicos.logos &&
-          data.socios_comerciales.partners_tecnologicos.logos.length > 0 && (
-            <LogoCarousel
-              logos={data.socios_comerciales.partners_tecnologicos.logos}
-              speed={38}
-            />
+      {/* FILA 4: Productores */}
+      {data.socios_comerciales?.productores && (
+        <div className="sobre-row socios-category-row">
+          <h4 className="socios-category-title">
+            {data.socios_comerciales.productores.titulo || "Amigos Productores"}
+          </h4>
+          {data.socios_comerciales.productores.descripcion && (
+            <p className="category-desc">
+              {data.socios_comerciales.productores.descripcion}
+            </p>
           )}
-      </div>
-    )}
+          {data.socios_comerciales.productores.logos &&
+            data.socios_comerciales.productores.logos.length > 0 && (
+              <LogoCarousel
+                logos={data.socios_comerciales.productores.logos}
+                speed={35}
+              />
+            )}
+        </div>
+      )}
 
-    {/* FILA 6: Amigos E-commerce */}
-    {data.socios_comerciales?.amigos_ecommerce && (
-      <div className="sobre-row socios-category-row">
-        <h4 className="socios-category-title">
-          {data.socios_comerciales.amigos_ecommerce.titulo ||
-            "Amigos E-commerce"}
-        </h4>
-        {data.socios_comerciales.amigos_ecommerce.descripcion && (
-          <p className="category-desc">
-            {data.socios_comerciales.amigos_ecommerce.descripcion}
-          </p>
-        )}
-        {data.socios_comerciales.amigos_ecommerce.logos &&
-          data.socios_comerciales.amigos_ecommerce.logos.length > 0 && (
-            <LogoCarousel
-              logos={data.socios_comerciales.amigos_ecommerce.logos}
-              speed={42}
-            />
+      {/* FILA 5: Partners Tecnológicos */}
+      {data.socios_comerciales?.partners_tecnologicos && (
+        <div className="sobre-row socios-category-row">
+          <h4 className="socios-category-title">
+            {data.socios_comerciales.partners_tecnologicos.titulo ||
+              "Partners Tecnológicos"}
+          </h4>
+          {data.socios_comerciales.partners_tecnologicos.descripcion && (
+            <p className="category-desc">
+              {data.socios_comerciales.partners_tecnologicos.descripcion}
+            </p>
           )}
-      </div>
-    )}
+          {data.socios_comerciales.partners_tecnologicos.logos &&
+            data.socios_comerciales.partners_tecnologicos.logos.length > 0 && (
+              <LogoCarousel
+                logos={data.socios_comerciales.partners_tecnologicos.logos}
+                speed={38}
+              />
+            )}
+        </div>
+      )}
 
-    {/* FILA 7: Partners Publicitarios */}
-    {data.socios_comerciales?.partners_publicitarios && (
-      <div className="sobre-row socios-category-row">
-        <h4 className="socios-category-title">
-          {data.socios_comerciales.partners_publicitarios.titulo ||
-            "Partners Publicitarios"}
-        </h4>
-        {data.socios_comerciales.partners_publicitarios.descripcion && (
-          <p className="category-desc">
-            {data.socios_comerciales.partners_publicitarios.descripcion}
-          </p>
-        )}
-        {data.socios_comerciales.partners_publicitarios.logos &&
-          data.socios_comerciales.partners_publicitarios.logos.length > 0 && (
-            <LogoCarousel
-              logos={data.socios_comerciales.partners_publicitarios.logos}
-              speed={45}
-            />
+      {/* FILA 6: Amigos E-commerce */}
+      {data.socios_comerciales?.amigos_ecommerce && (
+        <div className="sobre-row socios-category-row">
+          <h4 className="socios-category-title">
+            {data.socios_comerciales.amigos_ecommerce.titulo ||
+              "Amigos E-commerce"}
+          </h4>
+          {data.socios_comerciales.amigos_ecommerce.descripcion && (
+            <p className="category-desc">
+              {data.socios_comerciales.amigos_ecommerce.descripcion}
+            </p>
           )}
-      </div>
-    )}
-  </div>
+          {data.socios_comerciales.amigos_ecommerce.logos &&
+            data.socios_comerciales.amigos_ecommerce.logos.length > 0 && (
+              <LogoCarousel
+                logos={data.socios_comerciales.amigos_ecommerce.logos}
+                speed={42}
+              />
+            )}
+        </div>
+      )}
+
+      {/* FILA 7: Partners Publicitarios */}
+      {data.socios_comerciales?.partners_publicitarios && (
+        <div className="sobre-row socios-category-row">
+          <h4 className="socios-category-title">
+            {data.socios_comerciales.partners_publicitarios.titulo ||
+              "Partners Publicitarios"}
+          </h4>
+          {data.socios_comerciales.partners_publicitarios.descripcion && (
+            <p className="category-desc">
+              {data.socios_comerciales.partners_publicitarios.descripcion}
+            </p>
+          )}
+          {data.socios_comerciales.partners_publicitarios.logos &&
+            data.socios_comerciales.partners_publicitarios.logos.length > 0 && (
+              <LogoCarousel
+                logos={data.socios_comerciales.partners_publicitarios.logos}
+                speed={45}
+              />
+            )}
+        </div>
+      )}
+    </div>
   );
 };
 
