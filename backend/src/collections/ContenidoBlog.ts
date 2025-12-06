@@ -71,24 +71,26 @@ export const ContenidoBlog: CollectionConfig = {
 
     // ===== EQUIPO (para Sobre Nosotros) =====
     {
-      name: 'fundadores',
-      type: 'array',
-      label: 'Fundadores',
+      name: 'fundadores_foto',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Foto Grupal de Fundadores',
       admin: {
         condition: (data) => data.seccion === 'sobre_nosotros',
+        description: 'Foto grupal de los 4 fundadores en el auditorio',
+      },
+    },
+    {
+      name: 'fundadores',
+      type: 'array',
+      label: 'Fundadores - Nombres y Cargos',
+      admin: {
+        condition: (data) => data.seccion === 'sobre_nosotros',
+        description: 'Lista de fundadores (se mostrará debajo de la foto grupal)',
       },
       fields: [
-        { name: 'nombre', type: 'text', label: 'Nombre', required: true },
-        { name: 'cargo', type: 'text', label: 'Cargo' },
-        { 
-          name: 'imagen', 
-          type: 'upload', 
-          relationTo: 'media', 
-          label: 'Foto de Perfil',
-          admin: {
-            description: 'Imagen circular del fundador',
-          },
-        },
+        { name: 'nombre', type: 'text', label: 'Nombre Completo', required: true },
+        { name: 'cargo', type: 'text', label: 'Cargo', required: true },
       ],
     },
     {

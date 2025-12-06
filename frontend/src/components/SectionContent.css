@@ -1175,6 +1175,132 @@
   margin-bottom: 0.5rem;
 }
 
+/* ========== 📸 FUNDADORES - FOTO GRUPAL + GRID ========== */
+.fundadores-photo-group {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto 3rem;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 102, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.fundadores-photo-group:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 30px 80px rgba(255, 102, 0, 0.3);
+  border-color: rgba(255, 102, 0, 0.4);
+}
+
+.group-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Grid de nombres de fundadores */
+.fundadores-names-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+.fundador-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 102, 0, 0.2);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.fundador-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff6600, #ff8833);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.fundador-card:hover::before {
+  transform: scaleX(1);
+}
+
+.fundador-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 102, 0, 0.4);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(255, 102, 0, 0.2);
+}
+
+.fundador-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1rem;
+  background: linear-gradient(135deg, rgba(255, 102, 0, 0.2), rgba(255, 136, 51, 0.1));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 102, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.fundador-card:hover .fundador-icon {
+  background: linear-gradient(135deg, rgba(255, 102, 0, 0.3), rgba(255, 136, 51, 0.2));
+  border-color: rgba(255, 102, 0, 0.5);
+  transform: scale(1.1) rotate(5deg);
+}
+
+.fundador-icon i {
+  font-size: 2rem;
+  color: #ff6600;
+}
+
+.fundador-name {
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.fundador-cargo {
+  color: #ff6600;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive para fundadores */
+@media (max-width: 768px) {
+  .fundadores-names-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .fundador-card {
+    padding: 1.5rem 1rem;
+  }
+  
+  .fundadores-photo-group {
+    margin: 1.5rem auto 2rem;
+    border-radius: 16px;
+  }
+}
+
 /* ========== 🤝 SOCIOS COMERCIALES - PURE GLASS ========== */
 .socios-comerciales {
   margin-top: 3rem;

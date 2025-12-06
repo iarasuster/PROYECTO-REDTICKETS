@@ -261,51 +261,37 @@ const InicioContent = ({ data }) => {
 
 const SobreNosotrosContent = ({ data }) => (
   <div className="sobre-nosotros-container">
-    {/* FILA 1: Fundadores */}
-    {data.fundadores && data.fundadores.length > 0 && (
+    {/* FILA 1: Fundadores - Foto Grupal + Nombres */}
+    {(data.fundadores_foto || (data.fundadores && data.fundadores.length > 0)) && (
       <div className="sobre-row fundadores-row">
         <h3 className="section-title">Fundadores</h3>
-        <div className="team-grid">
-          {data.fundadores.map((fundador, idx) => {
-            console.log(
-              "🔍 Fundador:",
-              fundador.nombre,
-              "Imagen:",
-              fundador.imagen
-            );
-            return (
-              <ChromaGrid
-                key={idx}
-                colors={["#ff6600", "#ff8833", "#ff9944"]}
-                intensity={0.4}
-              >
-                <div className="team-member">
-                  {fundador.imagen?.url ? (
-                    <div className="team-photo">
-                      <img
-                        src={getImageUrl(fundador.imagen)}
-                        alt={fundador.nombre}
-                        loading="lazy"
-                        onError={(e) => {
-                          console.error(
-                            "Error cargando imagen:",
-                            fundador.imagen.url
-                          );
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="team-photo placeholder">
-                      <i className="fas fa-user"></i>
-                    </div>
-                  )}
-                  <h4>{fundador.nombre}</h4>
-                  <p className="team-role">{fundador.cargo}</p>
+        
+        {/* Foto Grupal */}
+        {data.fundadores_foto?.url && (
+          <div className="fundadores-photo-group">
+            <img
+              src={getImageUrl(data.fundadores_foto)}
+              alt="Fundadores de RedTickets"
+              className="group-photo"
+              loading="lazy"
+            />
+          </div>
+        )}
+
+        {/* Grid de Nombres y Cargos */}
+        {data.fundadores && data.fundadores.length > 0 && (
+          <div className="fundadores-names-grid">
+            {data.fundadores.map((fundador, idx) => (
+              <div key={idx} className="fundador-card">
+                <div className="fundador-icon">
+                  <i className="fas fa-user-tie"></i>
                 </div>
-              </ChromaGrid>
-            );
-          })}
-        </div>
+                <h4 className="fundador-name">{fundador.nombre}</h4>
+                <p className="fundador-cargo">{fundador.cargo}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     )}
 
