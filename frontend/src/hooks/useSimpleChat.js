@@ -183,7 +183,7 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
         if (err.name === "AbortError") {
           console.warn("⏱️ Request abortado (timeout o cancelación manual)");
           setStatus("ready");
-          
+
           // Agregar mensaje de timeout
           setMessages((prev) => [
             ...prev,
