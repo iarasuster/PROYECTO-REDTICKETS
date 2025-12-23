@@ -1,19 +1,21 @@
 // URL base de la API de Payload CMS
-// Detecta automáticamente si está en desarrollo o producción
-const API_BASE_URL =
-  import.meta.env.MODE === "development"
+// Usa variable de entorno o fallback a Render
+const API_BASE_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : import.meta.env.MODE === "development"
     ? "http://localhost:3000/api"
     : "https://redtickets-backend.onrender.com/api";
 
 // URL base del servidor (sin /api) para archivos media
-export const SERVER_URL =
-  import.meta.env.MODE === "development"
+export const SERVER_URL = import.meta.env.VITE_API_URL
+  || (import.meta.env.MODE === "development"
     ? "http://localhost:3000"
-    : "https://redtickets-backend.onrender.com";
+    : "https://redtickets-backend.onrender.com");
 
 // Configuración del chatbot
-const CHATBOT_API_URL =
-  import.meta.env.MODE === "development"
+const CHATBOT_API_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : import.meta.env.MODE === "development"
     ? "http://localhost:3000/api"
     : "https://redtickets-backend.onrender.com/api";
 
