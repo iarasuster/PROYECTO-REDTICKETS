@@ -8,6 +8,17 @@ const __dirname = path.dirname(__filename)
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Your Next.js config here
+  
+  // Configuración para servir archivos estáticos en Vercel
+  async rewrites() {
+    return [
+      {
+        source: '/media/:path*',
+        destination: '/media/:path*',
+      },
+    ]
+  },
+  
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {
       '.cjs': ['.cts', '.cjs'],
