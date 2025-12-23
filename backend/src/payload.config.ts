@@ -15,29 +15,6 @@ import { Comments } from './collections/Comments'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Lista de origenes permitidos para CORS
-const allowedOrigins = [
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'http://localhost:3002',
-  'http://localhost:5173', 
-  'http://localhost:5174',
-  'http://localhost:4173',
-  'https://blog-redtickets.vercel.app',
-  'https://redtickets-backend.vercel.app',
-  'https://redtickets-backend.onrender.com',
-  'https://redtickets-frontend.onrender.com',
-]
-
-// Función para validar origenes de Vercel (incluyendo preview deployments)
-const isAllowedOrigin = (origin: string): boolean => {
-  // Verificar si está en la lista de origenes permitidos
-  if (allowedOrigins.includes(origin)) return true
-  // Permitir cualquier subdominio de vercel.app
-  if (/^https:\/\/.*\.vercel\.app$/.test(origin)) return true
-  return false
-}
-
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
   admin: {
@@ -52,15 +29,20 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  // Configuración de CORS para permitir acceso desde el frontend
-  cors: (req) => {
-    const origin = req.headers.origin || ''
-    return isAllowedOrigin(origin)
-  },
-  csrf: (req) => {
-    const origin = req.headers.origin || ''
-    return isAllowedOrigin(origin)
-  },
+  // Configuración de CORS - Permitir todos los origenes (necesario para preview deployments dinámicos de Vercel)
+  cors: '*',
+  csrf: [
+    'http://localhost:3000',
+    'http://localhost:3001', 
+    'http://localhost:3002',
+    'http://localhost:5173',
+    'http://localhost:5174', 
+    'http://localhost:4173',
+    'https://blog-redtickets.vercel.app',
+    'https://redtickets-backend.vercel.app',
+    'https://redtickets-backend.onrender.com',
+    'https://redtickets-frontend.onrender.com',
+  ],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
