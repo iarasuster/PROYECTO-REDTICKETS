@@ -61,12 +61,14 @@ PAYLOAD_SECRET=resultado-del-comando-anterior
 Estos elementos **NO son vulnerabilidades** y SÍ se pueden publicar:
 
 ### ✅ System Prompts del Chatbot
+
 Los prompts del chatbot están en el código y **es correcto que estén públicos**. No reducen la seguridad:
 
 - `backend/src/app/api/chat/route.ts`
 - `backend/src/app/api/chat-structured/route.ts`
 
 ### ✅ Arquitectura de Respuestas
+
 La estructura de respuestas (archetypes, layers) es diseño público:
 
 - Documentación de arquetipos
@@ -74,6 +76,7 @@ La estructura de respuestas (archetypes, layers) es diseño público:
 - Componentes de Generative UI
 
 ### ✅ Endpoints y API
+
 Los endpoints son públicos por diseño:
 
 - `/api/contenido-blog`
@@ -81,6 +84,7 @@ Los endpoints son públicos por diseño:
 - `/api/comments`
 
 La seguridad está en:
+
 - Autenticación (JWT tokens)
 - Rate limiting
 - Validación de inputs
@@ -156,18 +160,21 @@ git push origin --force --all
 ### 1. Usa .env solo para desarrollo local
 
 Nunca uses `.env` en producción. En Render/Vercel:
+
 - Configura variables en el dashboard
 - Usa secrets managers
 
 ### 2. Principio de Mínimo Privilegio
 
 MongoDB users deben tener **solo** los permisos necesarios:
+
 - ✅ `readWrite` en database específica
 - ❌ NO `admin` o `root`
 
 ### 3. IP Whitelisting
 
 En MongoDB Atlas:
+
 - Desarrollo: Tu IP específica
 - Producción: IP del servidor (Render)
 - ❌ Evitar `0.0.0.0/0` en producción
@@ -175,6 +182,7 @@ En MongoDB Atlas:
 ### 4. Rotación de Credenciales
 
 Rota credenciales:
+
 - Cada 90 días (buena práctica)
 - Inmediatamente si sospechas compromiso
 - Antes de hacer un repo público
@@ -182,6 +190,7 @@ Rota credenciales:
 ### 5. Monitoreo
 
 Habilita en GitHub:
+
 - **Dependabot** - updates automáticos de seguridad
 - **Secret scanning** - detecta secrets commiteados
 - **Code scanning** - análisis estático de seguridad

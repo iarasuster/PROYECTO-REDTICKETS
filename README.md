@@ -100,11 +100,11 @@ Autenticación JWT, CORS configurado, protección CSRF y análisis de contenido
 
 ### Prerequisitos
 
-| Herramienta | Versión | Enlace |
-|------------|---------|--------|
-| Node.js | 20.19.5+ | [Descargar](https://nodejs.org/) |
+| Herramienta   | Versión   | Enlace                                                      |
+| ------------- | --------- | ----------------------------------------------------------- |
+| Node.js       | 20.19.5+  | [Descargar](https://nodejs.org/)                            |
 | MongoDB Atlas | Free Tier | [Registrarse](https://www.mongodb.com/cloud/atlas/register) |
-| Groq API Key | Gratuita | [Obtener Key](https://console.groq.com/) |
+| Groq API Key  | Gratuita  | [Obtener Key](https://console.groq.com/)                    |
 
 > **📚 Guía de Seguridad**: Ver [SECURITY.md](./SECURITY.md) para obtener tus credenciales de forma segura.
 
@@ -657,13 +657,13 @@ nvm alias default 20.19.5
 
 ### Guías Completas
 
-| Documento | Descripción |
-|-----------|-------------|
-| [DEPLOY-GUIDE.md](./DEPLOY-GUIDE.md) | Guía completa de despliegue en Render con GitHub Actions |
-| [DOCUMENTACION-CHATBOT.md](./DOCUMENTACION-CHATBOT.md) | Arquitectura detallada del chatbot y Generative UI |
-| [STRUCTURED-CHAT-GUIDE.md](./STRUCTURED-CHAT-GUIDE.md) | Especificaciones del sistema de chat estructurado |
-| [SECURITY.md](./SECURITY.md) | 🔒 Guía de seguridad para contribuidores |
-| [.github/copilot-instructions.md](./.github/copilot-instructions.md) | Instrucciones para desarrollo con GitHub Copilot |
+| Documento                                                            | Descripción                                              |
+| -------------------------------------------------------------------- | -------------------------------------------------------- |
+| [DEPLOY-GUIDE.md](./DEPLOY-GUIDE.md)                                 | Guía completa de despliegue en Render con GitHub Actions |
+| [DOCUMENTACION-CHATBOT.md](./DOCUMENTACION-CHATBOT.md)               | Arquitectura detallada del chatbot y Generative UI       |
+| [STRUCTURED-CHAT-GUIDE.md](./STRUCTURED-CHAT-GUIDE.md)               | Especificaciones del sistema de chat estructurado        |
+| [SECURITY.md](./SECURITY.md)                                         | 🔒 Guía de seguridad para contribuidores                 |
+| [.github/copilot-instructions.md](./.github/copilot-instructions.md) | Instrucciones para desarrollo con GitHub Copilot         |
 
 ### Referencias Externas
 
@@ -706,6 +706,7 @@ Ver carpeta `backend/tests/` para ejemplos de uso de la API y tests de integraci
 ```
 
 Este script verifica:
+
 - ✅ Archivos `.env` no están en staging
 - ✅ Sin secrets en historial de Git
 - ✅ Sin credenciales hardcodeadas
@@ -734,7 +735,6 @@ Este script verifica:
 - ✅ **Sanitización de inputs** con Payload validators
 - ✅ **HTTPS only** en producción (Render)
 - ✅ **Environment variables** nunca expuestas en frontend
-
 
 ## 📞 Soporte y Contacto
 
