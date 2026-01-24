@@ -4,25 +4,42 @@ export const Media: CollectionConfig = {
   slug: 'media',
   access: {
     read: () => true,
-    create: ({ req: { user } }) => {
-      console.log('🔍 Media Create - User:', user ? user.email : 'NO USER')
-      return !!user
-    },
-    update: ({ req: { user } }) => {
-      console.log('🔍 Media Update - User:', user ? user.email : 'NO USER')
-      return !!user
-    },
-    delete: ({ req: { user } }) => {
-      console.log('🔍 Media Delete - User:', user ? user.email : 'NO USER')
-      return !!user
-    },
+    create: ({ req: { user } }) => !!user,
+    update: ({ req: { user } }) => !!user,
+    delete: ({ req: { user } }) => !!user,
   },
   fields: [
+    {
+      name: 'filename',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'url',
+      type: 'text',
+      required: true,
+    },
     {
       name: 'alt',
       type: 'text',
       required: true,
     },
+    {
+      name: 'width',
+      type: 'number',
+    },
+    {
+      name: 'height',
+      type: 'number',
+    },
+    {
+      name: 'mimeType',
+      type: 'text',
+    },
+    {
+      name: 'filesize',
+      type: 'number',
+    },
   ],
-  upload: true,
+  // NO upload: true - las URLs vienen directamente de Cloudinary
 }

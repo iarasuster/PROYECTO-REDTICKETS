@@ -58,47 +58,14 @@ export default buildConfig({
   sharp,
   plugins: [
     payloadCloudPlugin(),
-    cloudStoragePlugin({
-      collections: {
-        media: {
-          adapter: ({ prefix }) => ({
-            name: 'cloudinary',
-            handleUpload: async ({ file }) => {
-              // Cloudinary requiere path o base64, no Buffer directo
-              let uploadSource: string = file.tempFilePath || ''
-              
-              if (!uploadSource && file.buffer) {
-                // Convertir buffer a base64 data URI
-                const base64 = file.buffer.toString('base64')
-                uploadSource = `data:${file.mimeType};base64,${base64}`
-              }
-              
-              if (!uploadSource) {
-                throw new Error('No file source available for upload')
-              }
-              
-              const result = await cloudinary.uploader.upload(uploadSource, {
-                folder: prefix || 'redtickets',
-                resource_type: 'auto',
-              })
-              
-              return {
-                ...file,
-                url: result.secure_url,
-                filename: result.public_id,
-              }
-            },
-            handleDelete: async ({ filename }) => {
-              await cloudinary.uploader.destroy(filename)
-            },
-            staticHandler: (_req, _args) => {
-              // Cloudinary maneja las URLs directamente, no necesitamos proxy
-              return new Response('Not found', { status: 404 })
-            },
-          }),
-          disablePayloadAccessControl: true, // URLs apuntan directo a Cloudinary
-        },
-      },
-    }),
+    // Plugin cloudStorage desactivado - usando URLs de Cloudinary directamente desde MongoDB
+    // cloudStoragePlugin({
+    //   collections: {
+    //     media: {
+    //       disableLocalStorage: true,
+    //       disablePayloadAccessControl: true,
+    //     },
+    //   },
+    // }),
   ],
 })
