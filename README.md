@@ -1,10 +1,10 @@
 <div align="center">
 
-# Blog RedTickets - Proyecto Integrador Iara Suster
+# Blog RedTickets 
 
 ### Sistema de Gestión de Contenidos con IA Conversacional
 
-Plataforma headless CMS empresarial con chatbot inteligente, búsqueda semántica y Generative UI. Construida con tecnologías modernas para escalabilidad y rendimiento.
+Plataforma headless CMS con chatbot inteligente, búsqueda semántica y Generative UI. Construida con tecnologías modernas para escalabilidad y rendimiento. Proyecto Final para la licenciatura en Diseño Multimedia de la Universidad ORT Uruguay.
 
 [![Node.js](https://img.shields.io/badge/Node.js-20.19.5-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-19.1.2-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
@@ -747,7 +747,6 @@ Este script verifica:
 <div align="center">
 
 **Construido con ❤️ por Iara Suster**
-Diseño Multimedia, Universidad ORT Uruguay
 
 [⬆ Volver arriba](#-redtickets-blog-platform)
 
