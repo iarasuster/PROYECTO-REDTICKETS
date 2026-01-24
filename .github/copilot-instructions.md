@@ -1,172 +1,376 @@
-# Instrucciones del Proyecto - Blog RedTickets con IA
+# 🎯 Instrucciones del Proyecto - RedTickets Blog con IA
 
 ## Descripción
 
-Blog corporativo headless con CMS, chatbot inteligente y Generative UI para RedTickets.
+Blog corporativo headless con Payload CMS, chatbot inteligente con búsqueda semántica y Generative UI. Sistema de gestión de contenido estructurado por secciones con capacidades de IA conversacional.
 
-## Arquitectura
+---
 
-- **Backend**: Payload CMS con Next.js 15 y MongoDB Atlas
-- **Frontend**: React con Vite y React Router
-- **Base de datos**: MongoDB Atlas (Cloud)
-- **APIs**: REST automática generada por Payload
-- **IA**: Groq (Llama 3.1) + Vercel AI SDK + Generative UI
-- **Runtime**: Node.js 20.19.5 (gestionado con nvm)
+## 🏗️ Arquitectura del Sistema
 
-## Estructura de Datos
+### Stack Principal
 
-### Colección Posts
+- **Backend**: Payload CMS v3.59 + Next.js 15.4 (App Router)
+- **Frontend**: React 18 + Vite 5 + React Router 6
+- **Base de datos**: MongoDB Atlas (cloud, con mongoose adapter)
+- **IA**: Groq (Llama 3.1-8b-instant) + Vercel AI SDK v5 + OpenAI embeddings
+- **Runtime**: Node.js 20.19.5 (usar nvm)
+- **Deploy**: Render.com (configurado con `render.yaml`)
+
+### Puertos de Desarrollo
+
+- Backend (Payload + API): `http://localhost:3000`
+- Admin Panel: `http://localhost:3000/admin`
+- Frontend: `http://localhost:5173`
+
+### Separación de Responsabilidades
+
+- **Backend** genera **tipos automáticos** (`payload-types.ts`) para TypeScript
+- **Frontend** consume API REST pública (sin autenticación requerida para lectura)
+- **Payload CMS** auto-genera endpoints REST y GraphQL para todas las collections
+
+---
+
+## 📦 Collections de Payload (Modelos de Datos)
+
+### ContenidoBlog (`contenido-blog`)
+
+**Patrón único**: Un documento = una sección completa del sitio  
+**Secciones válidas**: `inicio | sobre_nosotros | servicios | comunidad | ayuda | contacto`
+
+```typescript
+// Estructura flexible según sección
+{
+  seccion: 'sobre_nosotros', // select único (1 doc por sección)
+  titulo: 'Sobre Nosotros',
+  descripcion: 'Texto intro...',
+
+  // Campos condicionales (admin.condition)
+  estadisticas?: { transacciones, eventos_realizados, productores }, // solo 'inicio'
+  fundadores?: [{ nombre, cargo }], // solo 'sobre_nosotros'
+  equipo?: [{ nombre, area, imagen }],
+  eventos?: [{ titulo, fecha, descripcion }], // solo 'comunidad'
+  faqs?: [{ pregunta, respuesta }], // solo 'ayuda'
+  // ... más campos según sección
+}
+```
+
+**Ver archivo completo**: [backend/src/collections/ContenidoBlog.ts](backend/src/collections/ContenidoBlog.ts)
+
+### Comments (`comments`)
+
+Sistema de comentarios con **análisis de sentimiento automático**:
+
+- `author`, `comment`, `eventRef` (opcional)
+- `sentimentScore` (-1 a 1), `toxicityScore` (0 a 1) - calculados en hook
+- `status`: `pendiente | publicado | rechazado`
+- Hook `beforeValidate` llama `analizarTexto()` para moderar automáticamente
+
+**Acceso**: Crear=público, leer/actualizar/eliminar=admin only
+
+### Users y Media
+
+- **Users**: Admin con email/password (crear primer usuario en `/admin`)
+- **Media**: Gestión de archivos con Sharp para optimización
+
+---
+
+## 🤖 Sistema de Chatbot con IA
+
+### Arquitectura del Chatbot
+
+```
+Usuario → ChatUI.jsx (frontend)
+         ↓ useSimpleChat hook
+         ↓ POST /api/chat (backend)
+         ↓ Vercel AI SDK streamText()
+         ↓ Groq Llama 3.1-8b-instant
+         ↓ Response con [ACTION:...] embebidos
+         ↓ Parser en useSimpleChat
+         ↓ Renderiza botones de navegación
+```
+
+### Endpoints de Chat
+
+#### `/api/chat-structured` - Chat con respuestas estructuradas (PRINCIPAL)
+
+- **Flujo**: User message → Groq streamText() → JSON en response body → Frontend parsea y renderiza
+- **Arquitectura**: Archetypes (discover/compare/inform/handoff/redirect) + Layers (visual/acknowledge/context/insight/nextSteps)
+- **Modelo**: Llama 3.1-8b-instant (rápido, conversacional)
+- **Componentes visuales**: CardList, VideoBlock, ImageBlock, ImageGallery
+- **Streaming**: Respuestas incrementales con `streamText()` de Vercel AI SDK
+- **Ver documentación completa**: [DOCUMENTACION-CHATBOT.md](DOCUMENTACION-CHATBOT.md)
+
+#### `/api/chat` - Chat simple con text commands (LEGACY)
+
+- **Flujo**: User message → Groq → Texto con comandos embebidos `[ACTION:...]`
+- **Parser**: Regex en frontend extrae comandos y genera botones
+- **Nota**: Mantener por compatibilidad, pero preferir `/api/chat-structured`
+
+### Generative UI - Arquitectura Actual
+
+**Frontend**: `ChatUI.jsx` con `useStructuredChat.js` hook
+
+**Respuesta JSON del LLM**:
 
 ```typescript
 {
-  titulo: string (requerido)
-  autor: string (requerido)
-  fecha: date (requerido)
-  imagenDestacada: upload (opcional)
-  contenido: richText (requerido)
-  slug: string (único, auto-generado)
-  publicado: boolean (default: false)
-  extracto: textarea (opcional)
+  archetype: "discover" | "compare" | "inform" | "handoff" | "redirect",
+  layers: {
+    visual?: VisualBlock[],      // Componentes UI (card-list, video, image, image-gallery)
+    acknowledge?: { text },       // Reconocimiento breve de intención
+    context?: { text },           // Clarificación adicional (opcional)
+    insight?: { text },           // Recomendación humana (opcional)
+    nextSteps?: ActionBlock[]     // Botones de acción (navigate/message), máx 3
+  }
 }
 ```
 
-## Componentes Frontend
+**Visual Blocks** (`frontend/src/components/chatbot/`):
 
-### BlogList.jsx
+- `ImageBlock.jsx` - Imagen única con caption
+- `ImageGallery.jsx` - Grid de imágenes (equipo, productos)
+- `CardList.jsx` - Lista de servicios/opciones con acciones
+- `VideoBlock.jsx` - Video embebido (SOLO existe 1: tutorial de compra)
 
-- Muestra posts en formato tarjetas
-- Paginación y filtros
-- Manejo de estados de carga
-- Responsive design
+**Renderizado** (`StructuredChatUI.jsx`):
 
-### BlogPost.jsx
+- Orden: visual → text layers → nextSteps
+- Animaciones con CSS transitions
+- Estados: `ready | submitting | streaming | error`
+- Hook: `useStructuredChat.js` maneja streaming JSON
 
-- Vista detalle de post individual
-- Renderizado de contenido rico
-- Navegación entre posts
-- Breadcrumbs
+````
 
-### Chatbot.jsx
+**Visual Blocks** (`frontend/src/components/chatbot/`):
+- `ImageBlock.jsx` - Imagen única con caption
+- `ImageGallery.jsx` - Grid de imágenes (equipo, productos)
+- `CardList.jsx` - Lista de servicios/opciones con acciones
+- `VideoBlock.jsx` - Video embebido (SOLO existe 1: tutorial de compra)
 
-- Chat flotante interactivo
-- Respuestas predefinidas por categorías
-- Animaciones y transiciones
-- Responsive mobile-first
+**Renderizado** (`ChatUI.jsx`):
+- Orden: visual → text layers → nextSteps
+- Animaciones con CSS transitions
+- Estados: `ready | submitting | streaming | error`
+- Hook: `useStructuredChat.js` maneja streaming JSON
+- Botones header: Limpiar chat, Maximizar/Minimizar, Cerrar
 
-## APIs Disponibles
+### Configuración de Modelos
 
-### Endpoints Principales
+**Groq models disponibles** (todos gratuitos):
+- `llama-3.1-8b-instant` - Ultra-rápido, conversacional ✅ (EN USO)
+- `llama-3.1-70b-versatile` - Más inteligente, más lento (DESACTIVADO por Groq)
+- `llama-3.3-70b-versatile` - Más reciente (no soporta json_schema)
+- `mixtral-8x7b-32768` - Contexto largo
 
-- `GET /api/posts` - Lista de posts
-- `GET /api/posts/:id` - Post por ID
-- `GET /api/posts?where={"slug":{"equals":"post-slug"}}` - Post por slug
-- `GET /api/media` - Archivos multimedia
+**Cambiar modelo**: Editar directamente en `route.ts`:
 
-### Filtros y Consultas
+---
+
+## 🔧 Flujos de Desarrollo Críticos
+
+### 1. Agregar Nueva Sección al Sitio
+
+```typescript
+// 1. Backend: ContenidoBlog.ts
+{
+  name: 'seccion',
+  options: [
+    // ... existentes
+    { label: 'Nueva Sección', value: 'nueva_seccion' }
+  ]
+}
+
+// 2. Agregar campos condicionales
+{
+  name: 'campo_especifico',
+  type: 'text',
+  admin: {
+    condition: (data) => data.seccion === 'nueva_seccion'
+  }
+}
+
+// 3. Frontend: App.jsx
+<Route path="/seccion/nueva-seccion" element={<SectionPage />} />
+
+// 4. Admin Panel: Crear documento con seccion='nueva_seccion'
+````
+
+### 2. Testing
+
+```bash
+# Backend
+cd backend
+
+# Tests de integración (Vitest)
+npm run test:int          # API + Collections
+
+# Tests E2E (Playwright)
+npm run test:e2e          # Frontend en navegador
+
+# Todos los tests
+npm run test
+```
+
+**Nota**: Tests configurados en `vitest.config.mts` y `playwright.config.ts`
+
+### 3. Cargar Contenido Inicial
+
+```bash
+cd backend
+npm run seed  # Ejecuta seed-contenido.js
+```
+
+**Script** (`seed-contenido.js`):
+
+- Carga datos JSON estructurados para todas las secciones
+- Crea documentos en `contenido-blog` con Payload Local API
+- Útil para reset de base de datos o datos de demo
+
+---
+
+## 🚀 Deploy y CI/CD
+
+### Configuración con render.yaml
+
+**Blueprint automático** para Render.com:
+
+- **Backend**: Web Service con Node 20.19.5, build+start scripts
+- **Frontend**: Static Site con cache headers y SPA rewrites
+- **Env vars**: `DATABASE_URI`, `GROQ_API_KEY` deben configurarse manualmente
+
+```bash
+# Deploy desde GitHub
+git push origin main
+# Render detecta cambios y re-deploys automáticamente
+```
+
+**Ver guía completa**: [DEPLOY-GUIDE.md](DEPLOY-GUIDE.md)
+
+### Variables de Entorno Críticas
+
+**Backend** (`.env`):
+
+```env
+DATABASE_URI=mongodb+srv://...
+PAYLOAD_SECRET=$(openssl rand -base64 32)
+GROQ_API_KEY=gsk_...
+NODE_ENV=development
+```
+
+**Frontend** (`.env`):
+
+```env
+VITE_API_URL=http://localhost:3000
+VITE_CHAT_API_URL=http://localhost:3000/api/chat
+VITE_ENABLE_AI_CHAT=true
+```
+
+---
+
+## 🎨 Patrones y Convenciones
+
+### API de Payload (Auto-generadas)
 
 ```javascript
-// Solo posts publicados
-where: {
-  publicado: {
-    equals: true;
-  }
-}
+// Queries con filtros
+GET /api/contenido-blog?where={"seccion":{"equals":"inicio"}}
 
-// Búsqueda por texto
-where: {
-  titulo: {
-    contains: "término";
-  }
-}
+// Paginación
+GET /api/contenido-blog?page=1&limit=10
 
 // Ordenamiento
-sort: "-fecha";
+GET /api/contenido-blog?sort=-createdAt
+
+// Profundidad (populate relations)
+GET /api/contenido-blog?depth=2
 ```
 
-## Configuración de Desarrollo
+### CORS Pre-configurado
 
-### Puertos
+Payload permite múltiples origins (ver `payload.config.ts`):
 
-- Backend: http://localhost:3001
-- Frontend: http://localhost:5173
-- Admin Panel: http://localhost:3001/admin
+- Localhost ports: 3000, 3001, 5173, 5174
+- Vercel preview deployments: wildcards via `cors: '*'`
+- CSRF protection con lista explícita
 
-### Variables de Entorno
+### Análisis de Texto (Comments)
 
+**Hook automático** en `Comments.ts`:
+
+```typescript
+beforeValidate: async ({ data, req }) => {
+  const analisis = await analizarTexto(data.comment);
+  data.sentimentScore = analisis.sentimiento;
+  data.toxicityScore = analisis.toxicidad;
+  data.status = analisis.toxicidad > 0.5 ? "rechazado" : "pendiente";
+};
 ```
-DATABASE_URI=mongodb+srv://user:pass@cluster.mongodb.net/database
-PAYLOAD_SECRET=tu-secret-key
-```
 
-## Comandos Útiles
+**Implementación**: Usa análisis heurístico en `backend/src/utils/analizarTexto.ts`
+
+---
+
+## 📚 Scripts Útiles
 
 ### Backend
 
 ```bash
-cd backend
-npm run dev          # Desarrollo
-npm run build        # Construcción
-npm run start        # Producción
+npm run dev                    # Next.js dev con Payload
+npm run devsafe                # Limpia .next y reinicia
+npm run generate:types         # Genera payload-types.ts
+npm run generate:importmap     # Genera admin importMap
+npm run seed                   # Carga contenido inicial
+npm run test                   # Tests int + e2e
 ```
 
 ### Frontend
 
 ```bash
-cd frontend
-npm run dev          # Desarrollo
-npm run build        # Construcción
-npm run preview      # Preview de build
+npm run dev                    # Vite dev server
+npm run build                  # Build producción
+npm run preview                # Preview del build
 ```
 
-## Chatbot con IA y Generative UI
+---
 
-### Estructura del Chatbot
+## ⚠️ Problemas Comunes
 
-```
-ai-assistant/
-├── useChatbot.js           # Hook React para gestión de chat (LEGACY - no usar)
-├── generativeActions.jsx   # Acciones dinámicas UI (LEGACY - no usar)
-└── chatbot.js              # LEGACY - usar backend API en su lugar
+### "Cannot connect to MongoDB"
 
-hooks/
-└── useSimpleChat.js        # Hook React con streaming y parsing de acciones
+→ Verificar `DATABASE_URI` en `.env` (incluir `/database?retryWrites=true&w=majority`)
 
-components/
-├── ChatUI.jsx              # Interfaz de chat con streaming
-└── GenerativeRenderer.jsx  # Renderizador de UI dinámica (LEGACY)
-```
+### "Groq API error" en chatbot
 
-### Flujo del Chatbot
+→ Verificar `GROQ_API_KEY` válida en backend (obtener en console.groq.com)
 
-1. Usuario escribe pregunta en ChatUI.jsx
-2. useSimpleChat.js envía request a backend /api/chat
-3. Backend usa Vercel AI SDK + Groq (Llama 3.1-8b-instant)
-4. Respuesta streaming con comandos [ACTION:navigate:seccion|label]
-5. useSimpleChat parsea acciones y genera botones dinámicos
-6. Botones navegan a secciones del sitio
+### Posts no aparecen en frontend
 
-### Modelos de IA
+→ Verificar que `seccion` en admin panel coincida exactamente con valores en select
 
-- **Producción**: Groq `llama-3.1-8b-instant` (gratis, ultra-rápido)
-- **Alternativas**: `llama-3.1-70b-versatile`, `mixtral-8x7b-32768`
-- **API**: Groq Cloud (gratuita con rate limits generosos)
-- **SDK**: Vercel AI SDK v5 con `streamText()` y tools
+### Admin Panel redirige a login infinito
 
-### Generative UI
+→ Regenerar `PAYLOAD_SECRET`: `openssl rand -base64 32`
 
-- Basado en comandos inyectados en el texto: `[ACTION:navigate:seccion|label]`
-- Parser en useSimpleChat.js extrae comandos y genera botones
-- Botones de navegación renderizados dinámicamente en ChatUI
-- Navega a: inicio, sobre-nosotros, servicios, comunidad, ayuda, contacto
+### Frontend no conecta con backend en deploy
 
-## Próximas Mejoras
+→ Verificar `VITE_API_URL` apunta a backend desplegado (no localhost)
 
-- [x] Chatbot con Groq + Vercel AI SDK ✅
-- [x] Generative UI con comandos de navegación ✅
-- [x] Streaming de respuestas en tiempo real ✅
-- [ ] Más tipos de acciones (cards, FAQs, formularios)
-- [ ] Sistema de comentarios
-- [ ] SEO dinámico
-- [ ] PWA capabilities
-- [ ] Optimización de imágenes
-- [ ] Analytics de conversaciones del bot
+---
+
+## 🔐 Seguridad
+
+- ✅ **Next.js 15.4.8** - Patch CVE-2025-66478
+- ✅ **React 19.1.2** - Patch CVE-2025-55182
+- ✅ **Payload 3.59.1** - Última versión estable
+- ✅ **Análisis de toxicidad** automático en comentarios
+- ✅ **CSRF tokens** configurados para dominios específicos
+
+---
+
+## 📖 Referencias
+
+- [Payload CMS Docs](https://payloadcms.com/docs) - Collections, hooks, auth
+- [Vercel AI SDK](https://sdk.vercel.ai/docs) - streamText, useChat patterns
+- [Groq Cloud](https://console.groq.com/docs) - Modelos y rate limits
+- [OpenAI Guidelines](https://platform.openai.com/docs/guides/prompt-engineering) - Diseño de prompts

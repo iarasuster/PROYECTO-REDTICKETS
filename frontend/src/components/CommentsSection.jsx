@@ -7,8 +7,6 @@ const CommentsSection = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleCommentSubmitted = (newComment) => {
-    console.log("✅ Nuevo comentario enviado:", newComment);
-
     // Si el comentario fue publicado automáticamente, recargar la lista
     if (newComment.status === "publicado") {
       setRefreshTrigger((prev) => prev + 1);

@@ -159,62 +159,6 @@ export const ContenidoBlog: CollectionConfig = {
           ],
         },
         {
-          name: 'partners_tecnologicos',
-          type: 'group',
-          label: 'Partners Tecnológicos',
-          fields: [
-            { 
-              name: 'titulo', 
-              type: 'text', 
-              label: 'Título de la Sección',
-              defaultValue: 'Partners Tecnológicos',
-            },
-            { name: 'descripcion', type: 'textarea', label: 'Descripción' },
-            {
-              name: 'logos',
-              type: 'array',
-              label: 'Logos',
-              fields: [
-                { name: 'nombre', type: 'text', label: 'Nombre' },
-                { 
-                  name: 'imagen', 
-                  type: 'upload', 
-                  relationTo: 'media',
-                  label: 'Logo/Imagen',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: 'amigos_ecommerce',
-          type: 'group',
-          label: 'Amigos E-commerce',
-          fields: [
-            { 
-              name: 'titulo', 
-              type: 'text', 
-              label: 'Título de la Sección',
-              defaultValue: 'Amigos E-commerce',
-            },
-            { name: 'descripcion', type: 'textarea', label: 'Descripción' },
-            {
-              name: 'logos',
-              type: 'array',
-              label: 'Logos',
-              fields: [
-                { name: 'nombre', type: 'text', label: 'Nombre' },
-                { 
-                  name: 'imagen', 
-                  type: 'upload', 
-                  relationTo: 'media',
-                  label: 'Logo/Imagen',
-                },
-              ],
-            },
-          ],
-        },
-        {
           name: 'partners_publicitarios',
           type: 'group',
           label: 'Partners Publicitarios',

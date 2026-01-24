@@ -13,12 +13,10 @@ const LogoCarousel = ({ logos = [], speed = 30 }) => {
 
   useEffect(() => {
     setMounted(true);
-    console.log("🎠 LogoCarousel montado con logos:", logos);
   }, []);
 
   // Si no hay logos, no renderizar nada
   if (!logos || logos.length === 0) {
-    console.log("⚠️ LogoCarousel: No hay logos para mostrar");
     return null;
   }
 
@@ -61,7 +59,7 @@ const LogoCarousel = ({ logos = [], speed = 30 }) => {
       >
         {duplicatedLogos.map((logo, index) => {
           const imageUrl = getImageUrl(logo);
-          console.log(`🖼️ Logo ${index}:`, logo.nombre, "URL:", imageUrl);
+
 
           return (
             <div
@@ -75,10 +73,8 @@ const LogoCarousel = ({ logos = [], speed = 30 }) => {
                   className="logo-carousel__image"
                   loading="lazy"
                   onError={(e) => {
-                    console.error("❌ Error cargando imagen:", imageUrl);
                     e.target.style.display = "none";
                   }}
-                  onLoad={() => console.log("✅ Imagen cargada:", imageUrl)}
                 />
               ) : (
                 <div className="logo-carousel__placeholder">

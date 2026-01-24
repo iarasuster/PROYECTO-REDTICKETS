@@ -89,7 +89,6 @@ function SectionPage() {
           )}
         </div>
 
-        {/* Renderizar el contenido dinámico usando el slug directamente */}
         <SectionContent seccion={seccionSlug} />
       </div>
     </div>

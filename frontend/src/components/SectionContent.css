@@ -1220,21 +1220,6 @@
   padding-bottom: 15%;
 }
 
-/* Efecto sutil al tocar/click */
-.fundador-hotspot.active::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at center bottom, 
-    rgba(255, 102, 0, 0.2) 0%, 
-    transparent 70%
-  );
-  pointer-events: none;
-}
-
 /* Isotipo (estrella) sobre cada persona */
 .fundador-star-icon {
   width: 40px;
@@ -1245,7 +1230,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-  border: 2px solid rgba(255, 102, 0, 0.4);
+  border: 1px solid rgba(255, 102, 0, 0.4);
   transition: all 0.3s ease;
   padding: 8px;
   margin-bottom: 10%;
@@ -1345,7 +1330,7 @@
   }
 }
 
-/* ========== 🤝 SOCIOS COMERCIALES - PURE GLASS ========== */
+
 .socios-comerciales {
   margin-top: 3rem;
 }
@@ -1358,7 +1343,6 @@
   max-width: 800px;
 }
 
-/* Socios Category Row - No boxes, just spacing */
 .socios-category-row {
   margin-bottom: 4rem;
   padding: 0;
@@ -1990,79 +1974,109 @@
 /* ========== 🎯 SERVICIOS GRID MODERNO ========== */
 .servicios-container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 4rem 2rem;
+}
+
+/* Introducción de servicios */
+.servicios-intro {
   text-align: center;
-}
-
-.servicios-grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-}
-
-.servicio-card {
+  max-width: 800px;
+  margin: 0 auto 4rem;
+  padding: 2.5rem;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 3rem 2rem;
-  text-align: center;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 102, 0, 0.1);
+}
+
+.servicios-intro h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.servicios-intro p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+/* Grid de servicios - Compacto */
+.servicios-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.servicio-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
 }
 
-.servicio-card::before {
+.servicio-item::before {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 102, 0, 0.2) 0%, transparent 70%);
-  transform: translate(-50%, -50%);
-  transition: all 0.5s ease;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: linear-gradient(180deg, #ff6600 0%, #ff8833 100%);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
 }
 
-.servicio-card:hover::before {
-  width: 400px;
-  height: 400px;
+.servicio-item:hover::before {
+  transform: scaleY(1);
 }
 
-.servicio-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 40px rgba(255, 102, 0, 0.3);
-  background: rgba(255, 255, 255, 0.05);
+.servicio-item:hover {
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 102, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(255, 102, 0, 0.15);
 }
 
 .servicio-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 1.5rem;
   color: #ff6600;
-  opacity: 0.7;
+  opacity: 0.8;
   transition: all 0.3s ease;
+  flex-shrink: 0;
+  width: 32px;
+  text-align: center;
 }
 
-.servicio-card:hover .servicio-icon {
+.servicio-item:hover .servicio-icon {
   opacity: 1;
-  transform: scale(1.1);
+  transform: scale(1.15);
+  color: #ff8833;
 }
 
-.servicio-card h4 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #ffffff;
+.servicio-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.4;
-  position: relative;
-  z-index: 1;
   transition: color 0.3s ease;
 }
 
-.servicio-card:hover h4 {
-  color: #ff6600;
+.servicio-item:hover .servicio-text {
+  color: #ffffff;
 }
 
 /* ========== 📋 AYUDA CON TABS ========== */

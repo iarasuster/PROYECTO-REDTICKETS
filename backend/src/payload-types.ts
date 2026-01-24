@@ -217,28 +217,6 @@ export interface ContenidoBlog {
           }[]
         | null;
     };
-    partners_tecnologicos?: {
-      titulo?: string | null;
-      descripcion?: string | null;
-      logos?:
-        | {
-            nombre?: string | null;
-            imagen?: (string | null) | Media;
-            id?: string | null;
-          }[]
-        | null;
-    };
-    amigos_ecommerce?: {
-      titulo?: string | null;
-      descripcion?: string | null;
-      logos?:
-        | {
-            nombre?: string | null;
-            imagen?: (string | null) | Media;
-            id?: string | null;
-          }[]
-        | null;
-    };
     partners_publicitarios?: {
       titulo?: string | null;
       descripcion?: string | null;
@@ -522,32 +500,6 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
     | {
         descripcion?: T;
         productores?:
-          | T
-          | {
-              titulo?: T;
-              descripcion?: T;
-              logos?:
-                | T
-                | {
-                    nombre?: T;
-                    imagen?: T;
-                    id?: T;
-                  };
-            };
-        partners_tecnologicos?:
-          | T
-          | {
-              titulo?: T;
-              descripcion?: T;
-              logos?:
-                | T
-                | {
-                    nombre?: T;
-                    imagen?: T;
-                    id?: T;
-                  };
-            };
-        amigos_ecommerce?:
           | T
           | {
               titulo?: T;

@@ -2,6 +2,8 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
+import { v2 as cloudinary } from 'cloudinary'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -14,6 +16,13 @@ import { Comments } from './collections/Comments'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// Configurar Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
@@ -49,6 +58,47 @@ export default buildConfig({
   sharp,
   plugins: [
     payloadCloudPlugin(),
-    // storage-adapter-placeholder
+    cloudStoragePlugin({
+      collections: {
+        media: {
+          adapter: ({ prefix }) => ({
+            name: 'cloudinary',
+            handleUpload: async ({ file }) => {
+              // Cloudinary requiere path o base64, no Buffer directo
+              let uploadSource: string = file.tempFilePath || ''
+              
+              if (!uploadSource && file.buffer) {
+                // Convertir buffer a base64 data URI
+                const base64 = file.buffer.toString('base64')
+                uploadSource = `data:${file.mimeType};base64,${base64}`
+              }
+              
+              if (!uploadSource) {
+                throw new Error('No file source available for upload')
+              }
+              
+              const result = await cloudinary.uploader.upload(uploadSource, {
+                folder: prefix || 'redtickets',
+                resource_type: 'auto',
+              })
+              
+              return {
+                ...file,
+                url: result.secure_url,
+                filename: result.public_id,
+              }
+            },
+            handleDelete: async ({ filename }) => {
+              await cloudinary.uploader.destroy(filename)
+            },
+            staticHandler: (_req, _args) => {
+              // Cloudinary maneja las URLs directamente, no necesitamos proxy
+              return new Response('Not found', { status: 404 })
+            },
+          }),
+          disablePayloadAccessControl: true, // URLs apuntan directo a Cloudinary
+        },
+      },
+    }),
   ],
 })

@@ -30,6 +30,30 @@
   }
 }
 
+/* 🔍 Maximized State */
+.chat-ui--maximized {
+  width: 90vw !important;
+  height: 90vh !important;
+  max-width: 1400px !important;
+  max-height: 90vh !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  border-radius: 12px !important;
+}
+
+@media (max-width: 768px) {
+  .chat-ui--maximized {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+  }
+}
+
 /* ✨ Header con gradiente naranja */
 .chat-ui__header {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
@@ -468,4 +492,133 @@
   }
 }
 
+/* ========================================
+   VISUAL BLOCKS - Generative UI
+   ======================================== */
 
+.chat-ui__visual-content {
+  margin: 8px 0;
+}
+
+/* Sobrescribir estilos de visual blocks para match con tema */
+.chat-ui .visual-block {
+  margin: 8px 0;
+  border-radius: 8px;
+  background: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-ui .visual-image {
+  border-radius: 8px 8px 0 0;
+}
+
+.chat-ui .image-caption {
+  background: #2a2a2a;
+  color: #ccc;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Image Gallery */
+.chat-ui .gallery-image {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.chat-ui .gallery-name {
+  color: #fff;
+}
+
+.chat-ui .gallery-role {
+  color: #999;
+}
+
+/* Card List */
+.chat-ui .card {
+  background: #2a2a2a;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.chat-ui .card-clickable:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
+}
+
+.chat-ui .card-title {
+  color: #fff;
+}
+
+.chat-ui .card-description {
+  color: #aaa;
+}
+
+.chat-ui .card-action-hint {
+  color: var(--primary);
+}
+
+/* Video Block */
+.chat-ui .video-title {
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+}
+
+/* Text Layers con estilos diferentes */
+.chat-ui__text-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.chat-ui__layer-acknowledge {
+  font-weight: 500;
+  color: #fff;
+}
+
+.chat-ui__layer-context {
+  color: #ccc;
+  font-size: 0.95rem;
+}
+
+.chat-ui__layer-insight {
+  color: #ddd;
+  font-style: italic;
+  padding-left: 12px;
+  border-left: 3px solid var(--primary);
+  font-size: 0.95rem;
+}
+
+/* Suggested Actions en tema oscuro */
+.chat-ui .suggested-actions {
+  padding: 16px;
+  background: transparent;
+}
+
+.chat-ui .suggested-actions-title {
+  color: #fff;
+}
+
+.chat-ui .suggested-action-button {
+  background: #2a2a2a;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.chat-ui .suggested-action-button:hover {
+  background: #333;
+  border-color: var(--primary);
+}
+
+.chat-ui .action-label {
+  color: #fff;
+}
+
+/* Secondary action button variant */
+.chat-ui__action-btn--secondary {
+  background: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.chat-ui__action-btn--secondary:hover {
+  background: #333;
+  border-color: var(--primary);
+}

@@ -27,26 +27,12 @@ const SectionContent = ({ seccion, className = "" }) => {
       try {
         setLoading(true);
         const seccionField = seccion.replace(/-/g, "_");
-        console.log("🔍 SectionContent - Slug recibido:", seccion);
-        console.log("🔍 SectionContent - Campo BD:", seccionField);
-
         const result = await getContentBySection(seccionField);
-        console.log("🔍 SectionContent - Resultado API:", result);
 
         if (result.success && result.data) {
-          console.log("✅ SectionContent - Data recibida:", result.data);
-          console.log(
-            "🔍 SectionContent - Keys disponibles:",
-            Object.keys(result.data)
-          );
-          console.log(
-            "🔍 SectionContent - Estructura completa:",
-            JSON.stringify(result.data, null, 2)
-          );
           setContent(result.data);
           setError(null);
         } else {
-          console.error("❌ SectionContent - No se encontró contenido");
           setError("No se encontró contenido para esta sección");
         }
       } catch (err) {
@@ -146,7 +132,7 @@ const InicioContent = ({ data }) => {
           setLogosProductores(result.data.socios_comerciales.productores.logos);
         }
       } catch (err) {
-        console.error("Error cargando logos:", err);
+        // Silently fail in production
       }
     };
     fetchLogos();
@@ -313,7 +299,7 @@ const SobreNosotrosContent = ({ data }) => {
                       <strong>{fundador.nombre}</strong>
                       <span>{fundador.cargo}</span>
                     </div>
-                  )
+                  ),
               )}
             </div>
           )}
@@ -326,12 +312,6 @@ const SobreNosotrosContent = ({ data }) => {
           <h3 className="section-title">Nuestro Equipo</h3>
           <div className="team-grid">
             {data.equipo.map((miembro, idx) => {
-              console.log(
-                "🔍 Miembro equipo:",
-                miembro.nombre,
-                "Imagen:",
-                miembro.imagen
-              );
               return (
                 <ChromaGrid
                   key={idx}
@@ -345,12 +325,6 @@ const SobreNosotrosContent = ({ data }) => {
                           src={getImageUrl(miembro.imagen)}
                           alt={miembro.nombre}
                           loading="lazy"
-                          onError={(e) => {
-                            console.error(
-                              "Error cargando imagen:",
-                              miembro.imagen.url
-                            );
-                          }}
                         />
                       </div>
                     ) : (
@@ -401,51 +375,7 @@ const SobreNosotrosContent = ({ data }) => {
         </div>
       )}
 
-      {/* FILA 5: Partners Tecnológicos */}
-      {data.socios_comerciales?.partners_tecnologicos && (
-        <div className="sobre-row socios-category-row">
-          <h4 className="socios-category-title">
-            {data.socios_comerciales.partners_tecnologicos.titulo ||
-              "Partners Tecnológicos"}
-          </h4>
-          {data.socios_comerciales.partners_tecnologicos.descripcion && (
-            <p className="category-desc">
-              {data.socios_comerciales.partners_tecnologicos.descripcion}
-            </p>
-          )}
-          {data.socios_comerciales.partners_tecnologicos.logos &&
-            data.socios_comerciales.partners_tecnologicos.logos.length > 0 && (
-              <LogoCarousel
-                logos={data.socios_comerciales.partners_tecnologicos.logos}
-                speed={38}
-              />
-            )}
-        </div>
-      )}
-
-      {/* FILA 6: Amigos E-commerce */}
-      {data.socios_comerciales?.amigos_ecommerce && (
-        <div className="sobre-row socios-category-row">
-          <h4 className="socios-category-title">
-            {data.socios_comerciales.amigos_ecommerce.titulo ||
-              "Amigos E-commerce"}
-          </h4>
-          {data.socios_comerciales.amigos_ecommerce.descripcion && (
-            <p className="category-desc">
-              {data.socios_comerciales.amigos_ecommerce.descripcion}
-            </p>
-          )}
-          {data.socios_comerciales.amigos_ecommerce.logos &&
-            data.socios_comerciales.amigos_ecommerce.logos.length > 0 && (
-              <LogoCarousel
-                logos={data.socios_comerciales.amigos_ecommerce.logos}
-                speed={42}
-              />
-            )}
-        </div>
-      )}
-
-      {/* FILA 7: Partners Publicitarios */}
+      {/* FILA 5: Partners Publicitarios */}
       {data.socios_comerciales?.partners_publicitarios && (
         <div className="sobre-row socios-category-row">
           <h4 className="socios-category-title">
@@ -523,14 +453,25 @@ const ServiciosContent = ({ data }) => {
 
   return (
     <div className="servicios-container">
+      {/* Introducción de servicios */}
+      <div className="servicios-intro">
+        <h2>Soluciones completas para tu evento</h2>
+        <p>
+          En RedTickets ofrecemos una plataforma integral de ticketing que
+          abarca todo el ciclo del evento: desde la venta online hasta el
+          control de acceso. Nuestra tecnología permite gestionar entradas
+          físicas y digitales, con seguridad, personalización y soporte
+          profesional para eventos de cualquier tamaño.
+        </p>
+      </div>
+
+      {/* Grid de servicios */}
       {data.servicios_lista && data.servicios_lista.length > 0 && (
         <div className="servicios-grid-container">
           {data.servicios_lista.map((item, idx) => (
-            <div key={idx} className="servicio-card animate-item">
-              <div className="servicio-icon">
-                <i className={`fas ${getServiceIcon(item)}`}></i>
-              </div>
-              <h4>{item.servicio || item}</h4>
+            <div key={idx} className="servicio-item animate-item">
+              <i className={`fas ${getServiceIcon(item)} servicio-icon`}></i>
+              <span className="servicio-text">{item.servicio || item}</span>
             </div>
           ))}
         </div>
@@ -544,8 +485,6 @@ const ComunidadContent = ({ data }) => {
   const [dynamicTestimonios, setDynamicTestimonios] = useState([]);
 
   const handleCommentSubmitted = (newComment) => {
-    console.log("✅ Nuevo testimonio enviado:", newComment);
-
     // Si el comentario fue publicado automáticamente, recargar la lista
     if (newComment.status === "publicado") {
       setRefreshTrigger((prev) => prev + 1);
@@ -588,7 +527,7 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
       try {
         setLoading(true);
         const response = await fetch(
-          `${API_BASE_URL}/comments?where[status][equals]=publicado&sort=-createdAt&limit=50`
+          `${API_BASE_URL}/comments?where[status][equals]=publicado&sort=-createdAt&limit=50`,
         );
 
         if (response.ok) {
@@ -598,7 +537,7 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
           }
         }
       } catch (err) {
-        console.error("❌ Error fetching dynamic testimonios:", err);
+        // Silently fail
       } finally {
         setLoading(false);
       }
@@ -645,6 +584,26 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
 
 const AyudaContent = ({ data }) => {
   const [activeTab, setActiveTab] = useState("comprar");
+
+  // Leer el parámetro 'tab' de la URL al montar el componente
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get("tab");
+
+    if (
+      tabParam &&
+      [
+        "comprar",
+        "vender",
+        "datos",
+        "politicas",
+        "devoluciones",
+        "tecnica",
+      ].includes(tabParam)
+    ) {
+      setActiveTab(tabParam);
+    }
+  }, []);
 
   const tabs = [
     { id: "comprar", label: "Cómo Comprar" },
@@ -840,7 +799,7 @@ const AyudaContent = ({ data }) => {
                 <p>{data.ayuda_tecnica.cancelar_compra_totem.descripcion}</p>
                 {data.ayuda_tecnica.cancelar_compra_totem.campos &&
                   Array.isArray(
-                    data.ayuda_tecnica.cancelar_compra_totem.campos
+                    data.ayuda_tecnica.cancelar_compra_totem.campos,
                   ) && (
                     <form
                       className="ayuda-form"
@@ -869,7 +828,7 @@ const AyudaContent = ({ data }) => {
                               )}
                             </div>
                           );
-                        }
+                        },
                       )}
                       <button type="submit" className="btn-primary">
                         Enviar Solicitud

@@ -21,14 +21,8 @@ async function pingBackend() {
       method: "GET",
       signal: AbortSignal.timeout(5000), // 5s timeout
     });
-
-    if (response.ok) {
-      console.log("✅ Backend ping successful");
-    } else {
-      console.warn("⚠️ Backend ping failed:", response.status);
-    }
   } catch (error) {
-    console.warn("⚠️ Backend ping error:", error.message);
+    // Silent fail
   }
 }
 
@@ -38,7 +32,6 @@ async function pingBackend() {
 export function startKeepAlive() {
   // Solo en producción
   if (import.meta.env.MODE !== "production") {
-    console.log("🔧 Keep-alive deshabilitado en desarrollo");
     return;
   }
 
@@ -47,7 +40,6 @@ export function startKeepAlive() {
 
   // Ping cada 10 minutos
   pingInterval = setInterval(pingBackend, PING_INTERVAL);
-  console.log("🏓 Keep-alive iniciado (cada 10 min)");
 }
 
 /**
@@ -57,6 +49,5 @@ export function stopKeepAlive() {
   if (pingInterval) {
     clearInterval(pingInterval);
     pingInterval = null;
-    console.log("🛑 Keep-alive detenido");
   }
 }

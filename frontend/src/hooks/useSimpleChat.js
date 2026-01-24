@@ -81,9 +81,6 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
           abortControllerRef.current.abort();
         }, 30000);
 
-        console.log("📤 Enviando mensaje a:", api);
-        console.log("📝 Mensajes:", [...messages, userMessage]);
-
         const response = await fetch(api, {
           method: "POST",
           headers: {
@@ -97,23 +94,16 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
 
         clearTimeout(timeoutId); // Cancelar timeout si la respuesta llega a tiempo
 
-        console.log(
-          "📨 Respuesta recibida:",
-          response.status,
-          response.statusText
-        );
-
         if (!response.ok) {
           const errorText = await response.text();
           console.error("❌ Error del servidor:", errorText);
           throw new Error(
-            `HTTP error! status: ${response.status} - ${errorText}`
+            `HTTP error! status: ${response.status} - ${errorText}`,
           );
         }
 
         // Verificar que el content-type es text/event-stream o text/plain
         const contentType = response.headers.get("content-type");
-        console.log("📦 Content-Type:", contentType);
 
         setStatus("streaming"); // 🌊 Stream comenzó
 
@@ -154,7 +144,6 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
 
         // 🚫 Si el contenido está vacío y no hay acciones, no mostrar el mensaje
         if (!parsedMessage.text.trim() && parsedMessage.actions.length === 0) {
-          console.warn("⚠️ Mensaje vacío recibido, no se mostrará");
           // Remover el mensaje vacío
           setMessages((prev) => prev.slice(0, -1));
           setStatus("ready");
@@ -181,7 +170,6 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
         }
       } catch (err) {
         if (err.name === "AbortError") {
-          console.warn("⏱️ Request abortado (timeout o cancelación manual)");
           setStatus("ready");
 
           // Agregar mensaje de timeout
@@ -195,7 +183,6 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
             },
           ]);
         } else {
-          console.error("❌ Chat error:", err);
           setError(err);
           setStatus("error");
 
@@ -214,7 +201,7 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
         abortControllerRef.current = null;
       }
     },
-    [input, status, messages, api, onFinish]
+    [input, status, messages, api, onFinish],
   );
 
   return {

@@ -1,14 +1,15 @@
 // URL base de la API de Payload CMS
 // Usa variable de entorno o fallback a Render
-const API_BASE_URL = import.meta.env.VITE_API_URL 
+const API_BASE_URL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
   : import.meta.env.MODE === "development"
     ? "http://localhost:3000/api"
     : "https://redtickets-backend.onrender.com/api";
 
 // URL base del servidor (sin /api) para archivos media
-export const SERVER_URL = import.meta.env.VITE_API_URL
-  || (import.meta.env.MODE === "development"
+export const SERVER_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.MODE === "development"
     ? "http://localhost:3000"
     : "https://redtickets-backend.onrender.com");
 
@@ -55,23 +56,16 @@ export const getAllContent = async () => {
 
 // Función para obtener contenido por sección desde ContenidoBlog
 export const getContentBySection = async (seccion) => {
-  console.log("🔍 API - getContentBySection llamada con:", seccion);
-
   // IMPORTANTE: El filtro where de Payload tiene bugs
   // Mejor estrategia: obtener TODOS los documentos y filtrar en el cliente
   // depth=2 permite cargar las relaciones de imágenes (upload fields)
   const result = await fetchAPI(`/contenido-blog?limit=100&depth=2`);
-  console.log("🔍 API - Total documentos recibidos:", result.docs?.length);
 
   // Filtrar manualmente por sección
   if (result.docs && result.docs.length > 0) {
     const doc = result.docs.find((d) => d.seccion === seccion);
 
     if (doc) {
-      console.log("✅ API - Documento encontrado para sección:", seccion);
-      console.log("🔍 API - Fundadores:", doc.fundadores?.length || 0);
-      console.log("🔍 API - Equipo:", doc.equipo?.length || 0);
-
       return {
         success: true,
         data: doc,
@@ -80,7 +74,6 @@ export const getContentBySection = async (seccion) => {
     }
   }
 
-  console.log("❌ API - No se encontró documento para sección:", seccion);
   return {
     success: false,
     data: {},
@@ -139,7 +132,7 @@ export const sendChatMessage = async (message, conversationHistory = []) => {
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(
-        errorData.response || `HTTP error! status: ${response.status}`
+        errorData.response || `HTTP error! status: ${response.status}`,
       );
     }
 

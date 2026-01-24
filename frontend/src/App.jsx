@@ -30,7 +30,7 @@ function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Keep-alive para mantener backend de Render despierto
+  // Keep-alive para mantener backend despierto
   useEffect(() => {
     startKeepAlive();
     return () => stopKeepAlive();
@@ -131,7 +131,7 @@ function App() {
         {/* Footer */}
         <footer className="app-footer">
           <div className="container">
-            <h3 className="footer-title">Mantente actualizado</h3>
+            <h3 className="footer-title">Mantenete actualizado</h3>
             <p className="mb-3">
               Recibe las mejores noticias de eventos en tu correo
             </p>
@@ -148,14 +148,16 @@ function App() {
             </form>
 
             <div className="footer-social">
-              <a href="#facebook">Facebook</a>
-              <a href="#twitter">Twitter</a>
-              <a href="#instagram">Instagram</a>
-              <a href="#linkedin">LinkedIn</a>
+              <a href="https://www.youtube.com/@redtickets8280">Youtube</a>
+              <a href="https://x.com/RedTicketsUY">X</a>
+              <a href="https://www.instagram.com/redtickets.uy/">Instagram</a>
+              <a href="https://www.linkedin.com/company/redtickets/">
+                LinkedIn
+              </a>
             </div>
 
             <div className="footer-bottom">
-              <p>&copy; 2025 RedTickets. Todos los derechos reservados.</p>
+              <p>&copy; 2026 RedTickets. Todos los derechos reservados.</p>
             </div>
           </div>
         </footer>

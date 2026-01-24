@@ -1,50 +1,42 @@
 /**
- * COMPONENTE CHAT UI - Vercel AI SDK
- * Interfaz visual del chatbot con streaming de respuestas
+ * COMPONENTE CHAT UI - Generative UI con Mensajes Estructurados
+ * Arquitectura: Archetypes + Layers + Visual Blocks
  */
 
-import { useSimpleChat } from "../hooks/useSimpleChat";
-import { useRef, useEffect } from "react";
+import { useStructuredChat } from "../hooks/useStructuredChat";
+import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CardList } from "./chatbot/CardList";
+import { VideoBlock } from "./chatbot/VideoBlock";
+import { SuggestedActions } from "./chatbot/SuggestedActions";
 import "./ChatUI.css";
 
 const ChatUI = ({ isOpen, onClose }) => {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const navigate = useNavigate();
+  const [isMaximized, setIsMaximized] = useState(false);
 
   // Detectar automáticamente la URL del backend según el entorno
   const CHAT_API_URL =
     import.meta.env.MODE === "development"
-      ? "http://localhost:3000/api/chat"
-      : "https://redtickets-backend.onrender.com/api/chat";
+      ? "http://localhost:3000/api/chat-structured"
+      : "https://redtickets-backend.onrender.com/api/chat-structured";
 
-  // Hook personalizado para chat con streaming
+  // Hook personalizado para chat con streaming estructurado
   const {
     messages,
     input,
     handleInputChange,
     handleSubmit,
-    status, // ✅ Usar status granular
-    isLoading, // ✅ Mantener para backward compatibility
+    sendMessage,
+    status,
+    isLoading,
     error,
-    setMessages,
-  } = useSimpleChat({
+    clearMessages,
+  } = useStructuredChat({
     api: CHAT_API_URL,
-    initialMessages: [
-      {
-        id: "welcome",
-        role: "assistant",
-        content:
-          "¡Hola! Soy el asistente de RedTickets. ¿En qué puedo ayudarte hoy?",
-      },
-    ],
-    // 📊 Callback para analytics (opcional)
-    onFinish: ({ message, duration }) => {
-      console.log(`✅ Respuesta completada en ${duration}ms`);
-      // Aquí podrías enviar analytics a tu backend
-      // analytics.track('chat_response', { duration, messageLength: message.content.length });
-    },
+    initialMessages: [],
   });
 
   // Auto-scroll al último mensaje
@@ -59,38 +51,108 @@ const ChatUI = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
+  // Handler para acciones sugeridas
+  const handleSuggestedAction = (message) => {
+    sendMessage(message);
+  };
+
+  /**
+   * Renderizar Visual Blocks del mensaje
+   */
+  const renderVisualBlocks = (visualBlocks) => {
+    if (!visualBlocks || visualBlocks.length === 0) return null;
+
+    return (
+      <div className="chat-ui__visual-content">
+        {visualBlocks.map((block, index) => {
+          switch (block.type) {
+            case "card-list":
+              return (
+                <CardList
+                  key={index}
+                  {...block}
+                  onAction={(slug) => navigate(`/seccion/${slug}`)}
+                />
+              );
+            case "video":
+              return <VideoBlock key={index} {...block} />;
+            default:
+              return null;
+          }
+        })}
+      </div>
+    );
+  };
+
+  /**
+   * Renderizar capas de texto (mensaje principal)
+   */
+  const renderTextLayers = (layers) => {
+    if (!layers || !layers.message) return null;
+
+    return (
+      <div className="chat-ui__text-layers">
+        <p className="chat-ui__message-text">{layers.message}</p>
+      </div>
+    );
+  };
+
+  /**
+   * Renderizar Next Steps (botones de acción)
+   */
+  const renderNextSteps = (actions, isStreaming) => {
+    if (!actions || actions.length === 0 || isStreaming) return null;
+
+    return (
+      <div className="chat-ui__actions">
+        {actions.map((action, index) => (
+          <button
+            key={index}
+            className={`chat-ui__action-btn ${
+              action.variant === "secondary"
+                ? "chat-ui__action-btn--secondary"
+                : ""
+            }`}
+            onClick={() => {
+              if (action.type === "navigate") {
+                // Si el valor contiene query params (ej: "ayuda?tab=vender"), usar directamente
+                // Si no, usar el formato estándar
+                if (action.value.includes("?")) {
+                  const [section, query] = action.value.split("?");
+                  navigate(`/seccion/${section}?${query}`);
+                } else {
+                  navigate(`/seccion/${action.value}`);
+                }
+              } else if (action.type === "external") {
+                // Abrir link externo en nueva pestaña
+                window.open(action.value, "_blank", "noopener,noreferrer");
+              } else if (action.type === "message") {
+                sendMessage(action.value);
+              }
+            }}
+          >
+            <i className="fas fa-arrow-right"></i>
+            {action.label}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
   const handleClearMessages = () => {
-    if (setMessages) {
-      setMessages([
-        {
-          id: "welcome",
-          role: "assistant",
-          content:
-            "¡Hola! Soy el asistente de RedTickets. ¿En qué puedo ayudarte hoy?",
-        },
-      ]);
+    if (clearMessages) {
+      clearMessages();
     }
   };
 
-  const handleQuickAction = (action) => {
-    const actionMessages = {
-      services: "¿Qué servicios ofrece RedTickets?",
-      contact: "¿Cómo puedo contactar a RedTickets?",
-      events: "Quiero saber sobre eventos",
-      about: "Cuéntame sobre RedTickets",
-      help: "Necesito ayuda",
-    };
-
-    const message = actionMessages[action] || action;
-    if (handleSubmit) {
-      handleSubmit({ preventDefault: () => {} }, { data: { message } });
-    }
+  const handleQuickAction = (message) => {
+    sendMessage(message);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="chat-ui">
+    <div className={`chat-ui ${isMaximized ? "chat-ui--maximized" : ""}`}>
       {/* Header */}
       <div className="chat-ui__header">
         <div className="chat-ui__header-info">
@@ -115,10 +177,49 @@ const ChatUI = ({ isOpen, onClose }) => {
           <button
             className="chat-ui__icon-btn"
             onClick={handleClearMessages}
-            title="Nueva conversación"
+            title="Limpiar chat"
             type="button"
           >
-            <i className="fas fa-sync-alt"></i>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M3 6h18M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2m3 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6h14z" />
+            </svg>
+          </button>
+          <button
+            className="chat-ui__icon-btn"
+            onClick={() => setIsMaximized(!isMaximized)}
+            title={isMaximized ? "Minimizar" : "Maximizar"}
+            type="button"
+          >
+            {isMaximized ? (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+              </svg>
+            ) : (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+              </svg>
+            )}
           </button>
           <button
             className="chat-ui__icon-btn"
@@ -126,7 +227,16 @@ const ChatUI = ({ isOpen, onClose }) => {
             title="Cerrar chat"
             type="button"
           >
-            <i className="fas fa-times"></i>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
           </button>
         </div>
       </div>
@@ -134,12 +244,32 @@ const ChatUI = ({ isOpen, onClose }) => {
       {/* Messages */}
       <div className="chat-ui__messages">
         {messages && messages.length > 0 ? (
-          messages.map((message) => (
-            <div
-              key={message.id}
-              className={`chat-ui__message chat-ui__message--${message.role}`}
-            >
-              {message.role === "assistant" && (
+          messages.map((message) => {
+            // Mensaje del usuario
+            if (message.role === "user") {
+              return (
+                <div
+                  key={message.id}
+                  className="chat-ui__message chat-ui__message--user"
+                >
+                  <div className="chat-ui__message-content">
+                    <p className="chat-ui__message-text">{message.content}</p>
+                  </div>
+                  <div className="chat-ui__message-avatar">
+                    <i className="fas fa-user"></i>
+                  </div>
+                </div>
+              );
+            }
+
+            // Mensaje del asistente con capas estructuradas
+            const { layers, isStreaming } = message;
+
+            return (
+              <div
+                key={message.id}
+                className="chat-ui__message chat-ui__message--assistant"
+              >
                 <div className="chat-ui__message-avatar">
                   <img
                     src="/ISOTIPO.svg"
@@ -147,48 +277,32 @@ const ChatUI = ({ isOpen, onClose }) => {
                     className="chat-ui__avatar-logo"
                   />
                 </div>
-              )}
 
-              <div className="chat-ui__message-content">
-                <p className="chat-ui__message-text">{message.content}</p>
+                <div className="chat-ui__message-content">
+                  {/* Orden: visual → texto → acciones */}
+                  {layers?.visual && renderVisualBlocks(layers.visual)}
+                  {renderTextLayers(layers)}
+                  {layers?.actions &&
+                    renderNextSteps(layers.actions, isStreaming)}
 
-                {/* Botones de navegación generados dinámicamente */}
-                {message.role === "assistant" &&
-                  message.actions &&
-                  message.actions.length > 0 && (
-                    <div className="chat-ui__actions">
-                      {message.actions.map((action, index) => (
-                        <button
-                          key={index}
-                          className="chat-ui__action-btn"
-                          onClick={() => {
-                            navigate(action.path);
-                            // ✅ NO cerrar el chat - dejar que el usuario siga conversando
-                          }}
-                        >
-                          <i className="fas fa-arrow-right"></i>
-                          {action.label}
-                        </button>
-                      ))}
+                  {/* Indicador de streaming */}
+                  {isStreaming && (
+                    <div className="chat-ui__typing">
+                      <span></span>
+                      <span></span>
+                      <span></span>
                     </div>
                   )}
-              </div>
-
-              {message.role === "user" && (
-                <div className="chat-ui__message-avatar">
-                  <i className="fas fa-user"></i>
                 </div>
-              )}
-            </div>
-          ))
+              </div>
+            );
+          })
         ) : (
-          <div className="chat-ui__empty">
-            <p>Esperando mensajes...</p>
-          </div>
+          <SuggestedActions onSelectAction={handleSuggestedAction} />
         )}
 
-        {/* Typing indicator */}
-        {isLoading && (
+        {/* Typing indicator - solo si status es streaming pero no hay mensaje visible */}
+        {status === "streaming" && messages.length === 0 && (
           <div className="chat-ui__message chat-ui__message--assistant">
             <div className="chat-ui__message-avatar">
               <img
@@ -209,8 +323,7 @@ const ChatUI = ({ isOpen, onClose }) => {
         {error && (
           <div className="chat-ui__error">
             <i className="fas fa-exclamation-triangle"></i>{" "}
-            {error.message ||
-              "Hubo un problema. Por favor, intenta nuevamente."}
+            {error || "Hubo un problema. Por favor, intenta nuevamente."}
           </div>
         )}
 
