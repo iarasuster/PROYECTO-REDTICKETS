@@ -1,6 +1,7 @@
 <div align="center">
 
-# 🎫 RedTickets Blog Platform
+# Blog RedTickets - Proyecto Integrador 
+Diseño multimedia, Univerisad ORT Uruguay
 
 ### Sistema de Gestión de Contenidos con IA Conversacional
 
