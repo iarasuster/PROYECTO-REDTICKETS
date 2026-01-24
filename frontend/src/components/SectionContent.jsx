@@ -278,7 +278,7 @@ const SobreNosotrosContent = ({ data }) => {
                   >
                     <div className="fundador-star-icon">
                       <img
-                        src={`${SERVER_URL}/isotipo.svg`}
+                        src="/ISOTIPO.svg"
                         alt="Ver info"
                         className="isotipo-icon"
                       />
