@@ -1,7 +1,6 @@
 <div align="center">
 
-# Blog RedTickets - Proyecto Integrador 
-Diseño multimedia, Univerisad ORT Uruguay
+# Blog RedTickets - Proyecto Integrador Iara Suster
 
 ### Sistema de Gestión de Contenidos con IA Conversacional
 
@@ -748,6 +747,7 @@ Este script verifica:
 <div align="center">
 
 **Construido con ❤️ por Iara Suster**
+Diseño Multimedia, Universidad ORT Uruguay
 
 [⬆ Volver arriba](#-redtickets-blog-platform)
 
