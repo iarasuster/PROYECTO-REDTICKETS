@@ -1,6 +1,6 @@
 <div align="center">
 
-# Blog RedTickets - Proyecto integrador Iara Suster
+# 🎫 RedTickets Blog Platform
 
 ### Sistema de Gestión de Contenidos con IA Conversacional
 
@@ -11,10 +11,15 @@ Plataforma headless CMS empresarial con chatbot inteligente, búsqueda semántic
 [![Payload CMS](https://img.shields.io/badge/Payload_CMS-3.59-000000?style=flat&logo=payload&logoColor=white)](https://payloadcms.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat&logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Security](https://img.shields.io/badge/Security-Audited-success?style=flat&logo=shield&logoColor=white)](./SECURITY.md)
 
-[Demo](#) · [Documentación](./DEPLOY-GUIDE.md) · [Chatbot Guide](./DOCUMENTACION-CHATBOT.md)
+[Instalación](#-inicio-rápido) · [Documentación](./DEPLOY-GUIDE.md) · [Chatbot](./DOCUMENTACION-CHATBOT.md) · [Seguridad](./SECURITY.md)
 
 </div>
+
+---
+
+> **🔒 Proyecto Open Source Seguro**: Este repositorio ha sido auditado y está listo para fork/clone. Lee [SECURITY.md](./SECURITY.md) para configurar tus credenciales de forma segura. **Nunca uses valores de ejemplo en producción**.
 
 ---
 
@@ -95,11 +100,13 @@ Autenticación JWT, CORS configurado, protección CSRF y análisis de contenido
 
 ### Prerequisitos
 
-| Herramienta   | Versión   | Enlace                                                      |
-| ------------- | --------- | ----------------------------------------------------------- |
-| Node.js       | 20.19.5+  | [Descargar](https://nodejs.org/)                            |
+| Herramienta | Versión | Enlace |
+|------------|---------|--------|
+| Node.js | 20.19.5+ | [Descargar](https://nodejs.org/) |
 | MongoDB Atlas | Free Tier | [Registrarse](https://www.mongodb.com/cloud/atlas/register) |
-| Groq API Key  | Gratuita  | [Obtener Key](https://console.groq.com/)                    |
+| Groq API Key | Gratuita | [Obtener Key](https://console.groq.com/) |
+
+> **📚 Guía de Seguridad**: Ver [SECURITY.md](./SECURITY.md) para obtener tus credenciales de forma segura.
 
 ### Instalación en 3 Pasos
 
@@ -111,7 +118,8 @@ npm install
 
 # Configurar variables de entorno
 cp .env.example .env
-# Editar .env con tus credenciales
+# ⚠️ IMPORTANTE: Editar .env con TUS credenciales reales
+# Ver SECURITY.md para obtenerlas
 
 # Cargar contenido inicial
 npm run seed
@@ -649,12 +657,13 @@ nvm alias default 20.19.5
 
 ### Guías Completas
 
-| Documento                                                            | Descripción                                              |
-| -------------------------------------------------------------------- | -------------------------------------------------------- |
-| [DEPLOY-GUIDE.md](./DEPLOY-GUIDE.md)                                 | Guía completa de despliegue en Render con GitHub Actions |
-| [DOCUMENTACION-CHATBOT.md](./DOCUMENTACION-CHATBOT.md)               | Arquitectura detallada del chatbot y Generative UI       |
-| [STRUCTURED-CHAT-GUIDE.md](./STRUCTURED-CHAT-GUIDE.md)               | Especificaciones del sistema de chat estructurado        |
-| [.github/copilot-instructions.md](./.github/copilot-instructions.md) | Instrucciones para desarrollo con GitHub Copilot         |
+| Documento | Descripción |
+|-----------|-------------|
+| [DEPLOY-GUIDE.md](./DEPLOY-GUIDE.md) | Guía completa de despliegue en Render con GitHub Actions |
+| [DOCUMENTACION-CHATBOT.md](./DOCUMENTACION-CHATBOT.md) | Arquitectura detallada del chatbot y Generative UI |
+| [STRUCTURED-CHAT-GUIDE.md](./STRUCTURED-CHAT-GUIDE.md) | Especificaciones del sistema de chat estructurado |
+| [SECURITY.md](./SECURITY.md) | 🔒 Guía de seguridad para contribuidores |
+| [.github/copilot-instructions.md](./.github/copilot-instructions.md) | Instrucciones para desarrollo con GitHub Copilot |
 
 ### Referencias Externas
 
@@ -679,6 +688,29 @@ Ver carpeta `backend/tests/` para ejemplos de uso de la API y tests de integraci
 ---
 
 ## 🔒 Seguridad
+
+### Antes de Hacer Fork o Clonar
+
+⚠️ **IMPORTANTE**: Este es un proyecto open source. Antes de usarlo:
+
+1. **Lee [SECURITY.md](./SECURITY.md)** - Guía completa de seguridad
+2. **Ejecuta el audit**: `./security-check.sh` antes de hacer push
+3. **NUNCA uses credenciales de ejemplo** en producción
+4. **Rota todas las credenciales** si vas a hacer el repo público
+
+### Herramienta de Auditoría
+
+```bash
+# Ejecutar antes de cada push a GitHub
+./security-check.sh
+```
+
+Este script verifica:
+- ✅ Archivos `.env` no están en staging
+- ✅ Sin secrets en historial de Git
+- ✅ Sin credenciales hardcodeadas
+- ✅ `.gitignore` configurado correctamente
+- ✅ Dependencias sin vulnerabilidades
 
 ### Vulnerabilidades Conocidas - Ninguna
 
