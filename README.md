@@ -678,22 +678,6 @@ Ver carpeta `backend/tests/` para ejemplos de uso de la API y tests de integraci
 
 ---
 
-## 🤝 Contribuciones
-
-Actualmente este es un proyecto privado. Para sugerencias o reportar issues, contacta al equipo de desarrollo.
-
-### Roadmap
-
-- [ ] Sistema de notificaciones en tiempo real
-- [ ] Integración con analytics (Plausible/Umami)
-- [ ] Optimización de embeddings con vector DB (Pinecone/Qdrant)
-- [ ] Sistema de caché con Redis
-- [ ] Internacionalización (i18n) español/inglés
-- [ ] PWA support con service workers
-- [ ] Dark mode nativo
-
----
-
 ## 🔒 Seguridad
 
 ### Vulnerabilidades Conocidas - Ninguna
@@ -719,17 +703,6 @@ Actualmente este es un proyecto privado. Para sugerencias o reportar issues, con
 - ✅ **HTTPS only** en producción (Render)
 - ✅ **Environment variables** nunca expuestas en frontend
 
-### Reportar Vulnerabilidades
-
-Si encuentras una vulnerabilidad de seguridad, por favor NO la publiques en issues públicos. Contacta directamente al equipo de desarrollo.
-
----
-
-## 📄 Licencia
-
-Este proyecto es propiedad privada de **RedTickets**. Todos los derechos reservados.
-
----
 
 ## 📞 Soporte y Contacto
 
