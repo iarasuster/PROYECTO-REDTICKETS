@@ -19,10 +19,6 @@ Plataforma headless CMS con chatbot inteligente, búsqueda semántica y Generati
 
 ---
 
-> **🔒 Proyecto Open Source Seguro**: Este repositorio ha sido auditado y está listo para fork/clone. Lee [SECURITY.md](./SECURITY.md) para configurar tus credenciales de forma segura. **Nunca uses valores de ejemplo en producción**.
-
----
-
 ## 🚀 Descripción General
 
 **RedTickets Blog** es una plataforma de gestión de contenidos empresarial que combina la potencia de Payload CMS con capacidades avanzadas de IA conversacional. Diseñada para ofrecer experiencias de usuario excepcionales con respuestas inteligentes en tiempo real.
@@ -55,7 +51,7 @@ Autenticación JWT, CORS configurado, protección CSRF y análisis de contenido
 
 ---
 
-## � Tabla de Contenidos
+## Tabla de Contenidos
 
 - [Stack Tecnológico](#-stack-tecnológico)
 - [Inicio Rápido](#-inicio-rápido)
@@ -481,67 +477,6 @@ https://redtickets-frontend.onrender.com
 - **Payload REST API**: `http://localhost:3000/api/<collection-name>`
 - **GraphQL Playground**: `http://localhost:3000/api/graphql-playground`
 - **Admin Panel**: `http://localhost:3000/admin`
-
-### Ejemplos de Código
-
-Ver carpeta `backend/tests/` para ejemplos de uso de la API y tests de integración.
-
----
-
-## 🔒 Seguridad
-
-### Antes de Hacer Fork o Clonar
-
-⚠️ **IMPORTANTE**: Este es un proyecto open source. Antes de usarlo:
-
-1. **Lee [SECURITY.md](./SECURITY.md)** - Guía completa de seguridad
-2. **Ejecuta el audit**: `./security-check.sh` antes de hacer push
-3. **NUNCA uses credenciales de ejemplo** en producción
-4. **Rota todas las credenciales** si vas a hacer el repo público
-
-### Herramienta de Auditoría
-
-```bash
-# Ejecutar antes de cada push a GitHub
-./security-check.sh
-```
-
-Este script verifica:
-
-- ✅ Archivos `.env` no están en staging
-- ✅ Sin secrets en historial de Git
-- ✅ Sin credenciales hardcodeadas
-- ✅ `.gitignore` configurado correctamente
-- ✅ Dependencias sin vulnerabilidades
-
-### Vulnerabilidades Conocidas - Ninguna
-
-✅ **Última auditoría**: Enero 24, 2026  
-✅ **Dependencias actualizadas**: Todas las dependencias críticas están en sus últimas versiones
-
-### Parches de Seguridad Aplicados
-
-| CVE            | Paquete | Versión Vulnerable | Versión Parcheada | Fecha    |
-| -------------- | ------- | ------------------ | ----------------- | -------- |
-| CVE-2025-66478 | Next.js | < 15.4.8           | 15.4.8            | Dic 2025 |
-| CVE-2025-55182 | React   | < 19.1.2           | 19.1.2            | Dic 2025 |
-
-### Características de Seguridad
-
-- ✅ **Autenticación JWT** con Payload CMS
-- ✅ **CORS** configurado para dominios específicos
-- ✅ **Protección CSRF** con tokens
-- ✅ **Análisis de toxicidad** automático en comentarios
-- ✅ **Rate limiting** en endpoints de chat (Groq)
-- ✅ **Sanitización de inputs** con Payload validators
-- ✅ **HTTPS only** en producción (Render)
-- ✅ **Environment variables** nunca expuestas en frontend
-
-## 📞 Soporte y Contacto
-
-- **Documentación**: Ver carpeta `/docs` o archivos `.md` en la raíz
-- **Issues técnicos**: Revisar sección [Troubleshooting](#-troubleshooting)
-- **Preguntas sobre IA**: Ver [DOCUMENTACION-CHATBOT.md](./DOCUMENTACION-CHATBOT.md)
 
 ---
 
