@@ -62,21 +62,22 @@ const cloudinaryAdapter = () => ({
 
       // Actualizar metadata del archivo con la info de Cloudinary
       file.filename = uploadResult.public_id // "media/nombre_archivo"
-      
       // Para SVG, el mimeType debe ser image/svg+xml
       if (uploadResult.format === 'svg') {
         file.mimeType = 'image/svg+xml'
       } else {
         file.mimeType = `image/${uploadResult.format}` // "image/jpg", "image/png"
       }
-      
       file.filesize = uploadResult.bytes
-      file.width = uploadResult.width
-      file.height = uploadResult.height
-      
+      // Asignar width/height solo si existen en el objeto file
+      if ('width' in file && typeof uploadResult.width === 'number') {
+        (file as any).width = uploadResult.width
+      }
+      if ('height' in file && typeof uploadResult.height === 'number') {
+        (file as any).height = uploadResult.height
+      }
       // Guardar la URL de Cloudinary directamente en data
       data.url = uploadResult.secure_url
-      
       console.log('✅ Uploaded to Cloudinary:', uploadResult.secure_url)
     } catch (err) {
       console.error('❌ Upload Error', err)
@@ -136,21 +137,20 @@ export default buildConfig({
         media: {
           adapter: cloudinaryAdapter,
           disableLocalStorage: true, // Solo Cloudinary, no guardar localmente
-          generateFileURL: ({ filename, doc }) => {
+          generateFileURL: (args) => {
+            const filename = args.filename;
+            const doc = (args as any).doc || {};
             // Si el documento ya tiene URL guardada desde handleUpload, usarla
-            if (doc?.url && (doc.url.includes('cloudinary.com/image/upload/v') || doc.url.includes('cloudinary.com/raw/upload'))) {
-              return doc.url
+            if (doc.url && (doc.url.includes('cloudinary.com/image/upload/v') || doc.url.includes('cloudinary.com/raw/upload'))) {
+              return doc.url;
             }
-            
             // Detectar si es SVG por mimeType o extensión
-            const isSVG = doc?.mimeType === 'image/svg+xml' || filename.toLowerCase().endsWith('.svg')
-            const resourceType = isSVG ? 'raw' : 'image'
-            
+            const isSVG = doc.mimeType === 'image/svg+xml' || filename.toLowerCase().endsWith('.svg');
+            const resourceType = isSVG ? 'raw' : 'image';
             // Asegurar que filename tenga el prefijo media/
-            const path = filename.startsWith('media/') ? filename : `media/${filename}`
-            
+            const path = filename.startsWith('media/') ? filename : `media/${filename}`;
             // Construir URL correcta según resource_type
-            return `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/${resourceType}/upload/${path}`
+            return `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/${resourceType}/upload/${path}`;
           },
         },
       },

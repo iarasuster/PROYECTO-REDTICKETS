@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SERVER_URL } from "../services/api";
 import "./BentoGrid.css";
 
 const BentoGrid = ({ photos }) => {
@@ -9,9 +10,25 @@ const BentoGrid = ({ photos }) => {
   const getImageUrl = (photo) => {
     if (!photo.imagen) return "";
 
-    if (photo.imagen.url && photo.imagen.url.startsWith("http")) {
-      return photo.imagen.url;
+    // Si imagen es un objeto con url
+    if (typeof photo.imagen === "object" && photo.imagen.url) {
+      const url = photo.imagen.url;
+      // Si la URL ya incluye http, usarla directamente
+      if (url.startsWith("http")) {
+        return url;
+      }
+      // Si es una ruta relativa, usar SERVER_URL
+      return `${SERVER_URL}${url}`;
     }
+
+    // Si imagen es un string directo
+    if (typeof photo.imagen === "string") {
+      return photo.imagen.startsWith("http")
+        ? photo.imagen
+        : `${SERVER_URL}${photo.imagen}`;
+    }
+
+    return "";
   };
 
   return (

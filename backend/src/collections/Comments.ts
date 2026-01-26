@@ -93,7 +93,7 @@ export const Comments: CollectionConfig = {
     beforeValidate: [
       async ({ data, operation, req }) => {
         // Solo analizar en creación de nuevos comentarios
-        if (operation === 'create' && data.comment) {
+        if (operation === 'create' && data && data.comment) {
           try {
             // Analizar el texto del comentario
             const analisis = analizarTexto(data.comment)
@@ -129,7 +129,7 @@ export const Comments: CollectionConfig = {
           } catch (error) {
             console.error('❌ Error al analizar comentario:', error)
             // Re-lanzar el error si es de moderación
-            if (error.message.includes('inapropiado')) {
+            if (error instanceof Error && error.message.includes('inapropiado')) {
               throw error
             }
             // Si falla el análisis por otro motivo, dejar pendiente por seguridad
