@@ -4,42 +4,26 @@ export const Media: CollectionConfig = {
   slug: 'media',
   access: {
     read: () => true,
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
   },
+  upload: true,
   fields: [
-    {
-      name: 'filename',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'url',
-      type: 'text',
-      required: true,
-    },
     {
       name: 'alt',
       type: 'text',
       required: true,
     },
-    {
-      name: 'width',
-      type: 'number',
-    },
-    {
-      name: 'height',
-      type: 'number',
-    },
-    {
-      name: 'mimeType',
-      type: 'text',
-    },
-    {
-      name: 'filesize',
-      type: 'number',
-    },
   ],
-  // NO upload: true - las URLs vienen directamente de Cloudinary
+  hooks: {
+    beforeChange: [
+      ({ data, req, operation }) => {
+        // Preservar la URL de Cloudinary si ya existe en data
+        // Esto evita que generateFileURL la sobrescriba
+        if (operation === 'create' && data.url && data.url.includes('cloudinary.com')) {
+          // URL ya viene de Cloudinary con versión, preservarla
+          console.log('✅ Preserving Cloudinary URL:', data.url)
+        }
+        return data
+      },
+    ],
+  },
 }

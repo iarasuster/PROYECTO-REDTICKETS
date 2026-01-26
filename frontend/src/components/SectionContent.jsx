@@ -5,6 +5,9 @@ import ChromaGrid from "./ChromaGrid";
 import CommentsForm from "./CommentsForm";
 import Counter from "./Counter";
 import LogoCarousel from "./LogoCarousel";
+import SkeletonLoader from "./SkeletonLoader";
+import TestimoniosCarousel from "./TestimoniosCarousel";
+import BentoGrid from "./BentoGrid";
 import loaderAnimation from "../assets/loader.lottie";
 import "./SectionContent.css";
 
@@ -70,14 +73,19 @@ const SectionContent = ({ seccion, className = "" }) => {
   }, [content]);
 
   if (loading) {
+    // Mostrar skeleton específico según la sección
+    const skeletonVariant = {
+      inicio: "stats",
+      servicios: "cards",
+      comunidad: "list",
+      ayuda: "list",
+      "sobre-nosotros": "default",
+      contacto: "default",
+    }[seccion.replace(/-/g, "_")] || "default";
+
     return (
       <div className="section-loading">
-        <DotLottieReact
-          src={loaderAnimation}
-          loop
-          autoplay
-          style={{ width: 200, height: 200 }}
-        />
+        <SkeletonLoader variant={skeletonVariant} />
       </div>
     );
   }
@@ -401,79 +409,94 @@ const SobreNosotrosContent = ({ data }) => {
 };
 
 const ServiciosContent = ({ data }) => {
-  // Mapeo de servicios a iconos específicos
-  const getServiceIcon = (servicio) => {
+  // Mapeo de servicios a iconos y colores específicos
+  const getServiceDetails = (servicio) => {
     const texto = (servicio.servicio || servicio || "").toLowerCase();
 
     if (texto.includes("venta") || texto.includes("gestión"))
-      return "fa-shopping-cart";
+      return { icon: "fa-shopping-cart", color: "#ff6600", gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)" };
     if (texto.includes("compra") || texto.includes("pago"))
-      return "fa-credit-card";
+      return { icon: "fa-credit-card", color: "#00d4ff", gradient: "linear-gradient(135deg, #00d4ff 0%, #0099ff 100%)" };
     if (texto.includes("app") || texto.includes("billetera"))
-      return "fa-mobile-alt";
+      return { icon: "fa-mobile-alt", color: "#a855f7", gradient: "linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%)" };
     if (
       texto.includes("diseño") ||
       texto.includes("e-ticket") ||
       texto.includes("personalizado")
     )
-      return "fa-palette";
+      return { icon: "fa-palette", color: "#f59e0b", gradient: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)" };
     if (
       texto.includes("hard") ||
       texto.includes("impresión") ||
       texto.includes("físicas")
     )
-      return "fa-print";
+      return { icon: "fa-print", color: "#10b981", gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)" };
     if (
       texto.includes("control") ||
       texto.includes("acceso") ||
       texto.includes("seguridad")
     )
-      return "fa-shield-alt";
+      return { icon: "fa-shield-alt", color: "#ef4444", gradient: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)" };
     if (
       texto.includes("configuración") ||
       texto.includes("descuento") ||
       texto.includes("promoción")
     )
-      return "fa-cog";
+      return { icon: "fa-cog", color: "#6366f1", gradient: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)" };
     if (texto.includes("integración") || texto.includes("sistema"))
-      return "fa-plug";
+      return { icon: "fa-plug", color: "#14b8a6", gradient: "linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)" };
     if (
       texto.includes("atención") ||
       texto.includes("cliente") ||
       texto.includes("soporte")
     )
-      return "fa-headset";
+      return { icon: "fa-headset", color: "#f43f5e", gradient: "linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)" };
     if (texto.includes("seguro") || texto.includes("metlife"))
-      return "fa-umbrella";
+      return { icon: "fa-umbrella", color: "#8b5cf6", gradient: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)" };
     if (texto.includes("acreditaciones") || texto.includes("credenciales"))
-      return "fa-id-card";
+      return { icon: "fa-id-card", color: "#ec4899", gradient: "linear-gradient(135deg, #ec4899 0%, #db2777 100%)" };
 
-    return "fa-ticket-alt"; // Default
+    return { icon: "fa-ticket-alt", color: "#ff6600", gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)" };
   };
 
   return (
     <div className="servicios-container">
-      {/* Introducción de servicios */}
-      <div className="servicios-intro">
-        <h2>Soluciones completas para tu evento</h2>
-        <p>
-          En RedTickets ofrecemos una plataforma integral de ticketing que
-          abarca todo el ciclo del evento: desde la venta online hasta el
-          control de acceso. Nuestra tecnología permite gestionar entradas
-          físicas y digitales, con seguridad, personalización y soporte
-          profesional para eventos de cualquier tamaño.
-        </p>
+      {/* Hero Section */}
+      <div className="servicios-hero">
+        <div className="servicios-hero-content">
+          <span className="servicios-badge">Plataforma Integral</span>
+          <h1 className="servicios-hero-title">
+            Soluciones completas para
+            <span className="servicios-hero-highlight"> tu evento</span>
+          </h1>
+          <p className="servicios-hero-description">
+            En RedTickets ofrecemos una plataforma integral de ticketing que abarca
+            todo el ciclo del evento: desde la venta online hasta el control de acceso.
+            Nuestra tecnología permite gestionar entradas físicas y digitales, con
+            seguridad, personalización y soporte profesional para eventos de cualquier tamaño.
+          </p>
+        </div>
       </div>
 
-      {/* Grid de servicios */}
+      {/* Grid de servicios profesional */}
       {data.servicios_lista && data.servicios_lista.length > 0 && (
-        <div className="servicios-grid-container">
-          {data.servicios_lista.map((item, idx) => (
-            <div key={idx} className="servicio-item animate-item">
-              <i className={`fas ${getServiceIcon(item)} servicio-icon`}></i>
-              <span className="servicio-text">{item.servicio || item}</span>
-            </div>
-          ))}
+        <div className="servicios-grid">
+          {data.servicios_lista.map((item, idx) => {
+            const details = getServiceDetails(item);
+            return (
+              <div key={idx} className="servicio-card" data-index={idx}>
+                <div className="servicio-card-inner">
+                  <div className="servicio-icon-wrapper" style={{ '--icon-gradient': details.gradient }}>
+                    <i className={`fas ${details.icon} servicio-card-icon`}></i>
+                  </div>
+                  <div className="servicio-card-content">
+                    <p className="servicio-card-text">{item.servicio || item}</p>
+                  </div>
+                  <div className="servicio-card-glow" style={{ '--glow-color': details.color }}></div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
@@ -482,7 +505,6 @@ const ServiciosContent = ({ data }) => {
 
 const ComunidadContent = ({ data }) => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [dynamicTestimonios, setDynamicTestimonios] = useState([]);
 
   const handleCommentSubmitted = (newComment) => {
     // Si el comentario fue publicado automáticamente, recargar la lista
@@ -493,19 +515,33 @@ const ComunidadContent = ({ data }) => {
 
   return (
     <div className="comunidad-container">
-      {/* Testimonios: Estáticos del CMS + Dinámicos de la DB */}
-      <div className="content-item testimonios animate-item">
-        <h3>Lo que dicen nuestros clientes</h3>
+      {/* Bento Grid - Galería de Fotos */}
+      {data.galeria_fotos && data.galeria_fotos.length > 0 && (
+        <BentoGrid photos={data.galeria_fotos} />
+      )}
 
-        {/* CommentsList interno que pasa los testimonios al padre */}
+      {/* Titulo principal */}
+      <div className="comunidad-header">
+        <h2 className="comunidad-title">Lo que dicen nuestros clientes</h2>
+        <p className="comunidad-subtitle">
+          Miles de personas confían en RedTickets para sus eventos
+        </p>
+      </div>
+
+      {/* Carrusel de Testimonios */}
+      <div className="testimonios-section">
         <TestimoniosUnified
           staticTestimonios={data.testimonios || []}
           refreshTrigger={refreshTrigger}
         />
       </div>
 
-      {/* Formulario para agregar testimonios dinámicos */}
-      <div className="content-item comments-form-wrapper animate-item">
+      {/* Formulario mejorado */}
+      <div className="comunidad-form-section">
+        <div className="form-header">
+          <h3>Comparte tu experiencia</h3>
+          <p>Tu opinión nos ayuda a mejorar cada día</p>
+        </div>
         <CommentsForm onCommentSubmitted={handleCommentSubmitted} />
       </div>
     </div>
@@ -532,19 +568,22 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
 
         if (response.ok) {
           const result = await response.json();
+          console.log("✅ Testimonios cargados:", result.docs?.length || 0);
           if (result.docs) {
             setDynamicTestimonios(result.docs);
           }
+        } else {
+          console.error("❌ Error HTTP:", response.status);
         }
       } catch (err) {
-        // Silently fail
+        console.error("❌ Error fetching testimonios:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchDynamicTestimonios();
-  }, [refreshTrigger]);
+  }, [refreshTrigger, API_BASE_URL]);
 
   // Combinar testimonios estáticos y dinámicos
   const allTestimonios = [
@@ -561,24 +600,13 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
     })),
   ];
 
-  if (allTestimonios.length === 0 && !loading) {
-    return null; // No mostrar nada si no hay testimonios
-  }
+  console.log("📊 Total testimonios:", allTestimonios.length, {
+    estaticos: staticTestimonios.length,
+    dinamicos: dynamicTestimonios.length,
+  });
 
   return (
-    <div className="testimonios-grid">
-      {allTestimonios.map((testimonio, idx) => (
-        <div key={`${testimonio.tipo}-${idx}`} className="testimonio">
-          <p className="testimonio-texto">"{testimonio.texto}"</p>
-          <p className="testimonio-autor">— {testimonio.autor}</p>
-        </div>
-      ))}
-      {loading && (
-        <div className="testimonio loading-placeholder">
-          <p className="testimonio-texto">Cargando testimonios...</p>
-        </div>
-      )}
-    </div>
+    <TestimoniosCarousel testimonios={allTestimonios} loading={loading} />
   );
 };
 

@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     'contenido-blog': ContenidoBlog;
     comments: Comment;
+    formularios: Formulario;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -81,6 +82,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     'contenido-blog': ContenidoBlogSelect<false> | ContenidoBlogSelect<true>;
     comments: CommentsSelect<false> | CommentsSelect<true>;
+    formularios: FormulariosSelect<false> | FormulariosSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -147,18 +149,21 @@ export interface User {
  */
 export interface Media {
   id: string;
-  filename: string;
-  url: string;
   alt: string;
-  width?: number | null;
-  height?: number | null;
-  mimeType?: string | null;
-  filesize?: number | null;
   updatedAt: string;
   createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
- * Contenido de las secciones del sitio web
+ * Gestiona el contenido de todas las secciones del sitio web
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contenido-blog".
@@ -232,6 +237,20 @@ export interface ContenidoBlog {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Fotos de eventos que se mostrarán en formato Bento Grid antes de los testimonios
+   */
+  galeria_fotos?:
+    | {
+        imagen: string | Media;
+        titulo?: string | null;
+        orientacion?: ('horizontal' | 'vertical') | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Testimonios fijos editables desde aquí. Los comentarios de usuarios se gestionan en "Nuestra Comunidad → Comentarios" y aparecen automáticamente en el sitio.
+   */
   testimonios?:
     | {
         texto: string;
@@ -330,12 +349,18 @@ export interface ContenidoBlog {
   createdAt: string;
 }
 /**
+ * Testimonios y comentarios de usuarios del sitio
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "comments".
  */
 export interface Comment {
   id: string;
   author: string;
+  /**
+   * Email de contacto (no se muestra públicamente, solo uso interno)
+   */
+  email: string;
   comment: string;
   /**
    * Rango: -1 (negativo) a 1 (positivo)
@@ -353,6 +378,24 @@ export interface Comment {
    * ID o nombre del evento relacionado
    */
   eventRef?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Recopilación de datos de newsletter, ayuda técnica y contacto
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "formularios".
+ */
+export interface Formulario {
+  id: string;
+  tipo: 'newsletter' | 'ayuda_totem' | 'contacto';
+  email: string;
+  nombre?: string | null;
+  mensaje?: string | null;
+  telefono?: string | null;
+  ubicacion_totem?: string | null;
+  estado?: ('pendiente' | 'en_proceso' | 'resuelto') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -378,6 +421,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'comments';
         value: string | Comment;
+      } | null)
+    | ({
+        relationTo: 'formularios';
+        value: string | Formulario;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -448,15 +495,18 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
-  filename?: T;
-  url?: T;
   alt?: T;
-  width?: T;
-  height?: T;
-  mimeType?: T;
-  filesize?: T;
   updatedAt?: T;
   createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -524,6 +574,14 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
     | T
     | {
         servicio?: T;
+        id?: T;
+      };
+  galeria_fotos?:
+    | T
+    | {
+        imagen?: T;
+        titulo?: T;
+        orientacion?: T;
         id?: T;
       };
   testimonios?:
@@ -628,11 +686,27 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
  */
 export interface CommentsSelect<T extends boolean = true> {
   author?: T;
+  email?: T;
   comment?: T;
   sentimentScore?: T;
   toxicityScore?: T;
   status?: T;
   eventRef?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "formularios_select".
+ */
+export interface FormulariosSelect<T extends boolean = true> {
+  tipo?: T;
+  email?: T;
+  nombre?: T;
+  mensaje?: T;
+  telefono?: T;
+  ubicacion_totem?: T;
+  estado?: T;
   updatedAt?: T;
   createdAt?: T;
 }

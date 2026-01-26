@@ -22,7 +22,6 @@ html {
   --danger-color: #dc3545;
   --warning-color: #ffc107;
   --info-color: #17a2b8;
-  --lime-green: #C5F82A;
   
   /* 📝 Colores de texto mejorados */
   --text-primary: #1a1a1a;
@@ -96,7 +95,7 @@ body {
   margin: 0;
   font-family: var(--font-family-sans);
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.5;
   color: var(--text-primary);
   background: linear-gradient(180deg, #fafbfc 0%, #f0f2f5 100%);
   min-height: 100vh;
@@ -239,4 +238,40 @@ a {
 
 a:hover {
   color: var(--primary-dark);
+}
+
+/* 📝 Clases utilitarias de tipografía */
+.text-readable {
+  max-width: 70ch;
+  line-height: 1.75;
+}
+
+.text-tight {
+  line-height: 1.25;
+}
+
+.text-relaxed {
+  line-height: 1.75;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+p {
+  line-height: 1.75;
+  max-width: 70ch;
+}
+
+p + p {
+  margin-top: 1rem;
+}
+
+/* Focus visible para accesibilidad */
+*:focus-visible {
+  outline: 3px solid rgba(255, 102, 0, 0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

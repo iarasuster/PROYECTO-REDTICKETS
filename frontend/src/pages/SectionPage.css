@@ -31,24 +31,69 @@
 
 .section-page {
   min-height: calc(100vh - 200px);
-  padding: var(--spacing-xl) 0;
-  padding-top: calc(80px + var(--spacing-lg));
+  padding: clamp(2rem, 4vw, 4rem) 0;
+  padding-top: calc(80px + clamp(1rem, 3vw, 2rem));
   background: var(--dark);
   animation: fadeIn 0.6s ease;
 }
 
 .section-hero {
   text-align: center;
-  padding: var(--spacing-lg) 2rem;
-  margin-bottom: var(--spacing-xl);
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem);
+  margin-bottom: clamp(2rem, 5vw, 4rem);
   position: relative;
   background: transparent;
+  overflow: hidden;
+  /* Hacer que ocupe todo el ancho saliendo del container */
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
 }
 
-/* Hero más pequeño para secciones no-inicio */
+/* Hero con degradado animado para todas las secciones menos inicio */
 .section-page:not([data-section="inicio"]) .section-hero {
-  padding: var(--spacing-md) 2rem;
-  margin-bottom: var(--spacing-lg);
+  padding: clamp(2rem, 4vw, 4rem) clamp(1rem, 4vw, 2rem);
+  margin-bottom: clamp(1.5rem, 4vw, 3rem);
+}
+
+.section-page:not([data-section="inicio"]) .section-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 102, 0, 0.15), transparent),
+    linear-gradient(180deg, rgba(255, 102, 0, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.section-page:not([data-section="inicio"]) .section-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 102, 0, 0.03) 0px,
+      transparent 1px,
+      transparent 80px,
+      rgba(255, 102, 0, 0.03) 81px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 102, 0, 0.03) 0px,
+      transparent 1px,
+      transparent 80px,
+      rgba(255, 102, 0, 0.03) 81px
+    );
+  opacity: 0.3;
+  animation: gridMove 20s linear infinite;
+  z-index: 0;
+}
+
+@keyframes gridMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(80px, 80px); }
 }
 
 .section-hero > * {

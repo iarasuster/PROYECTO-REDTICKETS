@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SectionContent from "../components/SectionContent";
+import SkeletonLoader from "../components/SkeletonLoader";
 import { getSectionBySlug } from "../services/api";
 import "./SectionPage.css";
 
@@ -34,12 +35,9 @@ function SectionPage() {
 
   if (loading) {
     return (
-      <div className="section-page">
+      <div className="section-page" data-section={seccionSlug}>
         <div className="container">
-          <div className="loading-spinner">
-            <div className="spinner"></div>
-            <p>Cargando sección...</p>
-          </div>
+          <SkeletonLoader variant="hero" />
         </div>
       </div>
     );

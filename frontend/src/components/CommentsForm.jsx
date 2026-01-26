@@ -9,6 +9,7 @@ const API_BASE_URL =
 const CommentsForm = ({ onCommentSubmitted }) => {
   const [formData, setFormData] = useState({
     author: "",
+    email: "",
     comment: "",
   });
   const [loading, setLoading] = useState(false);
@@ -26,10 +27,24 @@ const CommentsForm = ({ onCommentSubmitted }) => {
     e.preventDefault();
 
     // Validaciones básicas
-    if (!formData.author.trim() || !formData.comment.trim()) {
+    if (
+      !formData.author.trim() ||
+      !formData.email.trim() ||
+      !formData.comment.trim()
+    ) {
       setMessage({
         type: "error",
         text: "Por favor completa todos los campos",
+      });
+      return;
+    }
+
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setMessage({
+        type: "error",
+        text: "Por favor ingresa un email válido",
       });
       return;
     }
@@ -68,22 +83,39 @@ const CommentsForm = ({ onCommentSubmitted }) => {
           if (onCommentSubmitted) {
             onCommentSubmitted(result.doc);
           }
+          // Limpiar formulario solo si fue publicado
+          setFormData({
+            author: "",
+            email: "",
+            comment: "",
+          });
         } else if (status === "pendiente") {
           setMessage({
             type: "warning",
             text: "Tu testimonio está en revisión. Lo publicaremos pronto. ⏳",
           });
+          // Limpiar formulario
+          setFormData({
+            author: "",
+            email: "",
+            comment: "",
+          });
+        } else if (status === "rechazado") {
+          setMessage({
+            type: "error",
+            text: "Tu comentario contiene lenguaje inapropiado y no puede ser publicado. Por favor, mantén un tono respetuoso. 🚫",
+          });
+          // NO limpiar formulario para que puedan editarlo
         }
-
-        // Limpiar formulario
-        setFormData({
-          author: "",
-          comment: "",
-        });
       } else {
-        throw new Error(
-          result.errors?.[0]?.message || "Error al enviar comentario"
-        );
+        // Error de validación o moderación
+        const errorMsg =
+          result.errors?.[0]?.message || "Error al enviar comentario";
+        setMessage({
+          type: "error",
+          text: errorMsg,
+        });
+        // NO limpiar formulario si hay error de moderación
       }
     } catch (error) {
       console.error("❌ Error al enviar comentario:", error);
@@ -99,15 +131,15 @@ const CommentsForm = ({ onCommentSubmitted }) => {
   return (
     <div className="comments-form-wrapper">
       <div className="comments-form-header">
-        <h3>Compartí tu experiencia</h3>
+        <h3>Comparte tu experiencia</h3>
         <p className="comments-form-subtitle">
-          Tu testimonio inspira a otros y nos ayuda a mejorar cada día.
+          Tu opinión nos ayuda a mejorar cada día
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="comments-form">
         <div className="form-group">
-          <label htmlFor="author">Tu nombre</label>
+          <label htmlFor="author">Nombre</label>
           <input
             type="text"
             id="author"
@@ -116,6 +148,20 @@ const CommentsForm = ({ onCommentSubmitted }) => {
             onChange={handleChange}
             placeholder="Ingresa tu nombre"
             maxLength={100}
+            disabled={loading}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="tu@email.com"
             disabled={loading}
             required
           />

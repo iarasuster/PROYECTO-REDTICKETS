@@ -1,13 +1,4 @@
-/**
- * 🧠 Análisis de texto con IA Mock
- * 
- * Simula análisis de sentimiento y toxicidad.
- * En producción, esto se conectaría a una API real como:
- * - Google Cloud Natural Language API
- * - AWS Comprehend
- * - OpenAI Moderation API
- * - Perspective API (Google)
- */
+
 
 interface AnalysisResult {
   sentiment: number    // -1 (muy negativo) a 1 (muy positivo)
@@ -22,8 +13,7 @@ interface AnalysisResult {
 export function analizarTexto(text: string): AnalysisResult {
   // Limpieza básica del texto
   const cleanText = text.toLowerCase().trim()
-  
-  // 🎭 MOCK: Simular análisis con heurísticas simples
+ 
   let sentiment = 0
   let toxicity = 0
   
@@ -33,14 +23,14 @@ export function analizarTexto(text: string): AnalysisResult {
   sentiment += positivasMatches * 0.3
   
   // Palabras negativas (decrementan sentiment)
-  const negativasRegex = /malo|pésimo|horrible|terrible|odio|peor|decepción|nunca más|fraude|estafa/gi
+  const negativasRegex = /malo|pésimo|horrible|terrible|odio|peor|decepción|nunca más|fraude|estafa|robo|timador|mentira|engaño|cagada|desastre|porquería|basura|denuncia|trucho/gi
   const negativasMatches = (cleanText.match(negativasRegex) || []).length
-  sentiment -= negativasMatches * 0.35
+  sentiment -= negativasMatches * 0.45
   
   // Palabras tóxicas (incrementan toxicity)
-  const toxicasRegex = /idiota|estúpido|basura|mierda|asco|porquería|inútil|insulto/gi
+  const toxicasRegex = /idiota|estúpido|basura|mierda|asco|porquería|inútil|insulto|puto|puta|carajo|pendejo|boludo|pelotudo|gil|tarado|imbécil|ladrón|hdp|hijos? de puta|la concha|la puta|chupa|chupen|maldito|desgraciado|verga|coño|joder|jodido|malparido|rata|lacra|escoria|garca|chorro/gi
   const toxicasMatches = (cleanText.match(toxicasRegex) || []).length
-  toxicity += toxicasMatches * 0.4
+  toxicity += toxicasMatches * 0.5
   
   // Múltiples signos de exclamación (incrementan toxicity levemente)
   const exclamacionesExcesivas = (cleanText.match(/!{2,}/g) || []).length
@@ -50,9 +40,6 @@ export function analizarTexto(text: string): AnalysisResult {
   const mayusculasSostenidas = (cleanText.match(/[A-Z]{5,}/g) || []).length
   toxicity += mayusculasSostenidas * 0.15
   
-  // Agregar aleatoriedad para simular análisis de IA real
-  sentiment += (Math.random() * 0.4 - 0.2) // ±0.2 de ruido
-  toxicity += Math.random() * 0.15 // 0-0.15 de ruido base
   
   // Normalizar valores
   sentiment = Math.max(-1, Math.min(1, sentiment))
@@ -70,11 +57,11 @@ export function analizarTexto(text: string): AnalysisResult {
  * @returns true si necesita moderación, false si se puede publicar
  */
 export function necesitaModeracion(analisis: AnalysisResult): boolean {
-  // Alta toxicidad
-  if (analisis.toxicity > 0.35) return true
+  // Toxicidad moderada o alta
+  if (analisis.toxicity > 0.25) return true
   
   // Muy negativo pero no tóxico (podría ser crítica constructiva)
-  if (analisis.sentiment < -0.55 && analisis.toxicity < 0.2) return true
+  if (analisis.sentiment < -0.4 && analisis.toxicity < 0.15) return true
   
   // Todo normal
   return false

@@ -13,7 +13,7 @@ export const ContenidoBlog: CollectionConfig = {
     useAsTitle: 'titulo',
     defaultColumns: ['seccion', 'titulo', 'updatedAt'],
     group: 'Contenido del Sitio',
-    description: 'Contenido de las secciones del sitio web',
+    description: 'Gestiona el contenido de todas las secciones del sitio web',
   },
   labels: {
     singular: 'Sección',
@@ -202,6 +202,41 @@ export const ContenidoBlog: CollectionConfig = {
       ],
     },
 
+    // ===== COMUNIDAD - GALERÍA DE FOTOS =====
+    {
+      name: 'galeria_fotos',
+      type: 'array',
+      label: 'Galería de Fotos',
+      admin: {
+        condition: (data) => data.seccion === 'comunidad',
+        description: 'Fotos de eventos que se mostrarán en formato Bento Grid antes de los testimonios',
+      },
+      fields: [
+        {
+          name: 'imagen',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Imagen',
+          required: true,
+        },
+        {
+          name: 'titulo',
+          type: 'text',
+          label: 'Título (opcional)',
+        },
+        {
+          name: 'orientacion',
+          type: 'select',
+          label: 'Orientación de la Imagen',
+          defaultValue: 'horizontal',
+          options: [
+            { label: 'Horizontal', value: 'horizontal' },
+            { label: 'Vertical', value: 'vertical' },
+          ],
+        },
+      ],
+    },
+
     // ===== TESTIMONIOS (para Comunidad) =====
     {
       name: 'testimonios',
@@ -209,6 +244,7 @@ export const ContenidoBlog: CollectionConfig = {
       label: 'Testimonios',
       admin: {
         condition: (data) => data.seccion === 'comunidad',
+        description: 'Testimonios fijos editables desde aquí. Los comentarios de usuarios se gestionan en "Nuestra Comunidad → Comentarios" y aparecen automáticamente en el sitio.',
       },
       fields: [
         { name: 'texto', type: 'textarea', label: 'Texto del Testimonio', required: true },

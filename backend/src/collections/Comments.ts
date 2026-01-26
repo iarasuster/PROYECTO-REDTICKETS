@@ -9,8 +9,9 @@ export const Comments: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'author',
-    defaultColumns: ['author', 'status', 'sentimentScore', 'createdAt'],
-    group: 'Comunidad',
+    defaultColumns: ['author', 'comment', 'status', 'createdAt'],
+    group: 'Nuestra Comunidad',
+    description: 'Testimonios y comentarios de usuarios del sitio',
   },
   access: {
     // Todos pueden crear (POST público)
@@ -29,6 +30,15 @@ export const Comments: CollectionConfig = {
       label: 'Autor',
       required: true,
       maxLength: 100,
+    },
+    {
+      name: 'email',
+      type: 'email',
+      label: 'Email',
+      required: true,
+      admin: {
+        description: 'Email de contacto (no se muestra públicamente, solo uso interno)',
+      },
     },
     {
       name: 'comment',
@@ -80,8 +90,8 @@ export const Comments: CollectionConfig = {
     },
   ],
   hooks: {
-    beforeChange: [
-      async ({ data, operation }) => {
+    beforeValidate: [
+      async ({ data, operation, req }) => {
         // Solo analizar en creación de nuevos comentarios
         if (operation === 'create' && data.comment) {
           try {
@@ -93,15 +103,21 @@ export const Comments: CollectionConfig = {
             data.toxicityScore = analisis.toxicity
             
             // Determinar status automáticamente
-            if (analisis.toxicity > 0.35) {
-              // Alta toxicidad → Pendiente de revisión
+            if (analisis.toxicity > 0.25) {
+              // Toxicidad moderada/alta → Rechazar y lanzar error
+              console.log('🚫 Comentario rechazado por toxicidad alta:', {
+                author: data.author,
+                toxicity: analisis.toxicity.toFixed(2),
+              })
+              throw new Error('Tu comentario contiene lenguaje inapropiado y no puede ser publicado.')
+            } else if (analisis.sentiment < -0.4 && analisis.toxicity < 0.15) {
+              // Muy negativo pero no tóxico → Pendiente de revisión manual
               data.status = 'pendiente'
-            } else if (analisis.sentiment < -0.55 && analisis.toxicity < 0.2) {
-              // Muy negativo pero no tóxico → Pendiente de revisión
-              data.status = 'pendiente'
+              console.log('⚠️ Comentario pendiente por sentimiento negativo')
             } else {
               // Todo bien → Publicado automáticamente
               data.status = 'publicado'
+              console.log('✅ Comentario publicado automáticamente')
             }
             
             console.log(`📊 Comentario analizado:`, {
@@ -112,7 +128,11 @@ export const Comments: CollectionConfig = {
             })
           } catch (error) {
             console.error('❌ Error al analizar comentario:', error)
-            // Si falla el análisis, dejar pendiente por seguridad
+            // Re-lanzar el error si es de moderación
+            if (error.message.includes('inapropiado')) {
+              throw error
+            }
+            // Si falla el análisis por otro motivo, dejar pendiente por seguridad
             data.status = 'pendiente'
           }
         }

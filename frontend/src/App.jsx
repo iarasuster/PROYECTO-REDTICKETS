@@ -132,15 +132,38 @@ function App() {
         <footer className="app-footer">
           <div className="container">
             <h3 className="footer-title">Mantenete actualizado</h3>
-            <p className="mb-3">
+            <p className="footer-subtitle">
               Recibe las mejores noticias de eventos en tu correo
             </p>
 
-            <form className="footer-form">
+            <form className="footer-form" onSubmit={async (e) => {
+              e.preventDefault();
+              const email = e.target.email.value;
+              
+              try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/formularios`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ tipo: 'newsletter', email })
+                });
+                
+                if (response.ok) {
+                  alert('¡Gracias por suscribirte! 🎉');
+                  e.target.reset();
+                } else {
+                  alert('Error al suscribirse. Intenta nuevamente.');
+                }
+              } catch (error) {
+                console.error('Error:', error);
+                alert('Error de conexión. Intenta nuevamente.');
+              }
+            }}>
               <input
                 type="email"
+                name="email"
                 placeholder="Tu correo electrónico"
                 className="footer-input"
+                required
               />
               <button type="submit" className="btn btn-large">
                 Suscribirme
@@ -148,10 +171,10 @@ function App() {
             </form>
 
             <div className="footer-social">
-              <a href="https://www.youtube.com/@redtickets8280">Youtube</a>
-              <a href="https://x.com/RedTicketsUY">X</a>
-              <a href="https://www.instagram.com/redtickets.uy/">Instagram</a>
-              <a href="https://www.linkedin.com/company/redtickets/">
+              <a href="https://www.youtube.com/@redtickets8280" target="_blank" rel="noopener noreferrer">Youtube</a>
+              <a href="https://x.com/RedTicketsUY" target="_blank" rel="noopener noreferrer">X</a>
+              <a href="https://www.instagram.com/redtickets.uy/" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://www.linkedin.com/company/redtickets/" target="_blank" rel="noopener noreferrer">
                 LinkedIn
               </a>
             </div>
