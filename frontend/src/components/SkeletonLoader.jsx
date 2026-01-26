@@ -1,5 +1,4 @@
 import "./SkeletonLoader.css";
-
 const SkeletonLoader = ({ variant = "default" }) => {
   if (variant === "hero") {
     return (

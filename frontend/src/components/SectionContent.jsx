@@ -5,7 +5,6 @@ import ChromaGrid from "./ChromaGrid";
 import CommentsForm from "./CommentsForm";
 import Counter from "./Counter";
 import LogoCarousel from "./LogoCarousel";
-import SkeletonLoader from "./SkeletonLoader";
 import TestimoniosCarousel from "./TestimoniosCarousel";
 import BentoGrid from "./BentoGrid";
 import loaderAnimation from "../assets/loader.lottie";
@@ -73,19 +72,14 @@ const SectionContent = ({ seccion, className = "" }) => {
   }, [content]);
 
   if (loading) {
-    // Mostrar skeleton específico según la sección
-    const skeletonVariant = {
-      inicio: "stats",
-      servicios: "cards",
-      comunidad: "list",
-      ayuda: "list",
-      "sobre-nosotros": "default",
-      contacto: "default",
-    }[seccion.replace(/-/g, "_")] || "default";
-
     return (
       <div className="section-loading">
-        <SkeletonLoader variant={skeletonVariant} />
+        <DotLottieReact
+          src={loaderAnimation}
+          autoplay
+          loop
+          style={{ width: 350, height: 350 }}
+        />
       </div>
     );
   }
@@ -414,49 +408,97 @@ const ServiciosContent = ({ data }) => {
     const texto = (servicio.servicio || servicio || "").toLowerCase();
 
     if (texto.includes("venta") || texto.includes("gestión"))
-      return { icon: "fa-shopping-cart", color: "#ff6600", gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)" };
+      return {
+        icon: "fa-shopping-cart",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
+      };
     if (texto.includes("compra") || texto.includes("pago"))
-      return { icon: "fa-credit-card", color: "#00d4ff", gradient: "linear-gradient(135deg, #00d4ff 0%, #0099ff 100%)" };
+      return {
+        icon: "fa-credit-card",
+        color: "#00d4ff",
+        gradient: "linear-gradient(135deg, #00d4ff 0%, #0099ff 100%)",
+      };
     if (texto.includes("app") || texto.includes("billetera"))
-      return { icon: "fa-mobile-alt", color: "#a855f7", gradient: "linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%)" };
+      return {
+        icon: "fa-mobile-alt",
+        color: "#a855f7",
+        gradient: "linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%)",
+      };
     if (
       texto.includes("diseño") ||
       texto.includes("e-ticket") ||
       texto.includes("personalizado")
     )
-      return { icon: "fa-palette", color: "#f59e0b", gradient: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)" };
+      return {
+        icon: "fa-palette",
+        color: "#f59e0b",
+        gradient: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+      };
     if (
       texto.includes("hard") ||
       texto.includes("impresión") ||
       texto.includes("físicas")
     )
-      return { icon: "fa-print", color: "#10b981", gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)" };
+      return {
+        icon: "fa-print",
+        color: "#10b981",
+        gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+      };
     if (
       texto.includes("control") ||
       texto.includes("acceso") ||
       texto.includes("seguridad")
     )
-      return { icon: "fa-shield-alt", color: "#ef4444", gradient: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)" };
+      return {
+        icon: "fa-shield-alt",
+        color: "#ef4444",
+        gradient: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+      };
     if (
       texto.includes("configuración") ||
       texto.includes("descuento") ||
       texto.includes("promoción")
     )
-      return { icon: "fa-cog", color: "#6366f1", gradient: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)" };
+      return {
+        icon: "fa-cog",
+        color: "#6366f1",
+        gradient: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
+      };
     if (texto.includes("integración") || texto.includes("sistema"))
-      return { icon: "fa-plug", color: "#14b8a6", gradient: "linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)" };
+      return {
+        icon: "fa-plug",
+        color: "#14b8a6",
+        gradient: "linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)",
+      };
     if (
       texto.includes("atención") ||
       texto.includes("cliente") ||
       texto.includes("soporte")
     )
-      return { icon: "fa-headset", color: "#f43f5e", gradient: "linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)" };
+      return {
+        icon: "fa-headset",
+        color: "#f43f5e",
+        gradient: "linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)",
+      };
     if (texto.includes("seguro") || texto.includes("metlife"))
-      return { icon: "fa-umbrella", color: "#8b5cf6", gradient: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)" };
+      return {
+        icon: "fa-umbrella",
+        color: "#8b5cf6",
+        gradient: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+      };
     if (texto.includes("acreditaciones") || texto.includes("credenciales"))
-      return { icon: "fa-id-card", color: "#ec4899", gradient: "linear-gradient(135deg, #ec4899 0%, #db2777 100%)" };
+      return {
+        icon: "fa-id-card",
+        color: "#ec4899",
+        gradient: "linear-gradient(135deg, #ec4899 0%, #db2777 100%)",
+      };
 
-    return { icon: "fa-ticket-alt", color: "#ff6600", gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)" };
+    return {
+      icon: "fa-ticket-alt",
+      color: "#ff6600",
+      gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
+    };
   };
 
   return (
@@ -470,10 +512,11 @@ const ServiciosContent = ({ data }) => {
             <span className="servicios-hero-highlight"> tu evento</span>
           </h1>
           <p className="servicios-hero-description">
-            En RedTickets ofrecemos una plataforma integral de ticketing que abarca
-            todo el ciclo del evento: desde la venta online hasta el control de acceso.
-            Nuestra tecnología permite gestionar entradas físicas y digitales, con
-            seguridad, personalización y soporte profesional para eventos de cualquier tamaño.
+            En RedTickets ofrecemos una plataforma integral de ticketing que
+            abarca todo el ciclo del evento: desde la venta online hasta el
+            control de acceso. Nuestra tecnología permite gestionar entradas
+            físicas y digitales, con seguridad, personalización y soporte
+            profesional para eventos de cualquier tamaño.
           </p>
         </div>
       </div>
@@ -486,13 +529,21 @@ const ServiciosContent = ({ data }) => {
             return (
               <div key={idx} className="servicio-card" data-index={idx}>
                 <div className="servicio-card-inner">
-                  <div className="servicio-icon-wrapper" style={{ '--icon-gradient': details.gradient }}>
+                  <div
+                    className="servicio-icon-wrapper"
+                    style={{ "--icon-gradient": details.gradient }}
+                  >
                     <i className={`fas ${details.icon} servicio-card-icon`}></i>
                   </div>
                   <div className="servicio-card-content">
-                    <p className="servicio-card-text">{item.servicio || item}</p>
+                    <p className="servicio-card-text">
+                      {item.servicio || item}
+                    </p>
                   </div>
-                  <div className="servicio-card-glow" style={{ '--glow-color': details.color }}></div>
+                  <div
+                    className="servicio-card-glow"
+                    style={{ "--glow-color": details.color }}
+                  ></div>
                 </div>
               </div>
             );
@@ -605,9 +656,7 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
     dinamicos: dynamicTestimonios.length,
   });
 
-  return (
-    <TestimoniosCarousel testimonios={allTestimonios} loading={loading} />
-  );
+  return <TestimoniosCarousel testimonios={allTestimonios} loading={loading} />;
 };
 
 const AyudaContent = ({ data }) => {
