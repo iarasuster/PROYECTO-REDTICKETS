@@ -5,14 +5,26 @@ import {
   NavLink,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import Home from "./pages/Home";
 import SectionPage from "./pages/SectionPage";
 import Chatbot from "./components/Chatbot";
 import { startKeepAlive, stopKeepAlive } from "./utils/keepalive";
+import loaderAnimation from "./assets/loader.lottie";
+import logoAnimation from "./assets/Logo.lottie";
 import "./App.css";
 
 function App() {
+  const [newsletterMessage, setNewsletterMessage] = useState(null);
+  // Ocultar mensaje automáticamente después de 3s
+  useEffect(() => {
+    if (newsletterMessage) {
+      const timeout = setTimeout(() => setNewsletterMessage(null), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [newsletterMessage]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [logoHovered, setLogoHovered] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -53,7 +65,34 @@ function App() {
           <div className="container">
             <h1 className="site-title">
               <a href="/">
-                <img src="/LOGO_1.svg" alt="RedTickets" className="site-logo" />
+                <div
+                  onMouseEnter={() => setLogoHovered(true)}
+                  style={{
+                    overflow: "hidden",
+                    height: "40px",
+                    display: "inline-block",
+                  }}
+                >
+                  {logoHovered ? (
+                    <DotLottieReact
+                      src={logoAnimation}
+                      autoplay
+                      loop={false}
+                      onComplete={() => setLogoHovered(false)}
+                      style={{
+                        width: "200px",
+                        height: "200px",
+                        marginTop: "-80px",
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src="/LOGO_1.svg"
+                      alt="RedTickets"
+                      className="site-logo"
+                    />
+                  )}
+                </div>
               </a>
             </h1>
 
@@ -136,28 +175,51 @@ function App() {
               Recibe las mejores noticias de eventos en tu correo
             </p>
 
-            <form className="footer-form" onSubmit={async (e) => {
-              e.preventDefault();
-              const email = e.target.email.value;
-              
-              try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/formularios`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ tipo: 'newsletter', email })
-                });
-                
-                if (response.ok) {
-                  alert('¡Gracias por suscribirte! 🎉');
-                  e.target.reset();
-                } else {
-                  alert('Error al suscribirse. Intenta nuevamente.');
+            <form
+              className="footer-form"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setNewsletterMessage(null);
+                const email = e.target.email.value;
+                // Validar formato de email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                  setNewsletterMessage({
+                    type: "error",
+                    text: "Por favor ingresa un email válido",
+                  });
+                  return;
                 }
-              } catch (error) {
-                console.error('Error:', error);
-                alert('Error de conexión. Intenta nuevamente.');
-              }
-            }}>
+                try {
+                  const response = await fetch(
+                    `${import.meta.env.VITE_API_URL}/api/formularios`,
+                    {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ tipo: "newsletter", email }),
+                    },
+                  );
+                  if (response.ok) {
+                    setNewsletterMessage({
+                      type: "success",
+                      text: "¡Gracias por suscribirte! 🎉",
+                    });
+                    e.target.reset();
+                  } else {
+                    setNewsletterMessage({
+                      type: "error",
+                      text: "Error al suscribirse. Intenta nuevamente.",
+                    });
+                  }
+                } catch (error) {
+                  console.error("Error:", error);
+                  setNewsletterMessage({
+                    type: "error",
+                    text: "Error de conexión. Intenta nuevamente.",
+                  });
+                }
+              }}
+            >
               <input
                 type="email"
                 name="email"
@@ -168,13 +230,40 @@ function App() {
               <button type="submit" className="btn btn-large">
                 Suscribirme
               </button>
+              {newsletterMessage && (
+                <div className={`form-message ${newsletterMessage.type}`}>
+                  {newsletterMessage.text}
+                </div>
+              )}
             </form>
 
             <div className="footer-social">
-              <a href="https://www.youtube.com/@redtickets8280" target="_blank" rel="noopener noreferrer">Youtube</a>
-              <a href="https://x.com/RedTicketsUY" target="_blank" rel="noopener noreferrer">X</a>
-              <a href="https://www.instagram.com/redtickets.uy/" target="_blank" rel="noopener noreferrer">Instagram</a>
-              <a href="https://www.linkedin.com/company/redtickets/" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.youtube.com/@redtickets8280"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Youtube
+              </a>
+              <a
+                href="https://x.com/RedTicketsUY"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                X
+              </a>
+              <a
+                href="https://www.instagram.com/redtickets.uy/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram
+              </a>
+              <a
+                href="https://www.linkedin.com/company/redtickets/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 LinkedIn
               </a>
             </div>

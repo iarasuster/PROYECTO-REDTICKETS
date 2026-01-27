@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SectionContent from "../components/SectionContent";
-import SkeletonLoader from "../components/SkeletonLoader";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import loaderAnimation from "../components/../assets/loader.lottie";
 import { getSectionBySlug } from "../services/api";
 import "./SectionPage.css";
 
@@ -36,8 +37,13 @@ function SectionPage() {
   if (loading) {
     return (
       <div className="section-page" data-section={seccionSlug}>
-        <div className="container">
-          <SkeletonLoader variant="hero" />
+        <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+          <DotLottieReact
+            src={loaderAnimation}
+            autoplay
+            loop
+            style={{ width: 220, height: 220 }}
+          />
         </div>
       </div>
     );

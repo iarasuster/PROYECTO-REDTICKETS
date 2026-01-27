@@ -163,9 +163,10 @@
   font-weight: 600;
 }
 
-/* Preview de Secciones */
 .sections-preview {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .preview-title {
@@ -177,90 +178,157 @@
   letter-spacing: -0.02em;
 }
 
-/* Logos Section en Inicio */
-.inicio-logos {
-  width: 100%;
-  margin: 3rem 0;
-}
-
 .logos-title {
   text-align: center;
-  font-size: 1.25rem;
-  font-weight: 800;
-  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 700;
   color: #ffffff;
-  margin-bottom: 2rem;
-  text-transform: none;
+  margin-bottom: 3rem;
   letter-spacing: -0.02em;
 }
 
-/* Preview List - Diseño limpio y minimalista */
-.preview-list {
-  display: flex;
-  flex-direction: column;
-  max-width: 900px;
-  margin: 0 auto;
+/* Magic Bento Grid */
+.magic-bento-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1.5rem;
+  height: 600px;
+  transition: all 0.5s ease;
 }
 
-.preview-item {
+.bento-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   text-decoration: none;
   color: inherit;
-  padding: clamp(1.5rem, 4vw, 3rem) 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.preview-item:last-child {
-  border-bottom: none;
-}
-
-.preview-item:hover {
-  padding-left: 0;
-}
-
-.preview-header {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+}
+
+/* Posicionamiento inicial */
+.bento-item:nth-child(1) {
+  grid-column: 1;
+}
+
+.bento-item:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.bento-item:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.bento-item:nth-child(4) {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+/* Hover effects - Magic Bento - keep positions, just scale */
+.magic-bento-grid:hover .bento-item {
+  transform: scale(0.95);
+}
+
+/* Individual hover - expand the hovered item */
+.bento-item:hover {
+  transform: scale(1.05) !important;
+}
+
+/* Special hover for large item - keep normal size */
+.bento-item.bento-large:hover {
+  transform: scale(1) !important;
+}
+
+
+.bento-item:hover ~ .bento-item {
+  transform: scale(0.9) !important;
+}
+
+/* Content inside bento items */
+.bento-content {
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bento-header {
+  display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 1rem;
 }
 
-.preview-header h3 {
-  font-size: 1.75rem;
-  font-weight: 600;
+.bento-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #ffffff;
   margin: 0;
+  line-height: 1.2;
   transition: color 0.3s ease;
-  letter-spacing: -0.01em;
 }
 
-.preview-item:hover .preview-header h3 {
+.bento-item:hover .bento-header h3 {
   color: #ff6600;
 }
 
-.preview-arrow {
+.bento-arrow {
   font-size: 1.5rem;
   color: rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
+  margin-top: 0.25rem;
 }
 
-.preview-item:hover .preview-arrow {
+.bento-item:hover .bento-arrow {
   color: #ff6600;
   transform: translateX(8px);
 }
 
-.preview-item p {
-  font-size: 1rem;
-  line-height: 1.75;
+.bento-content p {
+  font-size: 0.95rem;
+  line-height: 1.6;
   color: rgba(255, 255, 255, 0.75);
   margin: 0;
-  max-width: 65ch;
   transition: color 0.3s ease;
 }
 
-.preview-item:hover p {
+.bento-item:hover .bento-content p {
   color: rgba(255, 255, 255, 0.9);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .magic-bento-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 200px);
+    height: auto;
+    gap: 1rem;
+  }
+
+  .bento-item {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  .bento-content {
+    padding: 1.5rem;
+  }
+
+  .bento-header h3 {
+    font-size: 1.25rem;
+  }
 }
 
 /* Responsive */
@@ -306,8 +374,7 @@
   max-width: 1400px;
   padding: 4rem 2rem;
 }
-  padding: 4rem 2rem;
-}
+
 
 /* ========== 📐 ANIMATION UTILITIES ========== */
 .content-item {
@@ -803,6 +870,7 @@
 
 .contact-form {
   max-width: 500px;
+  margin: 0 auto;
 }
 
 .form-group {
@@ -818,7 +886,8 @@
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   width: 100%;
   padding: 0.875rem 1rem;
   background: rgba(255, 255, 255, 0.05);
@@ -836,7 +905,8 @@
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
   outline: none;
   background: rgba(255, 102, 0, 0.1);
   box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.2);
@@ -1952,6 +2022,117 @@
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* ========== 🎯 TIMELINE HISTORIA - DISEÑO MODERNO ========== */
+.historia-row {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.historia-row .section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ff6600;
+  margin-bottom: 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #ff6600 0%, #ff8833 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.timeline-blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.timeline-blocks::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 102, 0, 0.3) 20%, rgba(255, 102, 0, 0.6) 50%, rgba(255, 102, 0, 0.3) 80%, transparent 100%);
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.timeline-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+  z-index: 2;
+}
+
+.timeline-card:nth-child(odd) {
+  animation-delay: 0.1s;
+}
+
+.timeline-card:nth-child(even) {
+  animation-delay: 0.2s;
+}
+
+.timeline-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(255, 102, 0, 0.2);
+  border-color: rgba(255, 102, 0, 0.3);
+}
+
+.timeline-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6600 0%, #ff8833 50%, #ffaa55 100%);
+  border-radius: 16px 16px 0 0;
+}
+
+.timeline-year {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #ff6600;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  background: linear-gradient(135deg, #ff6600 0%, #ff8833 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 15px rgba(255, 102, 0, 0.3);
+}
+
+.timeline-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.timeline-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
+.timeline-text br {
+  margin-bottom: 0.25rem;
 }
 
 /* ========== 🎯 SERVICIOS GRID MODERNO ========== */

@@ -8,16 +8,18 @@ import LogoCarousel from "./LogoCarousel";
 import TestimoniosCarousel from "./TestimoniosCarousel";
 import BentoGrid from "./BentoGrid";
 import loaderAnimation from "../assets/loader.lottie";
+// Helper para obtener la URL de imagen desde objeto Payload
+function getImageUrl(imageObj) {
+  if (!imageObj) return "";
+  if (imageObj.url) return imageObj.url;
+  if (imageObj.filename) return `${SERVER_URL}/media/${imageObj.filename}`;
+  return "";
+}
 import "./SectionContent.css";
 
-// Helper para obtener URL correcta de imagen
-const getImageUrl = (imageObj) => {
-  if (!imageObj?.url) return null;
-  // Si ya empieza con http, usar directamente
-  if (imageObj.url.startsWith("http")) return imageObj.url;
-  // Si es ruta relativa, agregar SERVER_URL
-  return `${SERVER_URL}${imageObj.url}`;
-};
+// --- FIN SOBRE NOSOTROS ---
+
+// ...existing code...
 
 const SectionContent = ({ seccion, className = "" }) => {
   const [content, setContent] = useState(null);
@@ -188,58 +190,67 @@ const InicioContent = ({ data }) => {
         </div>
       )}
 
-      {/* Preview de Secciones */}
+      {/* Preview de Secciones - Magic Bento Style */}
       <div className="sections-preview animate-item">
         <h2 className="preview-title">Descubre RedTickets</h2>
 
-        <div className="preview-list">
-          {/* Sobre Nosotros */}
-          <a href="/seccion/sobre-nosotros" className="preview-item">
-            <div className="preview-header">
-              <h3>Sobre Nosotros</h3>
-              <span className="preview-arrow">→</span>
+        <div className="magic-bento-grid">
+          {/* Sobre Nosotros - Grande inicialmente */}
+          <a href="/seccion/sobre-nosotros" className="bento-item bento-large">
+            <div className="bento-content">
+              <div className="bento-header">
+                <h3>Sobre Nosotros</h3>
+                <span className="bento-arrow">→</span>
+              </div>
+              <p>
+                Más de 10 años conectando personas con experiencias únicas.
+                Conoce nuestro equipo, nuestra historia y la pasión que nos
+                impulsa día a día.
+              </p>
             </div>
-            <p>
-              Más de 10 años conectando personas con experiencias únicas. Conoce
-              nuestro equipo, nuestra historia y la pasión que nos impulsa día a
-              día.
-            </p>
           </a>
 
           {/* Servicios */}
-          <a href="/seccion/servicios" className="preview-item">
-            <div className="preview-header">
-              <h3>Servicios</h3>
-              <span className="preview-arrow">→</span>
+          <a href="/seccion/servicios" className="bento-item">
+            <div className="bento-content">
+              <div className="bento-header">
+                <h3>Servicios</h3>
+                <span className="bento-arrow">→</span>
+              </div>
+              <p>
+                Venta de entradas, control de acceso, hard ticketing, streaming
+                y más. Soluciones completas e integrales para tu evento.
+              </p>
             </div>
-            <p>
-              Venta de entradas, control de acceso, hard ticketing, streaming y
-              más. Soluciones completas e integrales para tu evento.
-            </p>
           </a>
 
           {/* Comunidad */}
-          <a href="/seccion/comunidad" className="preview-item">
-            <div className="preview-header">
-              <h3>Comunidad</h3>
-              <span className="preview-arrow">→</span>
+          <a href="/seccion/comunidad" className="bento-item">
+            <div className="bento-content">
+              <div className="bento-header">
+                <h3>Comunidad</h3>
+                <span className="bento-arrow">→</span>
+              </div>
+              <p>
+                Lee testimonios de productores y asistentes que confían en
+                RedTickets para crear experiencias inolvidables.
+              </p>
             </div>
-            <p>
-              Lee testimonios de productores y asistentes que confían en
-              RedTickets para crear experiencias inolvidables.
-            </p>
           </a>
 
           {/* Ayuda */}
-          <a href="/seccion/ayuda" className="preview-item">
-            <div className="preview-header">
-              <h3>Centro de Ayuda</h3>
-              <span className="preview-arrow">→</span>
+          <a href="/seccion/ayuda" className="bento-item">
+            <div className="bento-content">
+              <div className="bento-header">
+                <h3>Centro de Ayuda</h3>
+                <span className="bento-arrow">→</span>
+              </div>
+              <p>
+                ¿Dudas sobre cómo comprar o vender entradas? Encuentra
+                respuestas a las preguntas más frecuentes y soporte
+                personalizado.
+              </p>
             </div>
-            <p>
-              ¿Dudas sobre cómo comprar o vender entradas? Encuentra respuestas
-              a las preguntas más frecuentes y soporte personalizado.
-            </p>
           </a>
         </div>
       </div>
@@ -247,16 +258,67 @@ const InicioContent = ({ data }) => {
   );
 };
 
-const SobreNosotrosContent = ({ data }) => {
+// Componente para la sección SOBRE NOSOTROS
+function SobreNosotrosContent({ data }) {
   const [activeFounder, setActiveFounder] = useState(null);
 
   return (
     <div className="sobre-nosotros-container">
+      {/* FILA 0: Historia RedTickets - Timeline visual */}
+      <div className="sobre-row historia-row animate-item">
+        <h3 className="section-title">Nuestra Historia</h3>
+        <div className="timeline-blocks">
+          <div className="timeline-card">
+            <div className="timeline-year">2015</div>
+            <div className="timeline-title">Fundación & Reconocimiento</div>
+            <div className="timeline-text">
+              RedTickets nace como la primera y única ticketera autogestionable
+              de Uruguay.
+              <br />
+              Ese mismo año, recibe el reconocimiento de ANII como “Proyecto de
+              Innovación del Año”, marcando el inicio de una nueva era en la
+              gestión de eventos.
+            </div>
+          </div>
+          <div className="timeline-card">
+            <div className="timeline-year">2016</div>
+            <div className="timeline-title">Lanzamiento al Mercado</div>
+            <div className="timeline-text">
+              Abril 2016: RedTickets inicia operaciones, acercando tecnología y
+              autonomía a productores y asistentes en todo el país.
+            </div>
+          </div>
+          <div className="timeline-card">
+            <div className="timeline-year">2017</div>
+            <div className="timeline-title">Innovación en el Fútbol</div>
+            <div className="timeline-text">
+              Primer ticket digital del fútbol uruguayo.
+              <br />
+              RedTickets se convierte en la ticketera oficial de la Selección
+              Uruguaya de Fútbol y participa en eventos internacionales de
+              Conmebol, consolidando su liderazgo en el sector.
+            </div>
+          </div>
+          <div className="timeline-card">
+            <div className="timeline-year">2019</div>
+            <div className="timeline-title">
+              Expansión & Internacionalización
+            </div>
+            <div className="timeline-text">
+              Seleccionada por el Programa de Apoyo al Crecimiento de ANII.
+              <br />
+              Este impulso permite a RedTickets expandir su alcance y
+              proyectarse internacionalmente, manteniendo el compromiso con la
+              innovación y la excelencia.
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* FILA 1: Fundadores - Foto Grupal con Tooltips */}
       {data.fundadores_foto?.url && (
         <div className="sobre-row fundadores-row">
           <h3 className="section-title">Fundadores</h3>
-
           <div className="fundadores-photo-interactive">
             <img
               src={getImageUrl(data.fundadores_foto)}
@@ -264,7 +326,6 @@ const SobreNosotrosContent = ({ data }) => {
               className="group-photo"
               loading="lazy"
             />
-
             {/* Áreas interactivas sobre cada fundador */}
             {data.fundadores && data.fundadores.length === 4 && (
               <div className="fundadores-hotspots">
@@ -290,7 +351,6 @@ const SobreNosotrosContent = ({ data }) => {
               </div>
             )}
           </div>
-
           {/* Tooltips debajo de la foto */}
           {data.fundadores && data.fundadores.length === 4 && (
             <div className="fundadores-info-below">
@@ -400,7 +460,8 @@ const SobreNosotrosContent = ({ data }) => {
       )}
     </div>
   );
-};
+}
+// ...existing code...
 
 const ServiciosContent = ({ data }) => {
   // Mapeo de servicios a iconos y colores específicos
@@ -566,7 +627,6 @@ const ComunidadContent = ({ data }) => {
 
   return (
     <div className="comunidad-container">
-      {/* Bento Grid - Galería de Fotos */}
       {data.galeria_fotos && data.galeria_fotos.length > 0 && (
         <BentoGrid photos={data.galeria_fotos} />
       )}
@@ -685,7 +745,7 @@ const AyudaContent = ({ data }) => {
   const tabs = [
     { id: "comprar", label: "Cómo Comprar" },
     { id: "vender", label: "Cómo Vender" },
-    { id: "datos", label: "Datos Importantes" },
+    { id: "datos", label: "Preguntas Frecuentes" },
     { id: "politicas", label: "Políticas" },
     { id: "devoluciones", label: "Devoluciones" },
     { id: "tecnica", label: "Ayuda Técnica" },
@@ -750,7 +810,7 @@ const AyudaContent = ({ data }) => {
 
         {activeTab === "datos" && data.datos_importantes && (
           <div className="tab-panel animate-in">
-            <h3>Datos Importantes</h3>
+            <h3>Preguntas Frecuentes</h3>
 
             {data.datos_importantes.faqs &&
             Array.isArray(data.datos_importantes.faqs) &&
@@ -874,43 +934,15 @@ const AyudaContent = ({ data }) => {
               <div className="ayuda-item">
                 <h4>Cancelar Compra en Tótem</h4>
                 <p>{data.ayuda_tecnica.cancelar_compra_totem.descripcion}</p>
-                {data.ayuda_tecnica.cancelar_compra_totem.campos &&
-                  Array.isArray(
-                    data.ayuda_tecnica.cancelar_compra_totem.campos,
-                  ) && (
-                    <form
-                      className="ayuda-form"
-                      onSubmit={(e) => e.preventDefault()}
-                    >
-                      {data.ayuda_tecnica.cancelar_compra_totem.campos.map(
-                        (item, idx) => {
-                          const fieldName =
-                            typeof item === "string" ? item : item.campo;
-                          const isTextarea = fieldName
-                            .toLowerCase()
-                            .includes("motivo");
-                          return (
-                            <div key={item.id || idx} className="form-group">
-                              <label>{fieldName}</label>
-                              {isTextarea ? (
-                                <textarea
-                                  placeholder={`Ingresa ${fieldName.toLowerCase()}`}
-                                  rows="3"
-                                />
-                              ) : (
-                                <input
-                                  type="text"
-                                  placeholder={`Ingresa ${fieldName.toLowerCase()}`}
-                                />
-                              )}
-                            </div>
-                          );
-                        },
-                      )}
-                      <button type="submit" className="btn-primary">
-                        Enviar Solicitud
-                      </button>
-                    </form>
+                {Array.isArray(
+                  data.ayuda_tecnica.cancelar_compra_totem?.campos,
+                ) &&
+                  data.ayuda_tecnica.cancelar_compra_totem.campos.length >
+                    0 && (
+                    <AyudaForm
+                      campos={data.ayuda_tecnica.cancelar_compra_totem.campos}
+                      submitText="Enviar Solicitud"
+                    />
                   )}
               </div>
             )}
@@ -920,29 +952,13 @@ const AyudaContent = ({ data }) => {
               <div className="ayuda-item">
                 <h4>Solicitar Nuevos Rollos</h4>
                 <p>{data.ayuda_tecnica.solicitar_nuevos_rollos}</p>
-                <form
-                  className="ayuda-form"
-                  onSubmit={(e) => e.preventDefault()}
-                >
-                  <div className="form-group">
-                    <label>Cantidad de Rollos</label>
-                    <input
-                      type="number"
-                      min="1"
-                      placeholder="Ingresa la cantidad requerida"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Lugar o Evento</label>
-                    <input
-                      type="text"
-                      placeholder="Ingresa el lugar o nombre del evento"
-                    />
-                  </div>
-                  <button type="submit" className="btn-primary">
-                    Solicitar Rollos
-                  </button>
-                </form>
+                <AyudaForm
+                  campos={[
+                    { campo: "Cantidad de Rollos", type: "number", min: 1 },
+                    { campo: "Lugar o Evento", type: "text" },
+                  ]}
+                  submitText="Solicitar Rollos"
+                />
               </div>
             )}
           </div>
@@ -952,43 +968,105 @@ const AyudaContent = ({ data }) => {
   );
 };
 
-const ContactoContent = ({ data }) => (
-  <div className="content-grid">
-    {data.formulario && data.formulario.length > 0 && (
-      <div className="content-item formulario animate-item">
-        <h3>Contáctanos</h3>
-        <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
-          {data.formulario.map((campo, idx) => {
-            const fieldName = typeof campo === "string" ? campo : campo.campo;
-            const isTextarea = fieldName.toLowerCase().includes("mensaje");
-            return (
-              <div key={idx} className="form-group">
-                <label>{fieldName}</label>
-                {isTextarea ? (
-                  <textarea
-                    placeholder={`Ingresa tu ${fieldName.toLowerCase()}`}
-                  />
-                ) : (
-                  <input
-                    type={
-                      fieldName.toLowerCase().includes("email")
-                        ? "email"
-                        : "text"
-                    }
-                    placeholder={`Ingresa tu ${fieldName.toLowerCase()}`}
-                  />
-                )}
+const ContactoContent = ({ data }) => {
+  const [formMessage, setFormMessage] = useState(null);
+  useEffect(() => {
+    if (formMessage) {
+      const timeout = setTimeout(() => setFormMessage(null), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [formMessage]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    let valid = true;
+    for (const el of form.elements) {
+      if (
+        (el.tagName === "INPUT" || el.tagName === "TEXTAREA") &&
+        el.hasAttribute("required") &&
+        !el.value.trim()
+      ) {
+        valid = false;
+      }
+    }
+    if (!valid) {
+      setFormMessage({
+        type: "error",
+        text: "Por favor completa todos los campos.",
+      });
+      return;
+    }
+    setFormMessage({
+      type: "success",
+      text: "¡Mensaje enviado! Nos pondremos en contacto.",
+    });
+    form.reset();
+  };
+  return (
+    <div className="content-grid">
+      {Array.isArray(data.formulario) && data.formulario.length > 0 && (
+        <div className="content-item formulario animate-item">
+          <form className="contact-form" onSubmit={handleSubmit}>
+            {data.formulario.map((campo, idx) => {
+              const fieldName = typeof campo === "string" ? campo : campo.campo;
+              const isTextarea = fieldName.toLowerCase().includes("mensaje");
+              const isTipoConsulta =
+                fieldName.toLowerCase().includes("tipo") &&
+                fieldName.toLowerCase().includes("consulta");
+
+              return (
+                <div key={idx} className="form-group">
+                  <label>{fieldName}</label>
+                  {isTextarea ? (
+                    <textarea
+                      placeholder={`Ingresa tu ${fieldName.toLowerCase()}`}
+                      required
+                    />
+                  ) : isTipoConsulta ? (
+                    <select required>
+                      <option value="">Selecciona una opción</option>
+                      <option value="organizar-evento">
+                        Quiero organizar un evento
+                      </option>
+                      <option value="saber-servicios">
+                        Saber más sobre sus servicios
+                      </option>
+                      <option value="redtickets-pais">
+                        Quiero a RedTickets en mi país
+                      </option>
+                      <option value="ayuda-comprar">
+                        Quiero ayuda para comprar
+                      </option>
+                      <option value="otro">Otro</option>
+                    </select>
+                  ) : (
+                    <input
+                      type={
+                        fieldName.toLowerCase().includes("email")
+                          ? "email"
+                          : "text"
+                      }
+                      placeholder={`Ingresa tu ${fieldName.toLowerCase()}`}
+                      required
+                    />
+                  )}
+                </div>
+              );
+            })}
+            <button type="submit" className="btn btn-large">
+              Enviar mensaje
+            </button>
+            {formMessage && (
+              <div className={`form-message ${formMessage.type}`}>
+                {formMessage.text}
               </div>
-            );
-          })}
-          <button type="submit" className="btn btn-large">
-            Enviar mensaje
-          </button>
-        </form>
-      </div>
-    )}
-  </div>
-);
+            )}
+          </form>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const GenericContent = ({ data }) => (
   <div className="content-grid">
@@ -997,5 +1075,80 @@ const GenericContent = ({ data }) => (
     </div>
   </div>
 );
+
+// Formulario reutilizable para ayuda técnica
+function AyudaForm({ campos, submitText }) {
+  const [formMessage, setFormMessage] = useState(null);
+  useEffect(() => {
+    if (formMessage) {
+      const timeout = setTimeout(() => setFormMessage(null), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [formMessage]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    let valid = true;
+    for (const el of form.elements) {
+      if (
+        (el.tagName === "INPUT" || el.tagName === "TEXTAREA") &&
+        el.hasAttribute("required") &&
+        !el.value.trim()
+      ) {
+        valid = false;
+      }
+    }
+    if (!valid) {
+      setFormMessage({
+        type: "error",
+        text: "Por favor completa todos los campos.",
+      });
+      return;
+    }
+    setFormMessage({
+      type: "success",
+      text: "¡Mensaje enviado! Nos pondremos en contacto.",
+    });
+    form.reset();
+  };
+  if (!Array.isArray(campos) || campos.length === 0) return null;
+  return (
+    <form className="ayuda-form" onSubmit={handleSubmit}>
+      {campos.map((item, idx) => {
+        const fieldName = typeof item === "string" ? item : item.campo;
+        const isTextarea = fieldName.toLowerCase().includes("motivo");
+        const type = typeof item === "object" && item.type ? item.type : "text";
+        const min = typeof item === "object" && item.min ? item.min : undefined;
+        return (
+          <div key={item.id || idx} className="form-group">
+            <label>{fieldName}</label>
+            {isTextarea ? (
+              <textarea
+                placeholder={`Ingresa ${fieldName.toLowerCase()}`}
+                rows="3"
+                required
+              />
+            ) : (
+              <input
+                type={type}
+                min={min}
+                placeholder={`Ingresa ${fieldName.toLowerCase()}`}
+                required
+              />
+            )}
+          </div>
+        );
+      })}
+      <button type="submit" className="btn-primary">
+        {submitText}
+      </button>
+      {formMessage && (
+        <div className={`form-message ${formMessage.type}`}>
+          {formMessage.text}
+        </div>
+      )}
+    </form>
+  );
+}
 
 export default SectionContent;

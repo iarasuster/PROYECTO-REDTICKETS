@@ -96,7 +96,7 @@ export const Comments: CollectionConfig = {
         if (operation === 'create' && data && data.comment) {
           try {
             // Analizar el texto del comentario
-            const analisis = analizarTexto(data.comment)
+            const analisis = await analizarTexto(data.comment)
             
             // Guardar scores
             data.sentimentScore = analisis.sentiment
@@ -104,12 +104,12 @@ export const Comments: CollectionConfig = {
             
             // Determinar status automáticamente
             if (analisis.toxicity > 0.25) {
-              // Toxicidad moderada/alta → Rechazar y lanzar error
+              // Toxicidad moderada/alta → Rechazar
+              data.status = 'rechazado'
               console.log('🚫 Comentario rechazado por toxicidad alta:', {
                 author: data.author,
                 toxicity: analisis.toxicity.toFixed(2),
               })
-              throw new Error('Tu comentario contiene lenguaje inapropiado y no puede ser publicado.')
             } else if (analisis.sentiment < -0.4 && analisis.toxicity < 0.15) {
               // Muy negativo pero no tóxico → Pendiente de revisión manual
               data.status = 'pendiente'
@@ -128,11 +128,7 @@ export const Comments: CollectionConfig = {
             })
           } catch (error) {
             console.error('❌ Error al analizar comentario:', error)
-            // Re-lanzar el error si es de moderación
-            if (error instanceof Error && error.message.includes('inapropiado')) {
-              throw error
-            }
-            // Si falla el análisis por otro motivo, dejar pendiente por seguridad
+            // Si falla el análisis, dejar pendiente por seguridad
             data.status = 'pendiente'
           }
         }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./CommentsForm.css";
 
 const API_BASE_URL =
@@ -14,6 +14,13 @@ const CommentsForm = ({ onCommentSubmitted }) => {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  // Ocultar mensaje automáticamente después de 3s
+  useEffect(() => {
+    if (message) {
+      const timeout = setTimeout(() => setMessage(null), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [message]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -186,14 +193,16 @@ const CommentsForm = ({ onCommentSubmitted }) => {
         </div>
 
         <button type="submit" className="submit-button" disabled={loading}>
-          {loading ? (
-            <>
-              <span className="spinner"></span>
-              Enviando...
-            </>
-          ) : (
-            "Enviar testimonio"
-          )}
+          <span className="button-content">
+            {loading ? (
+              <>
+                <span className="spinner"></span>
+                Enviando...
+              </>
+            ) : (
+              "Enviar testimonio"
+            )}
+          </span>
         </button>
 
         {message && (
