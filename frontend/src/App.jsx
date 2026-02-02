@@ -179,7 +179,7 @@ function App() {
             >
               Contacto
             </NavLink>
-            
+
             {/* Botón CTA en móvil */}
             <a
               className="mobile-cta-button"

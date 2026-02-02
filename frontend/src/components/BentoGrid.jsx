@@ -45,8 +45,8 @@ const BentoGrid = ({ photos }) => {
       }
     };
 
-    grid.addEventListener('wheel', handleWheel, { passive: false });
-    return () => grid.removeEventListener('wheel', handleWheel);
+    grid.addEventListener("wheel", handleWheel, { passive: false });
+    return () => grid.removeEventListener("wheel", handleWheel);
   }, []);
 
   return (
