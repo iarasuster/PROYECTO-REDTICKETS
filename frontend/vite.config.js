@@ -10,12 +10,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name.endsWith('.lottie')) {
-            return 'assets/[name][extname]';
+          if (assetInfo.name.endsWith(".lottie")) {
+            return "assets/[name][extname]";
           }
-          return 'assets/[name]-[hash][extname]';
-        }
-      }
-    }
-  }
+          return "assets/[name]-[hash][extname]";
+        },
+      },
+    },
+  },
 });
