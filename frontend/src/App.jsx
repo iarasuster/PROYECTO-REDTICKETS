@@ -26,6 +26,13 @@ function App() {
   }, [newsletterMessage]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoHovered, setLogoHovered] = useState(false);
+  const [canAnimate, setCanAnimate] = useState(false);
+
+  // Habilitar animación después de que el componente esté montado
+  useEffect(() => {
+    const timer = setTimeout(() => setCanAnimate(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Reset logo después de animación (6s = duración de la animación)
   useEffect(() => {
@@ -71,25 +78,15 @@ function App() {
 
         {/* Header del sitio */}
         <header className="app-header">
-          {/* Precarga invisible del logo animado */}
-          <div
-            style={{
-              position: "absolute",
-              opacity: 0,
-              pointerEvents: "none",
-              width: 0,
-              height: 0,
-              overflow: "hidden",
-            }}
-          >
-            <DotLottieReact src={logoAnimation} autoplay={false} />
-          </div>
-
           <div className="container">
             <h1 className="site-title">
               <Link to="/">
                 <div
-                  onMouseEnter={() => setLogoHovered(true)}
+                  onMouseEnter={() => {
+                    if (canAnimate) {
+                      setLogoHovered(true);
+                    }
+                  }}
                   style={{
                     overflow: "hidden",
                     height: "40px",
@@ -110,7 +107,7 @@ function App() {
                   />
 
                   {/* Animación Lottie solo cuando hover */}
-                  {logoHovered && (
+                  {logoHovered && canAnimate && (
                     <DotLottieReact
                       src={logoAnimation}
                       autoplay
