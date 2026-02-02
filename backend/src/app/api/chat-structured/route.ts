@@ -119,9 +119,19 @@ ACTIONS: [opcional - máx 2]
 
 # COMPONENTES
 
-## CARDS (para "qué servicios", "mostrame opciones"):
+## CARDS (para "qué servicios", "mostrame opciones", "servicios", "que ofrecen"):
 CARDS: Título | Descripción | slug
 CARDS: Título | Descripción | slug
+
+⚠️ USA CARDS cuando el usuario pregunte por:
+- "servicios", "que ofrecen", "qué hacen"
+- "opciones", "alternativas"
+- Cualquier lista de características o productos
+
+✅ Ejemplo servicios:
+CARDS: Venta Online | Sistema de tickets con pagos seguros | servicios
+CARDS: Control de Acceso | Tótems inteligentes con QR | servicios
+CARDS: Producción | Asesoramiento integral para eventos | servicios
 
 ## VIDEO (⚠️ ÚNICO - SOLO "como compro" o "tutorial de compra"):
 VIDEO: https://www.youtube.com/embed/SfHuVUmpzgU | Tutorial de compra
@@ -141,13 +151,15 @@ Slugs válidos: inicio, sobre-nosotros, servicios, comunidad, ayuda, contacto, a
 Eventos: https://redtickets.uy (external)
 
 # REGLAS CRÍTICAS
-1. MESSAGE nunca vacío - siempre 1-2 oraciones
-2. VIDEO SOLO para "como compro" - NUNCA para "vender", "eventos", "tótem"
-3. ACTIONS: máx 2 botones con slugs válidos (NO inventes)
-4. Artistas/eventos → "No tengo info" + https://redtickets.uy
-5. Termina con ---
+1. ⚠️ MESSAGE es OBLIGATORIO - NUNCA lo omitas, siempre escribe 1-2 oraciones relevantes
+2. ⚠️ CADA respuesta DEBE tener MESSAGE al inicio (después de ARCHETYPE)
+3. VIDEO SOLO para "como compro" - NUNCA para "vender", "eventos", "tótem"
+4. ACTIONS: máx 2 botones con slugs válidos (NO inventes)
+5. Artistas/eventos → "No tengo info" + https://redtickets.uy
+6. Cuando uses CARDS, el MESSAGE debe PRESENTAR las cards ("te muestro", "acá están", etc)
+7. SIEMPRE termina con ---
 
-# EJEMPLOS
+# EJEMPLOS OBLIGATORIOS (COPIA ESTE FORMATO)
 
 Usuario: "hola"
 ARCHETYPE: inform
@@ -183,6 +195,28 @@ ARCHETYPE: inform
 MESSAGE: No tengo info sobre eventos específicos. Revisá la cartelera actualizada en RedTickets.uy
 ACTIONS:
 Ver Eventos → https://redtickets.uy (external)
+---
+
+Usuario: "que servicios ofrecen"
+ARCHETYPE: discover
+MESSAGE: Ofrecemos soluciones completas para gestión de eventos. Acá te muestro los principales:
+VISUAL:
+CARDS: Venta Online | Sistema de tickets con pagos seguros y gestión automatizada | servicios
+CARDS: Control de Acceso | Tótems inteligentes con lectura de QR y validación en tiempo real | servicios
+CARDS: Producción de Eventos | Asesoramiento integral desde planificación hasta ejecución | servicios
+ACTIONS:
+Ver Todos → servicios (navigate)
+---
+
+Usuario: "servicios"
+ARCHETYPE: discover
+MESSAGE: RedTickets ofrece tecnología para cada etapa de tu evento:
+VISUAL:
+CARDS: Venta Online | Sistema de tickets con pagos seguros y gestión automatizada | servicios
+CARDS: Control de Acceso | Tótems inteligentes con lectura de QR y validación en tiempo real | servicios
+CARDS: Producción de Eventos | Asesoramiento integral desde planificación hasta ejecución | servicios
+ACTIONS:
+Ver Detalles → servicios (navigate)
 ---`
 
 // CORS headers
@@ -267,7 +301,8 @@ ${(contentData.servicios as Record<string, unknown>[]).map((s: Record<string, un
       model: groq('llama-3.1-8b-instant'),
       system: SYSTEM_PROMPT,
       messages: enhancedMessages,
-      temperature: 0.3,  // Balance velocidad/calidad
+      temperature: 0.2,  // Más bajo para mayor adherencia al formato
+      maxTokens: 500,    // Limitar respuestas largas
     })
 
     // Stream response directo (más rápido)

@@ -34,10 +34,10 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Reset logo después de animación (6s = duración de la animación)
+  // Reset logo después de animación (8s = 6s animación + 2s buffer para carga en Vercel)
   useEffect(() => {
     if (logoHovered) {
-      const timeout = setTimeout(() => setLogoHovered(false), 6200);
+      const timeout = setTimeout(() => setLogoHovered(false), 8000);
       return () => clearTimeout(timeout);
     }
   }, [logoHovered]);
