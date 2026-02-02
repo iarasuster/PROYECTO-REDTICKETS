@@ -4,6 +4,12 @@
  */
 
 export function parseStructuredText(text) {
+  // Asegurar que el texto termine con ---
+  let normalizedText = text.trim();
+  if (!normalizedText.endsWith('---')) {
+    normalizedText += '\n---';
+  }
+
   const result = {
     archetype: "inform", // Default fallback
     layers: {
@@ -14,22 +20,32 @@ export function parseStructuredText(text) {
   };
 
   // Extract archetype (con validación)
-  const archetypeMatch = text.match(/ARCHETYPE:\s*(\w+)/i);
+  const archetypeMatch = normalizedText.match(/ARCHETYPE:\s*(\w+)/i);
   if (archetypeMatch) {
     const archetype = archetypeMatch[1].trim().toLowerCase();
     // Validar arquetipos válidos
-    const validArchetypes = ["discover", "inform", "handoff", "redirect"];
+    const validArchetypes = ["discover", "inform", "handoff", "redirect", "farewell"];
     result.archetype = validArchetypes.includes(archetype)
       ? archetype
       : "inform";
   }
 
   // Extract message text (regex más tolerante)
-  const messageMatch = text.match(
+  const messageMatch = normalizedText.match(
     /MESSAGE:\s*([\s\S]*?)(?=VISUAL:|ACTIONS:|---|$)/i,
   );
   if (messageMatch) {
     result.layers.message = messageMatch[1].trim();
+  }
+
+  // 🚨 DEBUG: Log para detectar respuestas vacías
+  if (!result.layers.message || result.layers.message.trim().length === 0) {
+    // Solo advertir si el texto parece completo (tiene ---)
+    if (normalizedText.includes('---')) {
+      console.warn("⚠️ MESSAGE vacío detectado");
+      console.log("Texto recibido:", normalizedText.substring(0, 500));
+      console.log("Archetype:", result.archetype);
+    }
   }
 
   // Extract visual section (opcional, regex más tolerante)
@@ -44,17 +60,18 @@ export function parseStructuredText(text) {
     for (const line of visualLines) {
       const trimmed = line.trim();
 
-      // Parse CARDS: Title | Description | action
+      // Parse CARDS: Title | Description | action (o solo Title | Description)
       if (trimmed.startsWith("CARDS:")) {
         const parts = trimmed
           .replace("CARDS:", "")
           .split("|")
           .map((p) => p.trim());
-        if (parts.length === 3) {
+        
+        if (parts.length >= 2) {
           cards.push({
             title: parts[0],
             description: parts[1],
-            action: parts[2],
+            action: parts[2] || "", // action es opcional
           });
         }
       }
@@ -106,6 +123,20 @@ export function parseStructuredText(text) {
         // Limitar a 3 acciones máximo
         if (result.layers.actions.length >= 3) break;
       }
+    }
+  }
+
+  // 🚨 VALIDACIÓN CRÍTICA: MESSAGE nunca puede estar vacío
+  if (!result.layers.message || result.layers.message.trim().length === 0) {
+    console.warn("⚠️ Respuesta sin MESSAGE detectada. Agregando fallback.");
+    
+    // Generar mensaje fallback según componentes presentes
+    if (result.layers.visual.length > 0) {
+      result.layers.message = "Aquí tenés la información que solicitaste:";
+    } else if (result.layers.actions.length > 0) {
+      result.layers.message = "Te comparto estas opciones útiles:";
+    } else {
+      result.layers.message = "¿En qué más puedo ayudarte?";
     }
   }
 

@@ -207,7 +207,7 @@ export async function POST() {
         ayuda_tecnica: {
           uso_totem: {
             descripcion: 'Los productores que utilizan los tótems de RedTickets pueden solicitar soporte técnico o materiales adicionales completando el formulario de asistencia.',
-            video: 'Video Tutorial del tótem',
+       
           },
           cambio_rollo: [
             { paso: 'Usar la llave plástica para abrir la impresora.' },

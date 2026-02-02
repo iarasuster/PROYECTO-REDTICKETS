@@ -146,19 +146,7 @@ export function useStructuredChat({
         setMessages((prev) => {
           const newMessages = [...prev];
           const lastMsg = newMessages[newMessages.length - 1];
-          if (lastMsg.role === "assistant") {
-            lastMsg.isStreaming = false;
-          }
-          return newMessages;
-        });
-
-        setStatus("ready");
-
-        // Finalize message
-        setMessages((prev) => {
-          const newMessages = [...prev];
-          const lastMsg = newMessages[newMessages.length - 1];
-          if (lastMsg.role === "assistant") {
+          if (lastMsg && lastMsg.role === "assistant") {
             lastMsg.isStreaming = false;
           }
           return newMessages;

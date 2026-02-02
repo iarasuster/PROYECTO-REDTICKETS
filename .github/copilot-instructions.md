@@ -81,18 +81,18 @@ Sistema de comentarios con **análisis de sentimiento automático**:
 
 ```
 Usuario → ChatUI.jsx (frontend)
-         ↓ useSimpleChat hook
-         ↓ POST /api/chat (backend)
+         ↓ useStructuredChat hook
+         ↓ POST /api/chat-structured (backend)
          ↓ Vercel AI SDK streamText()
          ↓ Groq Llama 3.1-8b-instant
-         ↓ Response con [ACTION:...] embebidos
-         ↓ Parser en useSimpleChat
-         ↓ Renderiza botones de navegación
+         ↓ Respuesta con formato estructurado
+         ↓ Parser en parseStructuredText
+         ↓ Renderiza componentes visuales
 ```
 
-### Endpoints de Chat
+### Endpoint de Chat
 
-#### `/api/chat-structured` - Chat con respuestas estructuradas (PRINCIPAL)
+#### `/api/chat-structured` - Chat con respuestas estructuradas
 
 - **Flujo**: User message → Groq streamText() → JSON en response body → Frontend parsea y renderiza
 - **Arquitectura**: Archetypes (discover/compare/inform/handoff/redirect) + Layers (visual/acknowledge/context/insight/nextSteps)
@@ -100,12 +100,6 @@ Usuario → ChatUI.jsx (frontend)
 - **Componentes visuales**: CardList, VideoBlock, ImageBlock, ImageGallery
 - **Streaming**: Respuestas incrementales con `streamText()` de Vercel AI SDK
 - **Ver documentación completa**: [DOCUMENTACION-CHATBOT.md](DOCUMENTACION-CHATBOT.md)
-
-#### `/api/chat` - Chat simple con text commands (LEGACY)
-
-- **Flujo**: User message → Groq → Texto con comandos embebidos `[ACTION:...]`
-- **Parser**: Regex en frontend extrae comandos y genera botones
-- **Nota**: Mantener por compatibilidad, pero preferir `/api/chat-structured`
 
 ### Generative UI - Arquitectura Actual
 

@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   NavLink,
+  Link,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
@@ -25,6 +26,14 @@ function App() {
   }, [newsletterMessage]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoHovered, setLogoHovered] = useState(false);
+
+  // Timeout para volver al logo después de la animación
+  useEffect(() => {
+    if (logoHovered) {
+      const timeout = setTimeout(() => setLogoHovered(false), 5500); // 5.5 segundos: animación + pausa
+      return () => clearTimeout(timeout);
+    }
+  }, [logoHovered]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -64,7 +73,7 @@ function App() {
         <header className="app-header">
           <div className="container">
             <h1 className="site-title">
-              <a href="/">
+              <Link to="/">
                 <div
                   onMouseEnter={() => setLogoHovered(true)}
                   style={{
@@ -75,10 +84,11 @@ function App() {
                 >
                   {logoHovered ? (
                     <DotLottieReact
+                      key={logoHovered ? Date.now() : 'static'}
                       src={logoAnimation}
                       autoplay
                       loop={false}
-                      onComplete={() => setLogoHovered(false)}
+                      preload={true}
                       style={{
                         width: "200px",
                         height: "200px",
@@ -93,7 +103,7 @@ function App() {
                     />
                   )}
                 </div>
-              </a>
+              </Link>
             </h1>
 
             {/* Navegación principal - Desktop */}

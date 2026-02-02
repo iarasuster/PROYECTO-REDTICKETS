@@ -154,9 +154,6 @@ npm run dev
 ### Verificación de Instalación
 
 ```bash
-# Backend health check
-curl http://localhost:3000/api/chat/health
-
 # Verificar contenido
 curl http://localhost:3000/api/contenido-blog
 
@@ -192,7 +189,6 @@ redtickets/
 │   │   │   ├── Users.ts            # Autenticación y usuarios
 │   │   │   └── Media.ts            # Gestión de archivos
 │   │   ├── app/api/
-│   │   │   ├── chat/              # Chatbot legacy (text commands)
 │   │   │   ├── chat-structured/   # Chatbot con Generative UI
 │   │   │   └── [...slug]/         # Auto-generated Payload API
 │   │   ├── utils/
@@ -329,9 +325,7 @@ El chatbot genera respuestas siguiendo una arquitectura de layers:
 
 | Endpoint               | Método | Descripción                                       |
 | ---------------------- | ------ | ------------------------------------------------- |
-| `/api/chat-structured` | POST   | Chat principal con Generative UI (JSON streaming) |
-| `/api/chat`            | POST   | Chat legacy con comandos de texto embebidos       |
-| `/api/chat/health`     | GET    | Health check del servicio                         |
+| `/api/chat-structured` | POST   | Chat con Generative UI (JSON streaming)           |
 
 **Documentación completa**: [DOCUMENTACION-CHATBOT.md](./DOCUMENTACION-CHATBOT.md)
 
@@ -385,9 +379,7 @@ GET /api/contenido-blog?select=titulo,descripcion
 
 ```bash
 # Chatbot
-POST   /api/chat-structured         # Chat con Generative UI (principal)
-POST   /api/chat                    # Chat legacy con text commands
-GET    /api/chat/health             # Health check
+POST   /api/chat-structured         # Chat con Generative UI
 
 # Utilidades
 POST   /api/seed-contenido          # Cargar contenido inicial (dev)

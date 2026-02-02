@@ -64,7 +64,6 @@ Estos elementos **NO son vulnerabilidades** y SÍ se pueden publicar:
 
 Los prompts del chatbot están en el código y **es correcto que estén públicos**. No reducen la seguridad:
 
-- `backend/src/app/api/chat/route.ts`
 - `backend/src/app/api/chat-structured/route.ts`
 
 ### ✅ Arquitectura de Respuestas

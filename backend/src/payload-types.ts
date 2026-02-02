@@ -203,6 +203,11 @@ export interface ContenidoBlog {
         id?: string | null;
       }[]
     | null;
+  quienes_somos?: string | null;
+  mision?: string | null;
+  cultura?: string | null;
+  como_trabajamos?: string | null;
+  trayectoria_impacto?: string | null;
   socios_comerciales?: {
     /**
      * Texto introductorio de la sección de socios
@@ -539,6 +544,11 @@ export interface ContenidoBlogSelect<T extends boolean = true> {
         imagen?: T;
         id?: T;
       };
+  quienes_somos?: T;
+  mision?: T;
+  cultura?: T;
+  como_trabajamos?: T;
+  trayectoria_impacto?: T;
   socios_comerciales?:
     | T
     | {

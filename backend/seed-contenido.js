@@ -77,27 +77,25 @@ async function seedContenido() {
         // Preparar el documento
         const documento = {
           seccion: slug,
-          [nombreSeccion]: datosSeccion,
+          ...datosSeccion,
         }
 
         if (existente.totalDocs > 0) {
-          // Actualizar el documento existente
-          await payload.update({
+          // Eliminar el documento existente para asegurar que se creen todos los campos nuevos
+          await payload.delete({
             collection: 'contenido-blog',
             id: existente.docs[0].id,
-            data: documento,
           })
-          console.log(`✅ Sección "${nombreSeccion}" actualizada\n`)
-          actualizados++
-        } else {
-          // Crear nuevo documento
-          await payload.create({
-            collection: 'contenido-blog',
-            data: documento,
-          })
-          console.log(`✅ Sección "${nombreSeccion}" insertada\n`)
-          insertados++
+          console.log(`🗑️  Sección "${nombreSeccion}" eliminada para recrear\n`)
         }
+
+        // Crear nuevo documento con todos los campos
+        await payload.create({
+          collection: 'contenido-blog',
+          data: documento,
+        })
+        console.log(`✅ Sección "${nombreSeccion}" creada\n`)
+        insertados++
       } catch (error) {
         console.error(`❌ Error procesando sección ${nombreSeccion}:`, error.message)
         errores++

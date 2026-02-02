@@ -16,6 +16,7 @@ const ChatUI = ({ isOpen, onClose }) => {
   const inputRef = useRef(null);
   const navigate = useNavigate();
   const [isMaximized, setIsMaximized] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Detectar automáticamente la URL del backend según el entorno
   const CHAT_API_URL =
@@ -174,30 +175,13 @@ const ChatUI = ({ isOpen, onClose }) => {
           </div>
         </div>
         <div className="chat-ui__header-actions">
-          <button
-            className="chat-ui__icon-btn"
-            onClick={handleClearMessages}
-            title="Limpiar chat"
-            type="button"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+          <div className="chat-ui__menu-container">
+            <button
+              className="chat-ui__icon-btn"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              title="Opciones"
+              type="button"
             >
-              <path d="M3 6h18M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2m3 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6h14z" />
-            </svg>
-          </button>
-          <button
-            className="chat-ui__icon-btn"
-            onClick={() => setIsMaximized(!isMaximized)}
-            title={isMaximized ? "Minimizar" : "Maximizar"}
-            type="button"
-          >
-            {isMaximized ? (
               <svg
                 width="20"
                 height="20"
@@ -206,21 +190,64 @@ const ChatUI = ({ isOpen, onClose }) => {
                 stroke="currentColor"
                 strokeWidth="2"
               >
-                <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+                <circle cx="12" cy="5" r="1.5" fill="currentColor" />
+                <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                <circle cx="12" cy="19" r="1.5" fill="currentColor" />
               </svg>
-            ) : (
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-              </svg>
+            </button>
+            {isMenuOpen && (
+              <>
+                <div 
+                  className="chat-ui__menu-backdrop" 
+                  onClick={() => setIsMenuOpen(false)}
+                />
+                <div className="chat-ui__menu-dropdown">
+                  <button
+                    className="chat-ui__menu-item"
+                    onClick={() => {
+                      handleClearMessages();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M3 6h18M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2m3 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6h14z" />
+                    </svg>
+                    Limpiar chat
+                  </button>
+                  <button
+                    className="chat-ui__menu-item"
+                    onClick={() => {
+                      setIsMaximized(!isMaximized);
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      {isMaximized ? (
+                        <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+                      ) : (
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                      )}
+                    </svg>
+                    {isMaximized ? "Pantalla normal" : "Pantalla completa"}
+                  </button>
+                </div>
+              </>
             )}
-          </button>
+          </div>
           <button
             className="chat-ui__icon-btn"
             onClick={onClose}
@@ -254,9 +281,6 @@ const ChatUI = ({ isOpen, onClose }) => {
                 >
                   <div className="chat-ui__message-content">
                     <p className="chat-ui__message-text">{message.content}</p>
-                  </div>
-                  <div className="chat-ui__message-avatar">
-                    <i className="fas fa-user"></i>
                   </div>
                 </div>
               );

@@ -114,6 +114,47 @@ export const ContenidoBlog: CollectionConfig = {
         },
       ],
     },
+    // ===== CONTENIDO ADICIONAL SOBRE NOSOTROS =====
+    {
+      name: 'quienes_somos',
+      type: 'textarea',
+      label: 'Quiénes Somos',
+      admin: {
+        condition: (data) => data.seccion === 'sobre_nosotros',
+      },
+    },
+    {
+      name: 'mision',
+      type: 'textarea',
+      label: 'Nuestra Misión',
+      admin: {
+        condition: (data) => data.seccion === 'sobre_nosotros',
+      },
+    },
+    {
+      name: 'cultura',
+      type: 'textarea',
+      label: 'Nuestra Cultura',
+      admin: {
+        condition: (data) => data.seccion === 'sobre_nosotros',
+      },
+    },
+    {
+      name: 'como_trabajamos',
+      type: 'textarea',
+      label: 'Cómo Trabajamos',
+      admin: {
+        condition: (data) => data.seccion === 'sobre_nosotros',
+      },
+    },
+    {
+      name: 'trayectoria_impacto',
+      type: 'textarea',
+      label: 'Trayectoria e Impacto',
+      admin: {
+        condition: (data) => data.seccion === 'sobre_nosotros',
+      },
+    },
     {
       name: 'socios_comerciales',
       type: 'group',
