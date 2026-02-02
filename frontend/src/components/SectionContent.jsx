@@ -8,7 +8,7 @@ import LogoCarousel from "./LogoCarousel";
 import TestimoniosCarousel from "./TestimoniosCarousel";
 import BentoGrid from "./BentoGrid";
 import loaderAnimation from "../assets/loader.lottie";
-// Helper para obtener la URL de imagen desde objeto Payload
+
 function getImageUrl(imageObj) {
   if (!imageObj) return "";
   if (imageObj.url) return imageObj.url;
@@ -16,10 +16,6 @@ function getImageUrl(imageObj) {
   return "";
 }
 import "./SectionContent.css";
-
-// --- FIN SOBRE NOSOTROS ---
-
-// ...existing code...
 
 const SectionContent = ({ seccion, className = "" }) => {
   const [content, setContent] = useState(null);
@@ -190,6 +186,19 @@ const InicioContent = ({ data }) => {
         </div>
       )}
 
+      {/* Video Institucional */}
+      <div className="inicio-video animate-item">
+        <div className="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/aoC7rMeNZNY"
+            title="Video Institucional - RedTickets"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </div>
+
       {/* Preview de Secciones - Magic Bento Style */}
       <div className="sections-preview animate-item">
         <h2 className="preview-title">Descubre RedTickets</h2>
@@ -264,58 +273,32 @@ function SobreNosotrosContent({ data }) {
 
   return (
     <div className="sobre-nosotros-container">
-      {/* FILA 0: Historia RedTickets - Timeline visual */}
-      <div className="sobre-row historia-row animate-item">
-        <h3 className="section-title">Nuestra Historia</h3>
-        <div className="timeline-blocks">
-          <div className="timeline-card">
-            <div className="timeline-year">2015</div>
-            <div className="timeline-title">Fundación & Reconocimiento</div>
-            <div className="timeline-text">
-              RedTickets nace como la primera y única ticketera autogestionable
-              de Uruguay.
-              <br />
-              Ese mismo año, recibe el reconocimiento de ANII como “Proyecto de
-              Innovación del Año”, marcando el inicio de una nueva era en la
-              gestión de eventos.
-            </div>
-          </div>
-          <div className="timeline-card">
-            <div className="timeline-year">2016</div>
-            <div className="timeline-title">Lanzamiento al Mercado</div>
-            <div className="timeline-text">
-              Abril 2016: RedTickets inicia operaciones, acercando tecnología y
-              autonomía a productores y asistentes en todo el país.
-            </div>
-          </div>
-          <div className="timeline-card">
-            <div className="timeline-year">2017</div>
-            <div className="timeline-title">Innovación en el Fútbol</div>
-            <div className="timeline-text">
-              Primer ticket digital del fútbol uruguayo.
-              <br />
-              RedTickets se convierte en la ticketera oficial de la Selección
-              Uruguaya de Fútbol y participa en eventos internacionales de
-              Conmebol, consolidando su liderazgo en el sector.
-            </div>
-          </div>
-          <div className="timeline-card">
-            <div className="timeline-year">2019</div>
-            <div className="timeline-title">
-              Expansión & Internacionalización
-            </div>
-            <div className="timeline-text">
-              Seleccionada por el Programa de Apoyo al Crecimiento de ANII.
-              <br />
-              Este impulso permite a RedTickets expandir su alcance y
-              proyectarse internacionalmente, manteniendo el compromiso con la
-              innovación y la excelencia.
-            </div>
-          </div>
+      {/* Descripción principal */}
+      {data.quienes_somos && (
+        <div className="sobre-row intro-row">
+          <p className="sobre-text-intro">{data.quienes_somos}</p>
         </div>
-      </div>
+      )}
 
-      {/* FILA 1: Fundadores - Foto Grupal con Tooltips */}
+      {/* FILA 4-5: Nuestra Misión y Cultura */}
+      {(data.mision || data.cultura) && (
+        <div className="sobre-row mision-cultura-row">
+          {data.mision && (
+            <div className="mision-cultura-item">
+              <h3 className="section-title">Nuestra Misión</h3>
+              <p className="sobre-text">{data.mision}</p>
+            </div>
+          )}
+          {data.cultura && (
+            <div className="mision-cultura-item">
+              <h3 className="section-title">Nuestra Cultura</h3>
+              <p className="sobre-text">{data.cultura}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* FILA 2: Fundadores - Foto Grupal con Tooltips */}
       {data.fundadores_foto?.url && (
         <div className="sobre-row fundadores-row">
           <h3 className="section-title">Fundadores</h3>
@@ -351,7 +334,7 @@ function SobreNosotrosContent({ data }) {
               </div>
             )}
           </div>
-          {/* Tooltips debajo de la foto */}
+
           {data.fundadores && data.fundadores.length === 4 && (
             <div className="fundadores-info-below">
               {data.fundadores.map(
@@ -365,103 +348,164 @@ function SobreNosotrosContent({ data }) {
               )}
             </div>
           )}
-        </div>
-      )}
 
-      {/* FILA 2: Equipo */}
-      {data.equipo && data.equipo.length > 0 && (
-        <div className="sobre-row equipo-row">
-          <h3 className="section-title">Nuestro Equipo</h3>
-          <div className="team-grid">
-            {data.equipo.map((miembro, idx) => {
-              return (
-                <ChromaGrid
-                  key={idx}
-                  colors={["#ff6600", "#ff8833", "#ff9944"]}
-                  intensity={0.3}
-                >
-                  <div className="team-member">
-                    {miembro.imagen?.url ? (
-                      <div className="team-photo">
-                        <img
-                          src={getImageUrl(miembro.imagen)}
-                          alt={miembro.nombre}
-                          loading="lazy"
-                        />
+          {/* FILA 2: Equipo */}
+          {data.equipo && data.equipo.length > 0 && (
+            <div className="sobre-row equipo-row">
+              <h3 className="section-title">Nuestro Equipo</h3>
+              <div className="team-grid">
+                {data.equipo.map((miembro, idx) => {
+                  return (
+                    <ChromaGrid
+                      key={idx}
+                      colors={["#ff6600", "#ff8833", "#ff9944"]}
+                      intensity={0.3}
+                    >
+                      <div className="team-member">
+                        {miembro.imagen?.url ? (
+                          <div className="team-photo">
+                            <img
+                              src={getImageUrl(miembro.imagen)}
+                              alt={miembro.nombre}
+                              loading="lazy"
+                            />
+                          </div>
+                        ) : (
+                          <div className="team-photo placeholder">
+                            <i className="fas fa-user"></i>
+                          </div>
+                        )}
+                        <h4>{miembro.nombre}</h4>
+                        <p className="team-role">{miembro.area}</p>
                       </div>
-                    ) : (
-                      <div className="team-photo placeholder">
-                        <i className="fas fa-user"></i>
-                      </div>
-                    )}
-                    <h4>{miembro.nombre}</h4>
-                    <p className="team-role">{miembro.area}</p>
-                  </div>
-                </ChromaGrid>
-              );
-            })}
+                    </ChromaGrid>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* FILA 7: Trayectoria e Impacto */}
+          {data.trayectoria_impacto && (
+            <div className="sobre-row trayectoria-row animate-item">
+              <h3 className="section-title">Trayectoria e Impacto</h3>
+              <p className="sobre-text">{data.trayectoria_impacto}</p>
+            </div>
+          )}
+
+          {/* FILA 8: Nuestra Historia - Timeline visual */}
+          <div className="sobre-row historia-row animate-item">
+            <div className="timeline-blocks">
+              <div className="timeline-card">
+                <div className="timeline-year">2015</div>
+                <div className="timeline-title">Fundación & Reconocimiento</div>
+                <div className="timeline-text">
+                  RedTickets nace como la primera y única ticketera
+                  autogestionable de Uruguay.
+                  <br />
+                  Ese mismo año, recibe el reconocimiento de ANII como "Proyecto
+                  de Innovación del Año", marcando el inicio de una nueva era en
+                  la gestión de eventos.
+                </div>
+              </div>
+              <div className="timeline-card">
+                <div className="timeline-year">2016</div>
+                <div className="timeline-title">Lanzamiento al Mercado</div>
+                <div className="timeline-text">
+                  Abril 2016: RedTickets inicia operaciones, acercando
+                  tecnología y autonomía a productores y asistentes en todo el
+                  país.
+                </div>
+              </div>
+              <div className="timeline-card">
+                <div className="timeline-year">2017</div>
+                <div className="timeline-title">Innovación en el Fútbol</div>
+                <div className="timeline-text">
+                  Primer ticket digital del fútbol uruguayo.
+                  <br />
+                  RedTickets se convierte en la ticketera oficial de la
+                  Selección Uruguaya de Fútbol y participa en eventos
+                  internacionales de Conmebol, consolidando su liderazgo en el
+                  sector.
+                </div>
+              </div>
+              <div className="timeline-card">
+                <div className="timeline-year">2019</div>
+                <div className="timeline-title">
+                  Expansión & Internacionalización
+                </div>
+                <div className="timeline-text">
+                  Seleccionada por el Programa de Apoyo al Crecimiento de ANII.
+                  <br />
+                  Este impulso permite a RedTickets expandir su alcance y
+                  proyectarse internacionalmente, manteniendo el compromiso con
+                  la innovación y la excelencia.
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
 
-      {/* FILA 3: Socios Comerciales - Título General */}
-      {data.socios_comerciales && (
-        <div className="sobre-row socios-header-row">
-          <h3 className="section-title">Socios Comerciales</h3>
-          {data.socios_comerciales.descripcion && (
-            <p className="socios-intro">
-              {data.socios_comerciales.descripcion}
-            </p>
+          {/* FILA 9: Socios Comerciales - Título General */}
+          {data.socios_comerciales && (
+            <div className="sobre-row socios-header-row">
+              <h3 className="section-title">Socios Comerciales</h3>
+              {data.socios_comerciales.descripcion && (
+                <p className="socios-intro">
+                  {data.socios_comerciales.descripcion}
+                </p>
+              )}
+            </div>
           )}
-        </div>
-      )}
 
-      {/* FILA 4: Productores */}
-      {data.socios_comerciales?.productores && (
-        <div className="sobre-row socios-category-row">
-          <h4 className="socios-category-title">
-            {data.socios_comerciales.productores.titulo || "Amigos Productores"}
-          </h4>
-          {data.socios_comerciales.productores.descripcion && (
-            <p className="category-desc">
-              {data.socios_comerciales.productores.descripcion}
-            </p>
+          {/* FILA 4: Productores */}
+          {data.socios_comerciales?.productores && (
+            <div className="sobre-row socios-category-row">
+              <h4 className="socios-category-title">
+                {data.socios_comerciales.productores.titulo ||
+                  "Amigos Productores"}
+              </h4>
+              {data.socios_comerciales.productores.descripcion && (
+                <p className="category-desc">
+                  {data.socios_comerciales.productores.descripcion}
+                </p>
+              )}
+              {data.socios_comerciales.productores.logos &&
+                data.socios_comerciales.productores.logos.length > 0 && (
+                  <LogoCarousel
+                    logos={data.socios_comerciales.productores.logos}
+                    speed={35}
+                  />
+                )}
+            </div>
           )}
-          {data.socios_comerciales.productores.logos &&
-            data.socios_comerciales.productores.logos.length > 0 && (
-              <LogoCarousel
-                logos={data.socios_comerciales.productores.logos}
-                speed={35}
-              />
-            )}
-        </div>
-      )}
 
-      {/* FILA 5: Partners Publicitarios */}
-      {data.socios_comerciales?.partners_publicitarios && (
-        <div className="sobre-row socios-category-row">
-          <h4 className="socios-category-title">
-            {data.socios_comerciales.partners_publicitarios.titulo ||
-              "Partners Publicitarios"}
-          </h4>
-          {data.socios_comerciales.partners_publicitarios.descripcion && (
-            <p className="category-desc">
-              {data.socios_comerciales.partners_publicitarios.descripcion}
-            </p>
+          {/* FILA 5: Partners Publicitarios */}
+          {data.socios_comerciales?.partners_publicitarios && (
+            <div className="sobre-row socios-category-row">
+              <h4 className="socios-category-title">
+                {data.socios_comerciales.partners_publicitarios.titulo ||
+                  "Partners Publicitarios"}
+              </h4>
+              {data.socios_comerciales.partners_publicitarios.descripcion && (
+                <p className="category-desc">
+                  {data.socios_comerciales.partners_publicitarios.descripcion}
+                </p>
+              )}
+              {data.socios_comerciales.partners_publicitarios.logos &&
+                data.socios_comerciales.partners_publicitarios.logos.length >
+                  0 && (
+                  <LogoCarousel
+                    logos={data.socios_comerciales.partners_publicitarios.logos}
+                    speed={45}
+                  />
+                )}
+            </div>
           )}
-          {data.socios_comerciales.partners_publicitarios.logos &&
-            data.socios_comerciales.partners_publicitarios.logos.length > 0 && (
-              <LogoCarousel
-                logos={data.socios_comerciales.partners_publicitarios.logos}
-                speed={45}
-              />
-            )}
         </div>
       )}
     </div>
   );
 }
-// ...existing code...
 
 const ServiciosContent = ({ data }) => {
   // Mapeo de servicios a iconos y colores específicos
@@ -477,14 +521,14 @@ const ServiciosContent = ({ data }) => {
     if (texto.includes("compra") || texto.includes("pago"))
       return {
         icon: "fa-credit-card",
-        color: "#00d4ff",
-        gradient: "linear-gradient(135deg, #00d4ff 0%, #0099ff 100%)",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
       };
     if (texto.includes("app") || texto.includes("billetera"))
       return {
         icon: "fa-mobile-alt",
-        color: "#a855f7",
-        gradient: "linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%)",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
       };
     if (
       texto.includes("diseño") ||
@@ -493,8 +537,8 @@ const ServiciosContent = ({ data }) => {
     )
       return {
         icon: "fa-palette",
-        color: "#f59e0b",
-        gradient: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
       };
     if (
       texto.includes("hard") ||
@@ -503,8 +547,8 @@ const ServiciosContent = ({ data }) => {
     )
       return {
         icon: "fa-print",
-        color: "#10b981",
-        gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
       };
     if (
       texto.includes("control") ||
@@ -513,8 +557,8 @@ const ServiciosContent = ({ data }) => {
     )
       return {
         icon: "fa-shield-alt",
-        color: "#ef4444",
-        gradient: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
       };
     if (
       texto.includes("configuración") ||
@@ -523,14 +567,14 @@ const ServiciosContent = ({ data }) => {
     )
       return {
         icon: "fa-cog",
-        color: "#6366f1",
-        gradient: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
       };
     if (texto.includes("integración") || texto.includes("sistema"))
       return {
         icon: "fa-plug",
-        color: "#14b8a6",
-        gradient: "linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
       };
     if (
       texto.includes("atención") ||
@@ -539,20 +583,20 @@ const ServiciosContent = ({ data }) => {
     )
       return {
         icon: "fa-headset",
-        color: "#f43f5e",
-        gradient: "linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
       };
     if (texto.includes("seguro") || texto.includes("metlife"))
       return {
         icon: "fa-umbrella",
-        color: "#8b5cf6",
-        gradient: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
       };
     if (texto.includes("acreditaciones") || texto.includes("credenciales"))
       return {
         icon: "fa-id-card",
-        color: "#ec4899",
-        gradient: "linear-gradient(135deg, #ec4899 0%, #db2777 100%)",
+        color: "#ff6600",
+        gradient: "linear-gradient(135deg, #ff6600 0%, #ff8833 100%)",
       };
 
     return {
@@ -564,24 +608,6 @@ const ServiciosContent = ({ data }) => {
 
   return (
     <div className="servicios-container">
-      {/* Hero Section */}
-      <div className="servicios-hero">
-        <div className="servicios-hero-content">
-          <span className="servicios-badge">Plataforma Integral</span>
-          <h1 className="servicios-hero-title">
-            Soluciones completas para
-            <span className="servicios-hero-highlight"> tu evento</span>
-          </h1>
-          <p className="servicios-hero-description">
-            En RedTickets ofrecemos una plataforma integral de ticketing que
-            abarca todo el ciclo del evento: desde la venta online hasta el
-            control de acceso. Nuestra tecnología permite gestionar entradas
-            físicas y digitales, con seguridad, personalización y soporte
-            profesional para eventos de cualquier tamaño.
-          </p>
-        </div>
-      </div>
-
       {/* Grid de servicios profesional */}
       {data.servicios_lista && data.servicios_lista.length > 0 && (
         <div className="servicios-grid">
@@ -679,7 +705,7 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
 
         if (response.ok) {
           const result = await response.json();
-          console.log("✅ Testimonios cargados:", result.docs?.length || 0);
+         
           if (result.docs) {
             setDynamicTestimonios(result.docs);
           }
@@ -785,6 +811,17 @@ const AyudaContent = ({ data }) => {
                 ))}
               </div>
             )}
+            
+            {/* Video Tutorial */}
+            <div className="video-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/SfHuVUmpzgU"
+                title="Tutorial de Compra - RedTickets"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
           </div>
         )}
 

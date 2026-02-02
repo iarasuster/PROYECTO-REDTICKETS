@@ -9,7 +9,7 @@ import "./SectionPage.css";
 // Mapeo de slugs de URL a nombres de sección en Payload
 const SECTION_NAMES = {
   inicio: "Inicio",
-  "sobre-nosotros": "Sobre Nosotros",
+  "sobre-nosotros": "Quiénes Somos",
   servicios: "Servicios",
   comunidad: "Comunidad",
   ayuda: "Ayuda",
@@ -37,7 +37,15 @@ function SectionPage() {
   if (loading) {
     return (
       <div className="section-page" data-section={seccionSlug}>
-        <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <div
+          className="container"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: 400,
+          }}
+        >
           <DotLottieReact
             src={loaderAnimation}
             autoplay
@@ -71,10 +79,8 @@ function SectionPage() {
   // Subtítulos para cada sección
   const getSubtitle = (slug) => {
     const subtitles = {
-      inicio:
-        "La plataforma líder en venta de entradas para eventos en Uruguay",
       "sobre-nosotros": "Conectamos personas con experiencias únicas",
-      servicios: "Soluciones integrales para eventos de todo tipo",
+      servicios: "Aqui encontraras todo lo que necesitas para tu evento",
       comunidad: "Lo mejor de RedTickets está en quienes confían en nosotros",
       ayuda: "Resolvemos tus dudas para que solo te preocupes por disfrutar",
       contacto: "Estamos para ayudarte en lo que necesites",
@@ -82,12 +88,35 @@ function SectionPage() {
     return subtitles[slug] || "";
   };
 
+  // Renderizar título con palabras destacadas en naranja
+  const renderTitle = (slug, name) => {
+    const titleConfig = {
+      "sobre-nosotros": { white: "Más que una", orange: "ticketera" },
+      servicios: { white: "Soluciones completas para", orange: "tu evento" },
+      comunidad: { white: "Nuestra", orange: "Comunidad" },
+      ayuda: { white: "¿Tenés dudas?", orange: "Estamos para ayudarte" },
+      contacto: { white: "¿Querés organizar un evento con", orange: "RedTickets?" },
+    };
+
+    const config = titleConfig[slug];
+    if (!config) {
+      return <h1 className="section-title">{name}</h1>;
+    }
+
+    return (
+      <h1 className="section-title">
+        {config.white}{" "}
+        <span className="title-highlight">{config.orange}</span>
+      </h1>
+    );
+  };
+
   return (
     <div className="section-page" data-section={seccionSlug}>
       <div className="container">
         {/* Hero de la sección */}
         <div className="section-hero">
-          <h1 className="section-title">{seccionName}</h1>
+          {renderTitle(seccionSlug, seccionName)}
           {seccionSlug !== "inicio" && (
             <p className="section-description">{getSubtitle(seccionSlug)}</p>
           )}
