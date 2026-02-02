@@ -325,10 +325,6 @@ body {
   transform: translateY(0);
 }
 
-.mobile-overlay {
-  display: none;
-}
-
 /* 🍔 Botón hamburguesa - Mobile First */
 .hamburger {
   display: flex;
@@ -468,28 +464,6 @@ body {
 .main-content {
   flex: 1;
   background: var(--dark);
-}
-
-.mobile-nav a:first-child {
-  border-top: 1px solid #f0f0f0;
-}
-
-/* Overlay */
-.mobile-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 999;
-  backdrop-filter: blur(2px);
-}
-
-/* ========== CONTENIDO PRINCIPAL ========== */
-.main-content {
-  flex: 1;
-  background: #fafafa;
 }
 
 /* ========== 🎯 BOTONES ULTRA MODERNOS CON MICROINTERACCIONES ========== */
@@ -732,21 +706,9 @@ body {
   }
 }
 
-/* ========== RESPONSIVE ========== */
-@media (min-width: 769px) {
-  .hamburger {
-    display: none;
-  }
-  
-  .main-nav {
-    position: static;
 @media (max-width: 480px) {
   .site-logo {
     height: 32px;
-  }
-  
-  .main-nav {
-    width: 90%;
   }
   
   .btn {

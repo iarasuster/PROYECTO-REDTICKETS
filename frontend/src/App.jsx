@@ -27,10 +27,10 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoHovered, setLogoHovered] = useState(false);
 
-  // Reset logo después de animación
+  // Reset logo después de animación (6s = duración de la animación)
   useEffect(() => {
     if (logoHovered) {
-      const timeout = setTimeout(() => setLogoHovered(false), 5500);
+      const timeout = setTimeout(() => setLogoHovered(false), 6200);
       return () => clearTimeout(timeout);
     }
   }, [logoHovered]);
@@ -93,26 +93,36 @@ function App() {
                   style={{
                     overflow: "hidden",
                     height: "40px",
+                    width: "200px",
                     display: "inline-block",
+                    position: "relative",
                   }}
                 >
-                  {logoHovered ? (
+                  {/* Logo estático siempre visible */}
+                  <img
+                    src="/LOGO_1.svg"
+                    alt="RedTickets"
+                    className="site-logo"
+                    style={{
+                      opacity: logoHovered ? 0 : 1,
+                      transition: "opacity 0.2s ease",
+                    }}
+                  />
+
+                  {/* Animación Lottie solo cuando hover */}
+                  {logoHovered && (
                     <DotLottieReact
                       src={logoAnimation}
                       autoplay
                       loop={false}
+                      onComplete={() => setLogoHovered(false)}
                       style={{
+                        position: "absolute",
+                        top: "-80px",
+                        left: "-5px",
                         width: "200px",
                         height: "200px",
-                        marginTop: "-80px",
-                        marginLeft: "-5px",
                       }}
-                    />
-                  ) : (
-                    <img
-                      src="/LOGO_1.svg"
-                      alt="RedTickets"
-                      className="site-logo"
                     />
                   )}
                 </div>
