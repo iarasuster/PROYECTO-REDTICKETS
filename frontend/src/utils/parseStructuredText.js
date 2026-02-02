@@ -6,8 +6,8 @@
 export function parseStructuredText(text) {
   // Asegurar que el texto termine con ---
   let normalizedText = text.trim();
-  if (!normalizedText.endsWith('---')) {
-    normalizedText += '\n---';
+  if (!normalizedText.endsWith("---")) {
+    normalizedText += "\n---";
   }
 
   const result = {
@@ -24,7 +24,13 @@ export function parseStructuredText(text) {
   if (archetypeMatch) {
     const archetype = archetypeMatch[1].trim().toLowerCase();
     // Validar arquetipos válidos
-    const validArchetypes = ["discover", "inform", "handoff", "redirect", "farewell"];
+    const validArchetypes = [
+      "discover",
+      "inform",
+      "handoff",
+      "redirect",
+      "farewell",
+    ];
     result.archetype = validArchetypes.includes(archetype)
       ? archetype
       : "inform";
@@ -41,7 +47,7 @@ export function parseStructuredText(text) {
   // 🚨 DEBUG: Log para detectar respuestas vacías
   if (!result.layers.message || result.layers.message.trim().length === 0) {
     // Solo advertir si el texto parece completo (tiene ---)
-    if (normalizedText.includes('---')) {
+    if (normalizedText.includes("---")) {
       console.warn("⚠️ MESSAGE vacío detectado");
       console.log("Texto recibido:", normalizedText.substring(0, 500));
       console.log("Archetype:", result.archetype);
@@ -66,7 +72,7 @@ export function parseStructuredText(text) {
           .replace("CARDS:", "")
           .split("|")
           .map((p) => p.trim());
-        
+
         if (parts.length >= 2) {
           cards.push({
             title: parts[0],
@@ -129,7 +135,7 @@ export function parseStructuredText(text) {
   // 🚨 VALIDACIÓN CRÍTICA: MESSAGE nunca puede estar vacío
   if (!result.layers.message || result.layers.message.trim().length === 0) {
     console.warn("⚠️ Respuesta sin MESSAGE detectada. Agregando fallback.");
-    
+
     // Generar mensaje fallback según componentes presentes
     if (result.layers.visual.length > 0) {
       result.layers.message = "Aquí tenés la información que solicitaste:";

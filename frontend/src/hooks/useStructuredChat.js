@@ -73,12 +73,11 @@ export function useStructuredChat({
                   m.role === "user" ||
                   (m.role === "assistant" &&
                     m.layers &&
-                    Object.keys(m.layers).length > 0)
+                    Object.keys(m.layers).length > 0),
               )
               .map((m) => ({
                 role: m.role,
-                content:
-                  m.role === "user" ? m.content : m.layers.message || "",
+                content: m.role === "user" ? m.content : m.layers.message || "",
               })),
           }),
           signal: abortControllerRef.current.signal,
@@ -133,8 +132,8 @@ export function useStructuredChat({
                         layers: parsedData.layers || {},
                         isStreaming: true,
                       }
-                    : m
-                )
+                    : m,
+                ),
               );
             }
           } catch (parseError) {
@@ -184,7 +183,7 @@ export function useStructuredChat({
         setStatus("error");
       }
     },
-    [api, input, messages, status, onFinish]
+    [api, input, messages, status, onFinish],
   );
 
   /**
@@ -194,7 +193,7 @@ export function useStructuredChat({
     (message) => {
       handleSubmit(message);
     },
-    [handleSubmit]
+    [handleSubmit],
   );
 
   /**

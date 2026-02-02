@@ -197,8 +197,8 @@ const ChatUI = ({ isOpen, onClose }) => {
             </button>
             {isMenuOpen && (
               <>
-                <div 
-                  className="chat-ui__menu-backdrop" 
+                <div
+                  className="chat-ui__menu-backdrop"
                   onClick={() => setIsMenuOpen(false)}
                 />
                 <div className="chat-ui__menu-dropdown">

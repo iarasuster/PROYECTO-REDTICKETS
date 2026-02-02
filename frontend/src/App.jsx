@@ -84,7 +84,7 @@ function App() {
                 >
                   {logoHovered ? (
                     <DotLottieReact
-                      key={logoHovered ? Date.now() : 'static'}
+                      key={logoHovered ? Date.now() : "static"}
                       src={logoAnimation}
                       autoplay
                       loop={false}

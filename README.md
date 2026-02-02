@@ -1,6 +1,6 @@
 <div align="center">
 
-# Blog RedTickets 
+# Blog RedTickets
 
 ### Sistema de Gestión de Contenidos con IA Conversacional
 
@@ -323,9 +323,9 @@ El chatbot genera respuestas siguiendo una arquitectura de layers:
 
 ### Endpoints del Chatbot
 
-| Endpoint               | Método | Descripción                                       |
-| ---------------------- | ------ | ------------------------------------------------- |
-| `/api/chat-structured` | POST   | Chat con Generative UI (JSON streaming)           |
+| Endpoint               | Método | Descripción                             |
+| ---------------------- | ------ | --------------------------------------- |
+| `/api/chat-structured` | POST   | Chat con Generative UI (JSON streaming) |
 
 **Documentación completa**: [DOCUMENTACION-CHATBOT.md](./DOCUMENTACION-CHATBOT.md)
 
@@ -425,6 +425,7 @@ const reader = response.body.getReader();
 ## 🚀 Despliegue
 
 ### Opción 1: Vercel
+
 Backend (Admin Panel)
 https://redtickets-backend.vercel.app/
 Requiere autenticación
@@ -432,7 +433,8 @@ Requiere autenticación
 Frontend (Blog público)
 https://blog-redtickets.vercel.app/
 
-### Opción 2: Render 
+### Opción 2: Render
+
 Backend (Admin Panel)
 https://redtickets-backend.onrender.com
 Requiere autenticación

@@ -402,21 +402,20 @@ function SobreNosotrosContent({ data }) {
             <div className="timeline-year">2015</div>
             <div className="timeline-title">Fundación & Reconocimiento</div>
             <div className="timeline-text">
-              RedTickets nace como la primera y única ticketera
-              autogestionable de Uruguay.
+              RedTickets nace como la primera y única ticketera autogestionable
+              de Uruguay.
               <br />
-              Ese mismo año, recibe el reconocimiento de ANII como "Proyecto
-              de Innovación del Año", marcando el inicio de una nueva era en
-              la gestión de eventos.
+              Ese mismo año, recibe el reconocimiento de ANII como "Proyecto de
+              Innovación del Año", marcando el inicio de una nueva era en la
+              gestión de eventos.
             </div>
           </div>
           <div className="timeline-card">
             <div className="timeline-year">2016</div>
             <div className="timeline-title">Lanzamiento al Mercado</div>
             <div className="timeline-text">
-              Abril 2016: RedTickets inicia operaciones, acercando
-              tecnología y autonomía a productores y asistentes en todo el
-              país.
+              Abril 2016: RedTickets inicia operaciones, acercando tecnología y
+              autonomía a productores y asistentes en todo el país.
             </div>
           </div>
           <div className="timeline-card">
@@ -425,10 +424,9 @@ function SobreNosotrosContent({ data }) {
             <div className="timeline-text">
               Primer ticket digital del fútbol uruguayo.
               <br />
-              RedTickets se convierte en la ticketera oficial de la
-              Selección Uruguaya de Fútbol y participa en eventos
-              internacionales de Conmebol, consolidando su liderazgo en el
-              sector.
+              RedTickets se convierte en la ticketera oficial de la Selección
+              Uruguaya de Fútbol y participa en eventos internacionales de
+              Conmebol, consolidando su liderazgo en el sector.
             </div>
           </div>
           <div className="timeline-card">
@@ -440,8 +438,8 @@ function SobreNosotrosContent({ data }) {
               Seleccionada por el Programa de Apoyo al Crecimiento de ANII.
               <br />
               Este impulso permite a RedTickets expandir su alcance y
-              proyectarse internacionalmente, manteniendo el compromiso con
-              la innovación y la excelencia.
+              proyectarse internacionalmente, manteniendo el compromiso con la
+              innovación y la excelencia.
             </div>
           </div>
         </div>
@@ -463,8 +461,7 @@ function SobreNosotrosContent({ data }) {
       {data.socios_comerciales?.productores && (
         <div className="sobre-row socios-category-row">
           <h4 className="socios-category-title">
-            {data.socios_comerciales.productores.titulo ||
-              "Amigos Productores"}
+            {data.socios_comerciales.productores.titulo || "Amigos Productores"}
           </h4>
           {data.socios_comerciales.productores.descripcion && (
             <p className="category-desc">
@@ -494,8 +491,7 @@ function SobreNosotrosContent({ data }) {
             </p>
           )}
           {data.socios_comerciales.partners_publicitarios.logos &&
-            data.socios_comerciales.partners_publicitarios.logos.length >
-              0 && (
+            data.socios_comerciales.partners_publicitarios.logos.length > 0 && (
               <LogoCarousel
                 logos={data.socios_comerciales.partners_publicitarios.logos}
                 speed={45}
@@ -515,17 +511,48 @@ const ServiciosContent = ({ data }) => {
   const getServiceIcon = (servicio) => {
     const texto = (servicio.servicio || servicio || "").toLowerCase();
 
-    if (texto.includes("venta") || texto.includes("gestión")) return "fa-shopping-cart";
-    if (texto.includes("compra") || texto.includes("pago")) return "fa-credit-card";
-    if (texto.includes("app") || texto.includes("billetera")) return "fa-mobile-alt";
-    if (texto.includes("diseño") || texto.includes("e-ticket") || texto.includes("personalizado")) return "fa-palette";
-    if (texto.includes("hard") || texto.includes("impresión") || texto.includes("físicas")) return "fa-print";
-    if (texto.includes("control") || texto.includes("acceso") || texto.includes("seguridad")) return "fa-shield-alt";
-    if (texto.includes("configuración") || texto.includes("descuento") || texto.includes("promoción")) return "fa-cog";
-    if (texto.includes("integración") || texto.includes("sistema")) return "fa-plug";
-    if (texto.includes("atención") || texto.includes("cliente") || texto.includes("soporte")) return "fa-headset";
-    if (texto.includes("seguro") || texto.includes("metlife")) return "fa-umbrella";
-    if (texto.includes("acreditaciones") || texto.includes("credenciales")) return "fa-id-card";
+    if (texto.includes("venta") || texto.includes("gestión"))
+      return "fa-shopping-cart";
+    if (texto.includes("compra") || texto.includes("pago"))
+      return "fa-credit-card";
+    if (texto.includes("app") || texto.includes("billetera"))
+      return "fa-mobile-alt";
+    if (
+      texto.includes("diseño") ||
+      texto.includes("e-ticket") ||
+      texto.includes("personalizado")
+    )
+      return "fa-palette";
+    if (
+      texto.includes("hard") ||
+      texto.includes("impresión") ||
+      texto.includes("físicas")
+    )
+      return "fa-print";
+    if (
+      texto.includes("control") ||
+      texto.includes("acceso") ||
+      texto.includes("seguridad")
+    )
+      return "fa-shield-alt";
+    if (
+      texto.includes("configuración") ||
+      texto.includes("descuento") ||
+      texto.includes("promoción")
+    )
+      return "fa-cog";
+    if (texto.includes("integración") || texto.includes("sistema"))
+      return "fa-plug";
+    if (
+      texto.includes("atención") ||
+      texto.includes("cliente") ||
+      texto.includes("soporte")
+    )
+      return "fa-headset";
+    if (texto.includes("seguro") || texto.includes("metlife"))
+      return "fa-umbrella";
+    if (texto.includes("acreditaciones") || texto.includes("credenciales"))
+      return "fa-id-card";
 
     return "fa-ticket-alt";
   };
@@ -629,7 +656,7 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
 
         if (response.ok) {
           const result = await response.json();
-         
+
           if (result.docs) {
             setDynamicTestimonios(result.docs);
           }
@@ -735,7 +762,7 @@ const AyudaContent = ({ data }) => {
                 ))}
               </div>
             )}
-            
+
             {/* Video Tutorial */}
             <div className="video-wrapper">
               <iframe
