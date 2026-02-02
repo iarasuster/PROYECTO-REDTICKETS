@@ -18,23 +18,24 @@
   padding-bottom: 1rem;
 }
 
-/* Scrollbar personalizado */
+/* Scrollbar personalizado - más fino y elegante */
 .bento-grid::-webkit-scrollbar {
-  height: 10px;
+  height: 6px;
 }
 
 .bento-grid::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 3px;
 }
 
 .bento-grid::-webkit-scrollbar-thumb {
-  background: var(--primary, #FF6600);
-  border-radius: 10px;
+  background: rgba(255, 102, 0, 0.4);
+  border-radius: 3px;
+  transition: background 0.3s ease;
 }
 
 .bento-grid::-webkit-scrollbar-thumb:hover {
-  background: #ff8533;
+  background: rgba(255, 102, 0, 0.7);
 }
 
 /* Items */
@@ -76,6 +77,25 @@
 .bento-item:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 102, 0, 0.2);
+}
+
+.bento-item:hover .bento-image {
+  transform: scale(1.1);
+}
+
+.bento-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2.5rem 1.5rem 1.5rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bento-item:hover .bento-overlay {
+  opacity: 1;
 }
 
 .bento-item:hover .bento-image {

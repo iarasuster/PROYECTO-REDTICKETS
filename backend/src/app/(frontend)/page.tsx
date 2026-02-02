@@ -59,7 +59,7 @@ export default async function HomePage() {
             </a>
             <a
               className="btn btn-secondary"
-              href="https://redtickets-frontend.onrender.com"
+              href="https://blog-redtickets.vercel.app/"
               rel="noopener noreferrer"
               target="_blank"
             >

@@ -32,10 +32,10 @@ const cloudinaryAdapter = () => ({
   name: 'cloudinary-adapter',
   async handleUpload({
     file,
-    collection,
+    collection: _collection,
     data,
-    req,
-    clientUploadContext,
+    req: _req,
+    clientUploadContext: _clientUploadContext,
   }: Parameters<HandleUpload>[0]) {
     try {
       // Detectar si es SVG
@@ -71,10 +71,10 @@ const cloudinaryAdapter = () => ({
       file.filesize = uploadResult.bytes
       // Asignar width/height solo si existen en el objeto file
       if ('width' in file && typeof uploadResult.width === 'number') {
-        (file as any).width = uploadResult.width
+        (file as { width?: number }).width = uploadResult.width
       }
       if ('height' in file && typeof uploadResult.height === 'number') {
-        (file as any).height = uploadResult.height
+        (file as { height?: number }).height = uploadResult.height
       }
       // Guardar la URL de Cloudinary directamente en data
       data.url = uploadResult.secure_url
@@ -84,7 +84,7 @@ const cloudinaryAdapter = () => ({
       throw err
     }
   },
-  async handleDelete({ collection, doc, filename, req }: Parameters<HandleDelete>[0]) {
+  async handleDelete({ collection: _collection, doc: _doc, filename, req: _req }: Parameters<HandleDelete>[0]) {
     try {
       // filename ya viene como "media/nombre_archivo"
       await cloudinary.uploader.destroy(filename)
@@ -139,7 +139,7 @@ export default buildConfig({
           disableLocalStorage: true, // Solo Cloudinary, no guardar localmente
           generateFileURL: (args) => {
             const filename = args.filename;
-            const doc = (args as any).doc || {};
+            const doc = (args as { doc?: { url?: string; mimeType?: string } }).doc || {};
             // Si el documento ya tiene URL guardada desde handleUpload, usarla
             if (doc.url && (doc.url.includes('cloudinary.com/image/upload/v') || doc.url.includes('cloudinary.com/raw/upload'))) {
               return doc.url;

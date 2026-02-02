@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { SERVER_URL } from "../services/api";
 import "./BentoGrid.css";
 
 const BentoGrid = ({ photos }) => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const gridRef = useRef(null);
 
   if (!photos || photos.length === 0) return null;
 
@@ -31,10 +32,27 @@ const BentoGrid = ({ photos }) => {
     return "";
   };
 
+  // Convertir scroll vertical a horizontal
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    const handleWheel = (e) => {
+      // Solo si hay contenido para scrollear horizontalmente
+      if (grid.scrollWidth > grid.clientWidth) {
+        e.preventDefault();
+        grid.scrollLeft += e.deltaY;
+      }
+    };
+
+    grid.addEventListener('wheel', handleWheel, { passive: false });
+    return () => grid.removeEventListener('wheel', handleWheel);
+  }, []);
+
   return (
     <>
       <div className="bento-grid-container">
-        <div className="bento-grid">
+        <div className="bento-grid" ref={gridRef}>
           {photos.map((photo, index) => (
             <div
               key={index}

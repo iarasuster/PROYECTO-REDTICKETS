@@ -2069,28 +2069,7 @@
   max-width: 1100px;
 }
 
-.mision-cultura-item {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.3s ease;
-}
-
-.mision-cultura-item .section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #ff6600;
-  margin-bottom: 1.25rem;
-  text-align: left;
-}
-
-.mision-cultura-item:hover {
-  background: rgba(255, 255, 255, 0.04);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.1);
-}
+/* Eliminado - reemplazado por versión mejorada arriba */
 
 /* Títulos de sección mejorados */
 .section-title {
@@ -2112,21 +2091,112 @@
   text-align: left;
 }
 
-/* Texto intro - más compacto */
+/* Texto intro - Hero con efecto glassmorphism mejorado */
 .intro-row {
-  margin: 0 auto 2.5rem;
+  margin: 0 auto 3rem;
   max-width: 1000px;
+  position: relative;
 }
 
 .sobre-text-intro {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Misión y Cultura - Diseño moderno con gradientes y profundidad mejorado */
+.mision-cultura-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin: 0 auto 4.5rem;
+  max-width: 1200px;
+}
+
+.mision-cultura-item {
+  background: rgba(15, 15, 15, 0.6);
+  border-radius: 16px;
+  padding: 3.5rem 3rem;
+  border: 1px solid rgba(255, 102, 0, 0.15);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.mision-cultura-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #ff6600 0%, #ff8533 50%, #ff6600 100%);
+  background-size: 100% 200%;
+  animation: gradientMoveVertical 3s ease infinite;
+}
+
+@keyframes gradientMoveVertical {
+  0%, 100% { background-position: 50% 0%; }
+  50% { background-position: 50% 100%; }
+}
+
+.mision-cultura-item::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  bottom: -2px;
+  left: -2px;
+  background: linear-gradient(135deg, rgba(255, 102, 0, 0.1), transparent 50%);
+  border-radius: 16px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+.mision-cultura-item .section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 1.75rem;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.02em;
+}
+
+.mision-cultura-item .sobre-text {
+  position: relative;
+  z-index: 1;
+  font-size: 1.05rem;
   line-height: 1.8;
   color: rgba(255, 255, 255, 0.85);
-  text-align: center;
-  padding: 2rem 2.5rem;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mision-cultura-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 
+    0 16px 32px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 102, 0, 0.15);
+  border-color: rgba(255, 102, 0, 0.3);
+  background: rgba(20, 20, 20, 0.8);
+}
+
+.mision-cultura-item:hover::after {
+  opacity: 1;
+}
+
+.mision-cultura-item:hover .section-title {
+  color: #ff8533;
 }
 
 /* Animaciones escalonadas para las filas */

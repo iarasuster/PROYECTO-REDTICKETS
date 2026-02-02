@@ -27,10 +27,10 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoHovered, setLogoHovered] = useState(false);
 
-  // Timeout para volver al logo después de la animación
+  // Reset logo después de animación
   useEffect(() => {
     if (logoHovered) {
-      const timeout = setTimeout(() => setLogoHovered(false), 5500); // 5.5 segundos: animación + pausa
+      const timeout = setTimeout(() => setLogoHovered(false), 5500);
       return () => clearTimeout(timeout);
     }
   }, [logoHovered]);
@@ -71,6 +71,20 @@ function App() {
 
         {/* Header del sitio */}
         <header className="app-header">
+          {/* Precarga invisible del logo animado */}
+          <div
+            style={{
+              position: "absolute",
+              opacity: 0,
+              pointerEvents: "none",
+              width: 0,
+              height: 0,
+              overflow: "hidden",
+            }}
+          >
+            <DotLottieReact src={logoAnimation} autoplay={false} />
+          </div>
+
           <div className="container">
             <h1 className="site-title">
               <Link to="/">
@@ -84,15 +98,14 @@ function App() {
                 >
                   {logoHovered ? (
                     <DotLottieReact
-                      key={logoHovered ? Date.now() : "static"}
                       src={logoAnimation}
                       autoplay
                       loop={false}
-                      preload={true}
                       style={{
                         width: "200px",
                         height: "200px",
                         marginTop: "-80px",
+                        marginLeft: "-5px",
                       }}
                     />
                   ) : (
@@ -166,6 +179,17 @@ function App() {
             >
               Contacto
             </NavLink>
+            
+            {/* Botón CTA en móvil */}
+            <a
+              className="mobile-cta-button"
+              href="https://redtickets.uy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Ver eventos
+            </a>
           </nav>
         </header>
 

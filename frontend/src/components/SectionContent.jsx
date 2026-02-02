@@ -140,14 +140,6 @@ const InicioContent = ({ data }) => {
 
   return (
     <div className="inicio-content">
-      {/* Carousel de Logos de Productores */}
-      {logosProductores.length > 0 && (
-        <div className="inicio-logos animate-item">
-          <h3 className="logos-title">Confían en nosotros</h3>
-          <LogoCarousel logos={logosProductores} speed={40} />
-        </div>
-      )}
-
       {/* Stats en fila */}
       {data.estadisticas && (
         <div className="inicio-stats animate-item">
@@ -183,6 +175,14 @@ const InicioContent = ({ data }) => {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Carousel de Logos de Productores */}
+      {logosProductores.length > 0 && (
+        <div className="inicio-logos animate-item">
+          <h3 className="logos-title">Confían en nosotros</h3>
+          <LogoCarousel logos={logosProductores} speed={40} />
         </div>
       )}
 
@@ -280,24 +280,6 @@ function SobreNosotrosContent({ data }) {
         </div>
       )}
 
-      {/* FILA 4-5: Nuestra Misión y Cultura */}
-      {(data.mision || data.cultura) && (
-        <div className="sobre-row mision-cultura-row">
-          {data.mision && (
-            <div className="mision-cultura-item">
-              <h3 className="section-title">Nuestra Misión</h3>
-              <p className="sobre-text">{data.mision}</p>
-            </div>
-          )}
-          {data.cultura && (
-            <div className="mision-cultura-item">
-              <h3 className="section-title">Nuestra Cultura</h3>
-              <p className="sobre-text">{data.cultura}</p>
-            </div>
-          )}
-        </div>
-      )}
-
       {/* FILA 2: Fundadores - Foto Grupal con Tooltips */}
       {data.fundadores_foto?.url && (
         <div className="sobre-row fundadores-row">
@@ -351,7 +333,25 @@ function SobreNosotrosContent({ data }) {
         </div>
       )}
 
-      {/* FILA 3: Equipo */}
+      {/* FILA 3: Misión y Cultura */}
+      {(data.mision || data.cultura) && (
+        <div className="sobre-row mision-cultura-row">
+          {data.mision && (
+            <div className="mision-cultura-item">
+              <h3 className="section-title">Misión</h3>
+              <p className="sobre-text">{data.mision}</p>
+            </div>
+          )}
+          {data.cultura && (
+            <div className="mision-cultura-item">
+              <h3 className="section-title">Cultura</h3>
+              <p className="sobre-text">{data.cultura}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* FILA 4: Equipo */}
       {data.equipo && data.equipo.length > 0 && (
         <div className="sobre-row equipo-row">
           <h3 className="section-title">Nuestro Equipo</h3>
