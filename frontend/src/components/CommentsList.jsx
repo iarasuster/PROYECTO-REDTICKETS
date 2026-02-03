@@ -18,7 +18,7 @@ const CommentsList = ({ refreshTrigger }) => {
 
       // Fetch solo comentarios publicados, ordenados por fecha descendente
       const response = await fetch(
-        `${API_BASE_URL}/comments?where[status][equals]=publicado&sort=-createdAt&limit=50`
+        `${API_BASE_URL}/comments?where[status][equals]=publicado&sort=-createdAt&limit=50`,
       );
 
       if (!response.ok) {
@@ -31,7 +31,8 @@ const CommentsList = ({ refreshTrigger }) => {
         setComments(result.docs);
       }
     } catch (err) {
-      if (import.meta.env.DEV) console.error("❌ Error fetching comments:", err);
+      if (import.meta.env.DEV)
+        console.error("❌ Error fetching comments:", err);
       setError("No se pudieron cargar los comentarios");
     } finally {
       setLoading(false);

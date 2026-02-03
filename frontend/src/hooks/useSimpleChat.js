@@ -96,7 +96,8 @@ export function useSimpleChat({ api, initialMessages = [], onFinish } = {}) {
 
         if (!response.ok) {
           const errorText = await response.text();
-          if (import.meta.env.DEV) console.error("❌ Error del servidor:", errorText);
+          if (import.meta.env.DEV)
+            console.error("❌ Error del servidor:", errorText);
           throw new Error(
             `HTTP error! status: ${response.status} - ${errorText}`,
           );

@@ -3,6 +3,7 @@
 ### ✅ Cambios Implementados
 
 #### 1. **Eliminación de Console.logs** (Reducción ~5-10% en procesamiento)
+
 - ❌ Removidos 14 console.logs que se ejecutaban en producción
 - ✅ Logs protegidos con `import.meta.env.DEV` - solo en desarrollo
 - **Archivos afectados:**
@@ -13,11 +14,13 @@
   - Varios componentes más
 
 #### 2. **Lazy Loading de Componentes Pesados** (Mejora ~30% First Load)
+
 - ✅ `Chatbot` ahora se carga con `React.lazy()` + `Suspense`
 - **Impacto**: Chatbot de 11.67 KB no bloquea render inicial
 - **Código**: `const Chatbot = lazy(() => import("./components/Chatbot"))`
 
 #### 3. **Optimización de Vite Build** (Reducción ~15% bundle size)
+
 ```javascript
 // vite.config.js
 terserOptions: {
@@ -33,10 +36,12 @@ manualChunks: {
 ```
 
 #### 4. **Eliminación de Fetch Redundante** (Reducción 1 request HTTP)
+
 - ❌ Removido fetch innecesario de logos en `InicioContent`
 - ✅ Logos solo se cargan en página "Sobre Nosotros"
 
 #### 5. **Optimización de Recursos Externos**
+
 - ✅ Iframe de YouTube con `loading="lazy"` (carga diferida)
 - ✅ Duración de animación del logo reducida de 8s → 5s
 
@@ -45,13 +50,15 @@ manualChunks: {
 ### 📊 Resultados del Bundle (Producción)
 
 **ANTES:**
+
 - Bundle JS principal: ~1,288 KB (259 KB gzipped)
 - CSS total: ~151 KB
 - Sin chunking optimizado
 
 **DESPUÉS:**
+
 - ✅ React vendor chunk: **161 KB** (52 KB gzipped) - aislado
-- ✅ Lottie vendor chunk: **557 KB** (58 KB gzipped) - aislado  
+- ✅ Lottie vendor chunk: **557 KB** (58 KB gzipped) - aislado
 - ✅ Main bundle: **553 KB** (140 KB gzipped) - reducido
 - ✅ Chatbot chunk: **11 KB** (4 KB gzipped) - lazy loaded
 - ✅ CSS optimizado: **132 KB** (37 KB gzipped)
@@ -67,28 +74,32 @@ manualChunks: {
 #### Recomendaciones para optimizar:
 
 **Opción 1: Convertir a SVG animado (RECOMENDADO)**
+
 ```bash
 # Usar herramienta online: lottiefiles.com/tools/lottie-to-svg
 # Resultado esperado: ~50-100 KB (reducción 95%)
 ```
 
 **Opción 2: Comprimir Lottie**
+
 ```bash
 # Usar: https://lottiefiles.com/tools/lottie-optimizer
 # Resultado esperado: ~400-600 KB (reducción 60%)
 ```
 
 **Opción 3: Lazy Load dinámico del logo**
+
 ```jsx
 // Cargar logo solo cuando usuario hace hover
 const [loadLogo, setLoadLogo] = useState(false);
 
 <Link onMouseEnter={() => setLoadLogo(true)}>
   {loadLogo && <DotLottieReact src={logoAnimation} />}
-</Link>
+</Link>;
 ```
 
 **Opción 4: Usar imagen estática por defecto**
+
 - Mostrar PNG/SVG simple inicialmente
 - Solo cargar animación Lottie en hover/interacción
 
@@ -97,10 +108,13 @@ const [loadLogo, setLoadLogo] = useState(false);
 ### 📱 Recomendaciones Adicionales para Mobile
 
 #### CSS / Performance
+
 ```css
 /* Deshabilitar animaciones en mobile para mejor rendimiento */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -108,9 +122,10 @@ const [loadLogo, setLoadLogo] = useState(false);
 ```
 
 #### JavaScript
+
 ```javascript
 // Detectar mobile y reducir efectos
-const isMobile = window.matchMedia('(max-width: 768px)').matches;
+const isMobile = window.matchMedia("(max-width: 768px)").matches;
 if (isMobile) {
   // Deshabilitar IntersectionObserver para animaciones
   // Reducir velocidad de carousels
@@ -119,6 +134,7 @@ if (isMobile) {
 ```
 
 #### Imágenes
+
 - Todas las imágenes deberían tener `loading="lazy"`
 - Considerar WebP para imágenes del CMS
 - Implementar `srcset` responsive

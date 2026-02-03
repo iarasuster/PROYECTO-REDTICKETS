@@ -132,7 +132,8 @@ export function parseStructuredText(text) {
 
   // 🚨 VALIDACIÓN CRÍTICA: MESSAGE nunca puede estar vacío
   if (!result.layers.message || result.layers.message.trim().length === 0) {
-    if (import.meta.env.DEV) console.warn("⚠️ Respuesta sin MESSAGE detectada. Agregando fallback.");
+    if (import.meta.env.DEV)
+      console.warn("⚠️ Respuesta sin MESSAGE detectada. Agregando fallback.");
 
     // Generar mensaje fallback según componentes presentes
     if (result.layers.visual.length > 0) {

@@ -125,7 +125,8 @@ const CommentsForm = ({ onCommentSubmitted }) => {
         // NO limpiar formulario si hay error de moderación
       }
     } catch (error) {
-      if (import.meta.env.DEV) console.error("❌ Error al enviar comentario:", error);
+      if (import.meta.env.DEV)
+        console.error("❌ Error al enviar comentario:", error);
       setMessage({
         type: "error",
         text: "Hubo un error al enviar tu comentario. Intenta nuevamente.",

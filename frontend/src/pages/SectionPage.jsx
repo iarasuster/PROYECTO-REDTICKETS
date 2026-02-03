@@ -95,7 +95,10 @@ function SectionPage() {
       servicios: { white: "Soluciones completas para", orange: "tu evento" },
       comunidad: { white: "Nuestra", orange: "Comunidad" },
       ayuda: { white: "¿Tenés dudas?", orange: "Estamos para ayudarte" },
-      contacto: { white: "¿Querés organizar un evento con", orange: "RedTickets?" },
+      contacto: {
+        white: "¿Querés organizar un evento con",
+        orange: "RedTickets?",
+      },
     };
 
     const config = titleConfig[slug];
@@ -105,8 +108,7 @@ function SectionPage() {
 
     return (
       <h1 className="section-title">
-        {config.white}{" "}
-        <span className="title-highlight">{config.orange}</span>
+        {config.white} <span className="title-highlight">{config.orange}</span>
       </h1>
     );
   };

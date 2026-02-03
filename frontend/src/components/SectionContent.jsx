@@ -36,7 +36,8 @@ const SectionContent = ({ seccion, className = "" }) => {
           setError("No se encontró contenido para esta sección");
         }
       } catch (err) {
-        if (import.meta.env.DEV) console.error("❌ Error fetching section content:", err);
+        if (import.meta.env.DEV)
+          console.error("❌ Error fetching section content:", err);
         setError("Error al cargar el contenido");
       } finally {
         setLoading(false);
@@ -665,7 +666,8 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
           console.error("❌ Error HTTP:", response.status);
         }
       } catch (err) {
-        if (import.meta.env.DEV) console.error("❌ Error fetching testimonios:", err);
+        if (import.meta.env.DEV)
+          console.error("❌ Error fetching testimonios:", err);
       } finally {
         setLoading(false);
       }
