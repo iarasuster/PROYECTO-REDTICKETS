@@ -31,7 +31,7 @@ const CommentsList = ({ refreshTrigger }) => {
         setComments(result.docs);
       }
     } catch (err) {
-      console.error("❌ Error fetching comments:", err);
+      if (import.meta.env.DEV) console.error("❌ Error fetching comments:", err);
       setError("No se pudieron cargar los comentarios");
     } finally {
       setLoading(false);

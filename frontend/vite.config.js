@@ -5,8 +5,19 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   assetsInclude: ["**/*.lottie"],
+  
   build: {
-    // Desactivar minificación para archivos .lottie
+    // Optimizaciones de rendimiento
+    target: 'esnext',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Eliminar console.logs en producción
+        drop_debugger: true,
+      },
+    },
+    
+    // Chunking manual para mejor cache
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
@@ -15,7 +26,20 @@ export default defineConfig({
           }
           return "assets/[name]-[hash][extname]";
         },
+        manualChunks: {
+          // Vendor chunks separados para mejor caching
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'lottie-vendor': ['@lottiefiles/dotlottie-react'],
+        },
       },
     },
+    
+    chunkSizeWarningLimit: 600, // Aumentar límite advertencia
+  },
+  
+  // Optimizar dependencias en desarrollo
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom'],
   },
 });
+

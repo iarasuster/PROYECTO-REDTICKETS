@@ -157,7 +157,7 @@ export function useStructuredChat({
           onFinish();
         }
       } catch (err) {
-        console.error("❌ Error en chat:", err);
+        if (import.meta.env.DEV) console.error("❌ Error en chat:", err);
 
         if (err.name === "AbortError") {
           setError("Timeout: La respuesta tardó demasiado");

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SectionContent from "../components/SectionContent";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import loaderAnimation from "../components/../assets/loader.lottie";
+import loaderAnimation from "../assets/loader.lottie";
 import { getSectionBySlug } from "../services/api";
 import "./SectionPage.css";
 

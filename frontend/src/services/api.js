@@ -42,7 +42,7 @@ const fetchAPI = async (endpoint, options = {}) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("API Error:", error);
+    if (import.meta.env.DEV) console.error("API Error:", error);
     throw error;
   }
 };
@@ -143,7 +143,7 @@ export const sendChatMessage = async (message, conversationHistory = []) => {
       timestamp: data.timestamp,
     };
   } catch (error) {
-    console.error("Error en sendChatMessage:", error);
+    if (import.meta.env.DEV) console.error("Error en sendChatMessage:", error);
 
     // Respuestas de fallback según el tipo de error
     if (error.message.includes("503")) {

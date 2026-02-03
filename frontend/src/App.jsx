@@ -5,15 +5,14 @@ import {
   NavLink,
   Link,
 } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import Home from "./pages/Home";
 import SectionPage from "./pages/SectionPage";
-import Chatbot from "./components/Chatbot";
 import { startKeepAlive, stopKeepAlive } from "./utils/keepalive";
-import loaderAnimation from "./assets/loader.lottie";
-import logoAnimation from "./assets/Logo.lottie";
 import "./App.css";
+
+// Lazy load del chatbot (componente pesado)
+const Chatbot = lazy(() => import("./components/Chatbot"));
 
 function App() {
   const [newsletterMessage, setNewsletterMessage] = useState(null);
@@ -34,10 +33,10 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Reset logo después de animación (8s = 6s animación + 2s buffer para carga en Vercel)
+  // Reset logo después de animación (5s = 4s animación + 1s buffer)
   useEffect(() => {
     if (logoHovered) {
-      const timeout = setTimeout(() => setLogoHovered(false), 8000);
+      const timeout = setTimeout(() => setLogoHovered(false), 5000);
       return () => clearTimeout(timeout);
     }
   }, [logoHovered]);
@@ -106,19 +105,22 @@ function App() {
                     }}
                   />
 
-                  {/* Animación Lottie solo cuando hover */}
+                  {/* GIF animado solo cuando hover */}
                   {logoHovered && canAnimate && (
-                    <DotLottieReact
-                      src={logoAnimation}
-                      autoplay
-                      loop={false}
-                      onComplete={() => setLogoHovered(false)}
+                    <img
+                      src="https://res.cloudinary.com/dto7bkvgc/image/upload/q_auto,f_auto/media/Logo.gif"
+                      alt="RedTickets Logo Animado"
+                      onLoad={() => {
+                        // Reset después de que termine la animación
+                        setTimeout(() => setLogoHovered(false), 5000);
+                      }}
                       style={{
                         position: "absolute",
                         top: "-80px",
                         left: "-5px",
                         width: "200px",
                         height: "200px",
+                        objectFit: "contain",
                       }}
                     />
                   )}
@@ -253,7 +255,7 @@ function App() {
                     });
                   }
                 } catch (error) {
-                  console.error("Error:", error);
+                  if (import.meta.env.DEV) console.error("Error:", error);
                   setNewsletterMessage({
                     type: "error",
                     text: "Error de conexión. Intenta nuevamente.",

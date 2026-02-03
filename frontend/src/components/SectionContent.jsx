@@ -36,7 +36,7 @@ const SectionContent = ({ seccion, className = "" }) => {
           setError("No se encontró contenido para esta sección");
         }
       } catch (err) {
-        console.error("❌ Error fetching section content:", err);
+        if (import.meta.env.DEV) console.error("❌ Error fetching section content:", err);
         setError("Error al cargar el contenido");
       } finally {
         setLoading(false);
@@ -195,6 +195,7 @@ const InicioContent = ({ data }) => {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            loading="lazy"
           ></iframe>
         </div>
       </div>
@@ -660,11 +661,11 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
           if (result.docs) {
             setDynamicTestimonios(result.docs);
           }
-        } else {
+        } else if (import.meta.env.DEV) {
           console.error("❌ Error HTTP:", response.status);
         }
       } catch (err) {
-        console.error("❌ Error fetching testimonios:", err);
+        if (import.meta.env.DEV) console.error("❌ Error fetching testimonios:", err);
       } finally {
         setLoading(false);
       }
@@ -687,11 +688,6 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
       fecha: t.createdAt,
     })),
   ];
-
-  console.log("📊 Total testimonios:", allTestimonios.length, {
-    estaticos: staticTestimonios.length,
-    dinamicos: dynamicTestimonios.length,
-  });
 
   return <TestimoniosCarousel testimonios={allTestimonios} loading={loading} />;
 };

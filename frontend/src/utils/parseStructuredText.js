@@ -44,13 +44,11 @@ export function parseStructuredText(text) {
     result.layers.message = messageMatch[1].trim();
   }
 
-  // 🚨 DEBUG: Log para detectar respuestas vacías
+  // Validación silenciosa en producción
   if (!result.layers.message || result.layers.message.trim().length === 0) {
-    // Solo advertir si el texto parece completo (tiene ---)
-    if (normalizedText.includes("---")) {
+    // Solo advertir en desarrollo
+    if (import.meta.env.DEV && normalizedText.includes("---")) {
       console.warn("⚠️ MESSAGE vacío detectado");
-      console.log("Texto recibido:", normalizedText.substring(0, 500));
-      console.log("Archetype:", result.archetype);
     }
   }
 
@@ -134,7 +132,7 @@ export function parseStructuredText(text) {
 
   // 🚨 VALIDACIÓN CRÍTICA: MESSAGE nunca puede estar vacío
   if (!result.layers.message || result.layers.message.trim().length === 0) {
-    console.warn("⚠️ Respuesta sin MESSAGE detectada. Agregando fallback.");
+    if (import.meta.env.DEV) console.warn("⚠️ Respuesta sin MESSAGE detectada. Agregando fallback.");
 
     // Generar mensaje fallback según componentes presentes
     if (result.layers.visual.length > 0) {
