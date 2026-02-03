@@ -302,7 +302,7 @@ ${(contentData.servicios as Record<string, unknown>[]).map((s: Record<string, un
       system: SYSTEM_PROMPT,
       messages: enhancedMessages,
       temperature: 0.2,  // Más bajo para mayor adherencia al formato
-      maxTokens: 500,    // Limitar respuestas largas
+      maxSteps: 1,       // Evitar loops de tool calling
     })
 
     // Stream response directo (más rápido)
