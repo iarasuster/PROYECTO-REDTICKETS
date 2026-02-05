@@ -56,7 +56,7 @@ async function getContentData() {
       })),
       equipo: [] as Array<{nombre: unknown; area: unknown; cargo?: unknown}>,
       servicios: [] as Array<{titulo: unknown; descripcion: unknown}>,
-      video_tutorial: 'https://www.youtube.com/embed/SfHuVUmpzgU',
+      video_tutorial: 'https://www.youtube.com/embed/O_JRfiGeSNI',
     }
 
     // Extraer equipo de "sobre_nosotros"
@@ -134,7 +134,7 @@ CARDS: Control de Acceso | Tótems inteligentes con QR | servicios
 CARDS: Producción | Asesoramiento integral para eventos | servicios
 
 ## VIDEO (⚠️ ÚNICO - SOLO "como compro" o "tutorial de compra"):
-VIDEO: https://www.youtube.com/embed/SfHuVUmpzgU | Tutorial de compra
+VIDEO: https://www.youtube.com/embed/O_JRfiGeSNI | Tutorial de compra
 
 🚫 NUNCA uses VIDEO para:
 - "como vendo", "vender entradas", "publicar evento"
@@ -178,7 +178,7 @@ Usuario: "como compro entradas"
 ARCHETYPE: handoff
 MESSAGE: Te muestro el proceso paso a paso en este video:
 VISUAL:
-VIDEO: https://www.youtube.com/embed/SfHuVUmpzgU | Tutorial de compra
+VIDEO: https://www.youtube.com/embed/O_JRfiGeSNI | Tutorial de compra
 ACTIONS:
 Ver Ayuda → ayuda (navigate)
 ---

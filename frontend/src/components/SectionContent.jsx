@@ -773,7 +773,7 @@ const AyudaContent = ({ data }) => {
             {/* Video Tutorial */}
             <div className="video-wrapper">
               <iframe
-                src="https://www.youtube.com/embed/SfHuVUmpzgU"
+                src="https://www.youtube.com/embed/O_JRfiGeSNI"
                 title="Tutorial de Compra - RedTickets"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

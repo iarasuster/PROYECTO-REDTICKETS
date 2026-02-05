@@ -45,14 +45,36 @@ const BentoGrid = ({ photos }) => {
       }
     };
 
+    // Navegación con teclado (flechas)
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        grid.scrollBy({ left: -300, behavior: "smooth" });
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        grid.scrollBy({ left: 300, behavior: "smooth" });
+      }
+    };
+
     grid.addEventListener("wheel", handleWheel, { passive: false });
-    return () => grid.removeEventListener("wheel", handleWheel);
+    grid.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      grid.removeEventListener("wheel", handleWheel);
+      grid.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   return (
     <>
       <div className="bento-grid-container">
-        <div className="bento-grid" ref={gridRef}>
+        <div
+          className="bento-grid"
+          ref={gridRef}
+          tabIndex="0"
+          role="region"
+          aria-label="Galería de fotos de eventos"
+        >
           {photos.map((photo, index) => (
             <div
               key={index}

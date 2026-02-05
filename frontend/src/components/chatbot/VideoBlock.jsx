@@ -5,7 +5,7 @@
  *
  * IMPORTANT: Only one video exists in the system:
  * - Tutorial: "Cómo comprar entradas"
- * - URL: https://www.youtube.com/embed/SfHuVUmpzgU
+ * - URL: https://www.youtube.com/embed/O_JRfiGeSNI
  */
 
 import React from "react";

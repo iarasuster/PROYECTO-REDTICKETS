@@ -4,6 +4,7 @@ import {
   Route,
   NavLink,
   Link,
+  useLocation,
 } from "react-router-dom";
 import { useState, useEffect, lazy, Suspense } from "react";
 import Home from "./pages/Home";
@@ -14,6 +15,17 @@ import "./App.css";
 
 // Lazy load del chatbot (componente pesado)
 const Chatbot = lazy(() => import("./components/Chatbot"));
+
+// Componente para scroll al tope en cada cambio de ruta
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   const [newsletterMessage, setNewsletterMessage] = useState(null);
@@ -74,6 +86,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="App">
         {/* Overlay para móvil */}
         {isMenuOpen && (
