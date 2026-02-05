@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import "./CommentsList.css";
 
-const API_BASE_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:3000/api"
+const CommentsList = () => {
+  const API_BASE_URL =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:3000/api"
       : "https://redtickets-backend.vercel.app/api";
+
+  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 

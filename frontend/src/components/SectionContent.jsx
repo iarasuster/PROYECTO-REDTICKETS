@@ -646,7 +646,10 @@ const TestimoniosUnified = ({ staticTestimonios, refreshTrigger }) => {
   const API_BASE_URL =
     import.meta.env.MODE === "development"
       ? "http://localhost:3000/api"
-        : "https://redtickets-backend.vercel.app/api";
+      : "https://redtickets-backend.vercel.app/api";
+
+  useEffect(() => {
+    const fetchDynamicTestimonios = async () => {
       try {
         setLoading(true);
         const response = await fetch(

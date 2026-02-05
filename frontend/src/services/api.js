@@ -18,8 +18,7 @@ const CHATBOT_API_URL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
   : import.meta.env.MODE === "development"
     ? "http://localhost:3000/api"
-    : "https://redtickets-backend.vercel.app/api"
-    : "https://redtickets-backend.onrender.com/api";
+    : "https://redtickets-backend.vercel.app/api";
 
 // Función helper para hacer peticiones HTTP
 const fetchAPI = async (endpoint, options = {}) => {

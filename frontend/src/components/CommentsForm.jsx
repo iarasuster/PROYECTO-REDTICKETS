@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import "./CommentsForm.css";
 
-const API_BASE_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:3000/api"
+const CommentsForm = ({ onCommentSubmitted }) => {
+  const API_BASE_URL =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:3000/api"
       : "https://redtickets-backend.vercel.app/api";
+
+  const [formData, setFormData] = useState({
     author: "",
     email: "",
     comment: "",
