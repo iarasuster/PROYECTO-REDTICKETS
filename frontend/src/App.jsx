@@ -334,7 +334,7 @@ function App() {
             </div>
 
             <div className="footer-bottom">
-              <p>&copy; 2026 RedTickets. Todos los derechos reservados.</p>
+              <p>&copy; 2026 RedTickets. Proyecto Integrador Iara Suster.</p>
             </div>
           </div>
         </footer>
