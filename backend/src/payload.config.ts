@@ -123,8 +123,8 @@ export default buildConfig({
     'http://localhost:4173',
     'https://blog-redtickets.vercel.app',
     'https://redtickets-backend.vercel.app',
-    'https://redtickets-backend.onrender.com',
-    'https://redtickets-frontend.onrender.com',
+    'https://redtickets-backend.vercel.app',
+    'https://blog-redtickets.vercel.app',
   ],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
