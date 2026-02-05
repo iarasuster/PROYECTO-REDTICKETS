@@ -990,8 +990,10 @@ const ContactoContent = ({ data }) => {
   };
   return (
     <div className="content-grid">
+      {/* Formulario de contacto - PRIMERO */}
       {Array.isArray(data.formulario) && data.formulario.length > 0 && (
         <div className="content-item formulario animate-item">
+          <h2 className="section-subtitle">Envíanos un mensaje</h2>
           <form className="contact-form" onSubmit={handleSubmit}>
             {data.formulario.map((campo, idx) => {
               const fieldName = typeof campo === "string" ? campo : campo.campo;
@@ -1048,6 +1050,29 @@ const ContactoContent = ({ data }) => {
               </div>
             )}
           </form>
+        </div>
+      )}
+
+      {/* Información de contacto - DEBAJO del formulario */}
+      {(data.email || data.telefono) && (
+        <div className="content-item animate-item">
+          <div className="contact-info-footer">
+            <p className="contact-info-label">Otras formas de contacto</p>
+            <div className="contact-info-links">
+              {data.email && (
+                <a href={`mailto:${data.email}`} className="contact-link">
+                  <i className="fas fa-envelope"></i>
+                  <span>{data.email}</span>
+                </a>
+              )}
+              {data.telefono && (
+                <a href={`tel:${data.telefono}`} className="contact-link">
+                  <i className="fas fa-phone"></i>
+                  <span>{data.telefono}</span>
+                </a>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -1,5 +1,4 @@
 // URL base de la API de Payload CMS
-// Usa variable de entorno o fallback a Render
 const API_BASE_URL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
   : import.meta.env.MODE === "development"
