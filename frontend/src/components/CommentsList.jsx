@@ -4,10 +4,7 @@ import "./CommentsList.css";
 const API_BASE_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:3000/api"
-    : "https://redtickets-backend.onrender.com/api";
-
-const CommentsList = ({ refreshTrigger }) => {
-  const [comments, setComments] = useState([]);
+      : "https://redtickets-backend.vercel.app/api";
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 

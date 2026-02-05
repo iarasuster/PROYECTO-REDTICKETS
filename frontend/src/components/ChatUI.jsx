@@ -22,7 +22,7 @@ const ChatUI = ({ isOpen, onClose }) => {
   const CHAT_API_URL =
     import.meta.env.MODE === "development"
       ? "http://localhost:3000/api/chat-structured"
-      : "https://redtickets-backend.onrender.com/api/chat-structured";
+      : "https://redtickets-backend.vercel.app/api/chat-structured";
 
   // Hook personalizado para chat con streaming estructurado
   const {

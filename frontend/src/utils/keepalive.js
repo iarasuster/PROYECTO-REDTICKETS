@@ -3,10 +3,10 @@
  * Render Free Tier duerme servicios después de 15 min inactividad
  */
 
-const BACKEND_URL =
-  import.meta.env.MODE === "development"
+const BACKEND_URL = import.meta.env.VITE_API_URL || 
+  (import.meta.env.MODE === "development"
     ? "http://localhost:3000"
-    : "https://redtickets-backend.onrender.com";
+    : "https://redtickets-backend.vercel.app");
 
 const PING_INTERVAL = 10 * 60 * 1000; // 10 minutos
 
