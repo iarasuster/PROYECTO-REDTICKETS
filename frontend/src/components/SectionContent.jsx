@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { getContentBySection, SERVER_URL } from "../services/api";
 import ChromaGrid from "./ChromaGrid";
@@ -49,7 +49,10 @@ const SectionContent = ({ seccion, className = "" }) => {
     }
   }, [seccion]);
 
+  // Animaciones de scroll - optimizado
   useEffect(() => {
+    if (!content) return;
+
     const observerOptions = {
       threshold: 0.1,
       rootMargin: "0px 0px -50px 0px",
@@ -64,10 +67,16 @@ const SectionContent = ({ seccion, className = "" }) => {
       });
     }, observerOptions);
 
-    const items = document.querySelectorAll(".content-item");
-    items.forEach((item) => observer.observe(item));
+    // Pequeño delay para que el DOM esté listo
+    const timeoutId = setTimeout(() => {
+      const items = document.querySelectorAll(".content-item");
+      items.forEach((item) => observer.observe(item));
+    }, 50);
 
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(timeoutId);
+      observer.disconnect();
+    };
   }, [content]);
 
   if (loading) {
@@ -1162,4 +1171,5 @@ function AyudaForm({ campos, submitText }) {
   );
 }
 
-export default SectionContent;
+// Memoizar componente para evitar re-renders innecesarios
+export default memo(SectionContent);

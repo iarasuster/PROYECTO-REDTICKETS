@@ -19,6 +19,13 @@ const CHATBOT_API_URL = import.meta.env.VITE_API_URL
     ? "http://localhost:3000/api"
     : "https://redtickets-backend.vercel.app/api";
 
+// Cache en memoria para evitar llamadas API repetidas
+const contentCache = {
+  allContent: null,
+  timestamp: null,
+  TTL: 5 * 60 * 1000, // 5 minutos
+};
+
 // Función helper para hacer peticiones HTTP
 const fetchAPI = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -55,10 +62,22 @@ export const getAllContent = async () => {
 
 // Función para obtener contenido por sección desde ContenidoBlog
 export const getContentBySection = async (seccion) => {
-  // IMPORTANTE: El filtro where de Payload tiene bugs
-  // Mejor estrategia: obtener TODOS los documentos y filtrar en el cliente
-  // depth=2 permite cargar las relaciones de imágenes (upload fields)
-  const result = await fetchAPI(`/contenido-blog?limit=100&depth=2`);
+  // Verificar cache primero
+  const now = Date.now();
+  const cacheValid = contentCache.allContent && 
+                     contentCache.timestamp && 
+                     (now - contentCache.timestamp < contentCache.TTL);
+
+  let result;
+  if (cacheValid) {
+    // Usar cache
+    result = contentCache.allContent;
+  } else {
+    // Hacer llamada API y actualizar cache
+    result = await fetchAPI(`/contenido-blog?limit=100&depth=2`);
+    contentCache.allContent = result;
+    contentCache.timestamp = now;
+  }
 
   // Filtrar manualmente por sección
   if (result.docs && result.docs.length > 0) {

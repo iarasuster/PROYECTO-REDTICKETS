@@ -9,6 +9,7 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import Home from "./pages/Home";
 import SectionPage from "./pages/SectionPage";
 import { startKeepAlive, stopKeepAlive } from "./utils/keepalive";
+import { getAllContent } from "./services/api";
 import "./App.css";
 
 // Lazy load del chatbot (componente pesado)
@@ -61,6 +62,13 @@ function App() {
   useEffect(() => {
     startKeepAlive();
     return () => stopKeepAlive();
+  }, []);
+
+  // Precargar TODO el contenido al montar la app
+  useEffect(() => {
+    getAllContent().catch((err) => {
+      if (import.meta.env.DEV) console.error("❌ Error precargando contenido:", err);
+    });
   }, []);
 
   return (
