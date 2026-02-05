@@ -67,7 +67,8 @@ function App() {
   // Precargar TODO el contenido al montar la app
   useEffect(() => {
     getAllContent().catch((err) => {
-      if (import.meta.env.DEV) console.error("❌ Error precargando contenido:", err);
+      if (import.meta.env.DEV)
+        console.error("❌ Error precargando contenido:", err);
     });
   }, []);
 

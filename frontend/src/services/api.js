@@ -64,9 +64,10 @@ export const getAllContent = async () => {
 export const getContentBySection = async (seccion) => {
   // Verificar cache primero
   const now = Date.now();
-  const cacheValid = contentCache.allContent && 
-                     contentCache.timestamp && 
-                     (now - contentCache.timestamp < contentCache.TTL);
+  const cacheValid =
+    contentCache.allContent &&
+    contentCache.timestamp &&
+    now - contentCache.timestamp < contentCache.TTL;
 
   let result;
   if (cacheValid) {
