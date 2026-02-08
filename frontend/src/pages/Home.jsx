@@ -8,11 +8,16 @@ const Home = () => {
   const [canUseLiquidEther, setCanUseLiquidEther] = useState(false);
 
   useEffect(() => {
-    // Solo habilitar LiquidEther en desktop con buen rendimiento
-    const isDesktop = window.innerWidth >= 1024;
-    const hasGoodGPU = !/(Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini)/i.test(navigator.userAgent);
-    
-    setCanUseLiquidEther(isDesktop && hasGoodGPU);
+    // Deshabilitar LiquidEther SOLO en tablets (768-1023px)
+    const checkCanUseLiquidEther = () => {
+      const width = window.innerWidth;
+      const isTablet = width >= 768 && width < 1024;
+      setCanUseLiquidEther(!isTablet); // Usar en todo EXCEPTO tablets
+    };
+
+    checkCanUseLiquidEther();
+    window.addEventListener("resize", checkCanUseLiquidEther);
+    return () => window.removeEventListener("resize", checkCanUseLiquidEther);
   }, []);
 
   return (
@@ -56,7 +61,8 @@ const Home = () => {
               position: "absolute",
               top: 0,
               left: 0,
-              background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #ff6600 50%, #ff8833 75%, #1a1a1a 100%)",
+              background:
+                "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #ff6600 50%, #ff8833 75%, #1a1a1a 100%)",
               backgroundSize: "400% 400%",
               animation: "gradientShift 15s ease infinite",
             }}

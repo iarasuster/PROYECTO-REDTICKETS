@@ -3,13 +3,39 @@ import { useEffect, useRef, useState } from "react";
 /**
  * Counter Component - Animated number counter for stats
  * Animates from 0 to target value when component enters viewport
+ * Deshabilitado en tablets/móviles para mejor rendimiento
  */
 const Counter = ({ end, duration = 2000, suffix = "" }) => {
   const [count, setCount] = useState(0);
   const countRef = useRef(null);
   const hasAnimated = useRef(false);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  // Detectar si NO es tablet (animar en desktop y móviles, no en tablets)
+  useEffect(() => {
+    const checkShouldAnimate = () => {
+      const width = window.innerWidth;
+      const isTablet = width >= 768 && width < 1024;
+      setShouldAnimate(!isTablet); // Animar en todo EXCEPTO tablets
+    };
+
+    checkShouldAnimate();
+    window.addEventListener("resize", checkShouldAnimate);
+    return () => window.removeEventListener("resize", checkShouldAnimate);
+  }, []);
+
+  // Si no debe animar, mostrar el valor final directamente
+  useEffect(() => {
+    if (!shouldAnimate) {
+      const endValue =
+        typeof end === "string" ? parseInt(end.replace(/\D/g, "")) : end;
+      setCount(endValue);
+    }
+  }, [shouldAnimate, end]);
 
   useEffect(() => {
+    if (!shouldAnimate) return; // No observar si no debe animar
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -19,7 +45,7 @@ const Counter = ({ end, duration = 2000, suffix = "" }) => {
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     if (countRef.current) {
@@ -31,7 +57,7 @@ const Counter = ({ end, duration = 2000, suffix = "" }) => {
         observer.unobserve(countRef.current);
       }
     };
-  }, []);
+  }, [shouldAnimate]);
 
   const animateCount = () => {
     const startTime = Date.now();

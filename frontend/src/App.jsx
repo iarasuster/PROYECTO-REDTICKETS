@@ -41,17 +41,17 @@ function App() {
   const [canAnimate, setCanAnimate] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
-  // Detectar si es desktop (solo mostrar GIF en desktop)
+  // Detectar si NO es tablet (mostrar GIF en desktop y móviles, no en tablets)
   useEffect(() => {
     const checkIsDesktop = () => {
-      const isLargeScreen = window.innerWidth >= 1024;
-      const isNotMobile = !/(Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini)/i.test(navigator.userAgent);
-      setIsDesktop(isLargeScreen && isNotMobile);
+      const width = window.innerWidth;
+      const isTablet = width >= 768 && width < 1024;
+      setIsDesktop(!isTablet); // Mostrar GIF en todo EXCEPTO tablets
     };
-    
+
     checkIsDesktop();
-    window.addEventListener('resize', checkIsDesktop);
-    return () => window.removeEventListener('resize', checkIsDesktop);
+    window.addEventListener("resize", checkIsDesktop);
+    return () => window.removeEventListener("resize", checkIsDesktop);
   }, []);
 
   // Habilitar animación después de que el componente esté montado
