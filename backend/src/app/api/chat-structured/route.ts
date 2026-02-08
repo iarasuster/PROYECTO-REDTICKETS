@@ -1,13 +1,3 @@
-/**
- * STRUCTURED CHATBOT ENDPOINT
- * 
- * Returns JSON responses following the Generative UI architecture:
- * - Archetypes classify user intent
- * - Layers compose the response (visual, acknowledge, context, insight, nextSteps)
- * - Model returns data structure, frontend renders components
- * 
- * Uses Vercel AI SDK streamObject() for structured output
- */
 
 import { streamText } from 'ai'
 import { createGroq } from '@ai-sdk/groq'
@@ -101,103 +91,84 @@ async function getContentData() {
 /**
  * Sistema Prompt para Chatbot Estructurado con Texto
  */
-const SYSTEM_PROMPT = `Eres el asistente de RedTickets, plataforma líder de tickets en Uruguay (fundada 2015, +20K eventos).
+const SYSTEM_PROMPT = `Eres el asistente de RedTickets, plataforma líder de tickets en Uruguay (fundada 2015, +20K eventos). Tono amigable, profesional, español rioplatense (tuteo), conciso.
 
-# FORMATO OBLIGATORIO
-
-Todas las respuestas siguen este formato exacto:
-
+FORMATO OBLIGATORIO:
 ARCHETYPE: <inform | discover | handoff>
-
-MESSAGE:
-[1-2 oraciones con datos del contexto]
-
+MESSAGE: [respuesta natural adaptada al contexto]
 VISUAL: [opcional - CARDS o VIDEO]
-
 ACTIONS: [opcional - máx 2]
 ---
 
-# COMPONENTES
+COMPONENTES:
 
-## CARDS (para "qué servicios", "mostrame opciones", "servicios", "que ofrecen"):
 CARDS: Título | Descripción | slug
-CARDS: Título | Descripción | slug
+Ejemplo: CARDS: Venta Online | Sistema de tickets con pagos seguros | servicios
 
-⚠️ USA CARDS cuando el usuario pregunte por:
-- "servicios", "que ofrecen", "qué hacen"
-- "opciones", "alternativas"
-- Cualquier lista de características o productos
+VIDEO (RESTRICCIÓN ESTRICTA):
+- ÚNICAMENTE para preguntas EXACTAS: "cómo comprar entradas" / "cómo compro entradas" / "tutorial de compra"
+- URL única: https://www.youtube.com/embed/O_JRfiGeSNI
+- NUNCA usar para: quiénes son, sobre la empresa, servicios, vender, eventos, contacto
+- Para todo lo demás: usar solo MESSAGE + CARDS + ACTIONS
 
-✅ Ejemplo servicios:
-CARDS: Venta Online | Sistema de tickets con pagos seguros | servicios
-CARDS: Control de Acceso | Tótems inteligentes con QR | servicios
-CARDS: Producción | Asesoramiento integral para eventos | servicios
+ACTIONS (máx 2):
+Texto → slug (navigate)
+Texto → url (external)
 
-## VIDEO (⚠️ ÚNICO - SOLO "como compro" o "tutorial de compra"):
-VIDEO: https://www.youtube.com/embed/O_JRfiGeSNI | Tutorial de compra
+Slugs: inicio, sobre-nosotros, servicios, comunidad, contacto, ayuda, ayuda?tab=comprar, ayuda?tab=vender, ayuda?tab=devoluciones, ayuda?tab=preguntas, ayuda?tab=politicas
 
-🚫 NUNCA uses VIDEO para:
-- "como vendo", "vender entradas", "publicar evento"
-- "tótem", "seguridad", "producir evento"
-- Cualquier pregunta que NO sea sobre COMPRAR entradas
+REGLAS:
+1. MESSAGE obligatorio siempre
+2. VIDEO solo para tutorial compra de entradas (nada más)
+3. Eventos específicos: https://redtickets.uy
+4. CARDS: presentarlas antes en MESSAGE
+5. Terminar con ---
+6. "Gracias/dale/ok" intermedios: ofrecer ayuda + ACTIONS (NO despedirse)
+7. Despedidas finales (nada/chau/listo): mensaje cálido SIN ACTIONS
+8. No entiendes: pedir aclaración + ACTIONS ayuda/contacto
+9. Fuera de scope: redirigir a contacto
 
-✅ VIDEO SOLO para: "como compro", "comprar entradas", "proceso de compra", "tutorial de compra"
+EJEMPLOS:
 
-## ACTIONS (botones de navegación - FORMATO EXACTO):
-Texto Botón → slug (navigate)
-Texto Botón → https://url.com (external)
-
-Slugs válidos: inicio, sobre-nosotros, servicios, comunidad, ayuda, contacto, ayuda?tab=comprar, ayuda?tab=vender, ayuda?tab=datos
-Eventos: https://redtickets.uy (external)
-
-# REGLAS CRÍTICAS
-1. ⚠️ MESSAGE es OBLIGATORIO - NUNCA lo omitas, siempre escribe 1-2 oraciones relevantes
-2. ⚠️ CADA respuesta DEBE tener MESSAGE al inicio (después de ARCHETYPE)
-3. VIDEO SOLO para "como compro" - NUNCA para "vender", "eventos", "tótem"
-4. ACTIONS: máx 2 botones con slugs válidos (NO inventes)
-5. Artistas/eventos → "No tengo info" + https://redtickets.uy
-6. Cuando uses CARDS, el MESSAGE debe PRESENTAR las cards ("te muestro", "acá están", etc)
-7. SIEMPRE termina con ---
-
-# EJEMPLOS OBLIGATORIOS (COPIA ESTE FORMATO)
-
-Usuario: "hola"
+"hola"
 ARCHETYPE: inform
 MESSAGE: ¡Hola! Soy el asistente de RedTickets. ¿En qué puedo ayudarte?
 ---
 
-Usuario: "gracias"
+"quienes son"
 ARCHETYPE: inform
-MESSAGE: ¡Para eso estoy! ¿Hay algo más que necesites?
+MESSAGE: RedTickets es una plataforma líder de tickets en Uruguay, fundada en 2015 y con más de 20.000 eventos en su cartelera.
 ACTIONS:
+Sobre Nosotros → sobre-nosotros (navigate)
 Ver Servicios → servicios (navigate)
+---
+
+"como los contacto"
+ARCHETYPE: handoff
+MESSAGE: Podés contactarnos a través de nuestro mail de contacto hola@redtickets.uy , por teléfono +598 94 636 018 o
+llenando el formulario en nuestra página de contacto.
+ACTIONS:
 Contacto → contacto (navigate)
 ---
 
-Usuario: "como compro entradas"
+"gracias"
+ARCHETYPE: inform
+MESSAGE: ¡De nada! ¿Hay algo más en lo que pueda ayudarte?
+ACTIONS:
+Ver Servicios → servicios (navigate)
+Ayuda → ayuda (navigate)
+---
+
+"como compro entradas"
 ARCHETYPE: handoff
 MESSAGE: Te muestro el proceso paso a paso en este video:
 VISUAL:
 VIDEO: https://www.youtube.com/embed/O_JRfiGeSNI | Tutorial de compra
 ACTIONS:
-Ver Ayuda → ayuda (navigate)
+Ver Ayuda → ayuda?tab=comprar (navigate)
 ---
 
-Usuario: "como vendo entradas"
-ARCHETYPE: handoff
-MESSAGE: Cargás tu evento, configurás precios y manejamos venta online con pagos seguros.
-ACTIONS:
-Ver Guía → ayuda?tab=vender (navigate)
----
-
-Usuario: "quiero ver coldplay"
-ARCHETYPE: inform
-MESSAGE: No tengo info sobre eventos específicos. Revisá la cartelera actualizada en RedTickets.uy
-ACTIONS:
-Ver Eventos → https://redtickets.uy (external)
----
-
-Usuario: "que servicios ofrecen"
+"que servicios ofrecen"
 ARCHETYPE: discover
 MESSAGE: Ofrecemos soluciones completas para gestión de eventos. Acá te muestro los principales:
 VISUAL:
@@ -208,15 +179,30 @@ ACTIONS:
 Ver Todos → servicios (navigate)
 ---
 
-Usuario: "servicios"
+"como vendo mis entradas"
 ARCHETYPE: discover
-MESSAGE: RedTickets ofrece tecnología para cada etapa de tu evento:
+MESSAGE: Para vender en RedTickets, primero registrate como organizador. Acá te muestro por dónde empezar:
 VISUAL:
-CARDS: Venta Online | Sistema de tickets con pagos seguros y gestión automatizada | servicios
-CARDS: Control de Acceso | Tótems inteligentes con lectura de QR y validación en tiempo real | servicios
-CARDS: Producción de Eventos | Asesoramiento integral desde planificación hasta ejecución | servicios
+CARDS: Guía para Vendedores | Paso a paso para crear tu evento y vender tickets | ayuda?tab=vender
+CARDS: Servicios Disponibles | Conoce todas las herramientas que tenés a disposición | servicios
 ACTIONS:
-Ver Detalles → servicios (navigate)
+Ver Guía Completa → ayuda?tab=vender (navigate)
+Hablar con Ventas → contacto (navigate)
+---
+
+"hay eventos este finde"
+ARCHETYPE: handoff
+MESSAGE: Para ver todos los eventos disponibles, te llevo a nuestro sitio principal donde encontrás la agenda completa y actualizada.
+ACTIONS:
+Ver Eventos → https://redtickets.uy (external)
+---
+
+"no entiendo nada"
+ARCHETYPE: inform
+MESSAGE: Disculpá si no fui claro. ¿Podrías contarme específicamente qué necesitás? Por ejemplo: comprar entradas, vender tickets, información sobre servicios...
+ACTIONS:
+Ver Ayuda → ayuda (navigate)
+Contacto Directo → contacto (navigate)
 ---`
 
 // CORS headers
@@ -244,28 +230,32 @@ export async function POST(req: Request) {
       })
     }
 
-    // 🚨 DETECCIÓN RÁPIDA DE DESPEDIDAS (antes de llamar al modelo)
     const lastUserMessage = messages[messages.length - 1]
-    if (lastUserMessage.role === 'user') {
-      const text = lastUserMessage.content.toLowerCase().trim()
-      const farewellKeywords = ['nada', 'listo', 'eso es todo']
-      const isFarewell = farewellKeywords.some(kw => text.includes(kw))
-      const isJustThanks = text === 'gracias' || text === 'genial gracias' || text === 'muchas gracias'
-      
-      // Si detectamos despedida, responder directamente sin modelo
-      if (isFarewell && !isJustThanks) {
-        const farewellResponse = `ARCHETYPE: farewell
+    const lastMessage = lastUserMessage.content.toLowerCase().trim()
 
-MESSAGE:
-¡Perfecto! Para lo que necesites, acá estoy. ¡Excelente día!
+    // ⚡ DETECCIÓN DE DESPEDIDAS FINALES (patrones flexibles)
+    const farewellPatterns = [
+      /^(en\s+)?nada(\s+m[aá]s)?$/i,           // nada, en nada, nada más, en nada mas
+      /^(en\s+)?nada\s+(entonces|chau|adi[oó]s)$/i,  // en nada chau, nada adiós
+      /^(est[aá]\s+bien|esta\s+bien|perfecto|ok|dale)$/i,  // está bien, perfecto, ok, dale
+      /^(chau|adi[oó]s|adios|hasta\s+luego)$/i,      // chau, adiós, hasta luego
+      /^no(\s+gracias)?$/i,                    // no, no gracias
+      /^(ya\s+est[aá]|listo|eso\s+es\s+todo)$/i,  // ya está, listo, eso es todo
+    ]
+
+    const isFarewell = farewellPatterns.some(pattern => pattern.test(lastMessage))
+
+    // Si es despedida final, responder inmediatamente
+    if (isFarewell) {
+      const farewellResponse = `ARCHETYPE: inform
+MESSAGE: ¡Que tengas un excelente día! Cualquier cosa acá estoy.
 ---`
-        return new Response(farewellResponse, {
-          headers: {
-            'Content-Type': 'text/plain',
-            ...corsHeaders,
-          },
-        })
-      }
+      return new Response(farewellResponse, {
+        headers: {
+          'Content-Type': 'text/plain',
+          ...corsHeaders,
+        },
+      })
     }
 
     // Obtener contenido del sitio
@@ -284,9 +274,8 @@ ${(contentData.servicios as Record<string, unknown>[]).map((s: Record<string, un
 ⚠️ IMPORTANTE: Esta es la ÚNICA información disponible. NO inventes datos. Si algo no está aquí, dilo honestamente.
 `
 
-    // Agregar contexto al sistema
     // Limitar historial a últimos 4 mensajes para reducir latencia
-    const recentMessages = messages.slice(-4);
+    const recentMessages = messages.slice(-4)
     
     const enhancedMessages = [
       {
@@ -301,7 +290,7 @@ ${(contentData.servicios as Record<string, unknown>[]).map((s: Record<string, un
       model: groq('llama-3.1-8b-instant'),
       system: SYSTEM_PROMPT,
       messages: enhancedMessages,
-      temperature: 0.2,  // Más bajo para mayor adherencia al formato
+      temperature: 0.2,
     })
 
     // Stream response directo (más rápido)

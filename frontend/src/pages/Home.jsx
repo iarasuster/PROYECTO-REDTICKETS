@@ -24,7 +24,7 @@ const Home = () => {
     <div className="home-page">
       {/* Hero Section */}
       <section className="hero-section">
-        {canUseLiquidEther ? (
+        {canUseLiquidEther && (
           <div
             style={{
               width: "100%",
@@ -52,21 +52,6 @@ const Home = () => {
               autoRampDuration={0.6}
             />
           </div>
-        ) : (
-          /* Fallback: degradado simple para dispositivos de bajo rendimiento */
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              background:
-                "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #ff6600 50%, #ff8833 75%, #1a1a1a 100%)",
-              backgroundSize: "400% 400%",
-              animation: "gradientShift 15s ease infinite",
-            }}
-          />
         )}
         <div className="container">
           <h1 className="hero-title">

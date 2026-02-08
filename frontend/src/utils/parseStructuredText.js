@@ -135,11 +135,9 @@ export function parseStructuredText(text) {
     if (import.meta.env.DEV)
       console.warn("⚠️ Respuesta sin MESSAGE detectada. Agregando fallback.");
 
-    // Generar mensaje fallback según componentes presentes
+    // Generar mensaje fallback neutral (el LLM debería siempre proveer MESSAGE)
     if (result.layers.visual.length > 0) {
-      result.layers.message = "Aquí tenés la información que solicitaste:";
-    } else if (result.layers.actions.length > 0) {
-      result.layers.message = "Te comparto estas opciones útiles:";
+      result.layers.message = "Aquí está la información:";
     } else {
       result.layers.message = "¿En qué más puedo ayudarte?";
     }

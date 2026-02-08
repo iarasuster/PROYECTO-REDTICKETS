@@ -40,16 +40,37 @@
   }
 }
 
-/* Animación para el degradado de fallback (tablets/móvil) */
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
+/* Animación fluida tipo LiquidEther (tablets) */
+@keyframes orbFloat1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30%, -20%) scale(1.1);
+  }
+  66% {
+    transform: translate(-20%, 30%) scale(0.9);
+  }
+}
+
+@keyframes orbFloat2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(-30%, 20%) scale(0.9);
+  }
+  66% {
+    transform: translate(20%, -30%) scale(1.1);
+  }
+}
+
+@keyframes orbFloat3 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
   }
   50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+    transform: translate(15%, 15%) scale(1.05);
   }
 }
 
@@ -71,7 +92,73 @@
   justify-content: center;
 }
 
-/* Removido el degradado anterior - ahora usa LiquidEther */
+/* Gradiente animado para tablets (sin LiquidEther) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Orbe naranja superior izquierda */
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    top: -200px;
+    left: -100px;
+    background: radial-gradient(
+      circle,
+      rgba(255, 102, 0, 0.6) 0%,
+      rgba(255, 102, 0, 0.3) 30%,
+      transparent 70%
+    );
+    filter: blur(60px);
+    opacity: 1;
+    animation: orbFloat1 20s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* Orbe naranja inferior derecha */
+  .hero-section::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    bottom: -150px;
+    right: -100px;
+    background: radial-gradient(
+      circle,
+      rgba(255, 133, 51, 0.55) 0%,
+      rgba(255, 102, 0, 0.25) 30%,
+      transparent 70%
+    );
+    filter: blur(50px);
+    opacity: 0.9;
+    animation: orbFloat2 18s ease-in-out infinite;
+    pointer-events: none;
+  }
+  
+  /* Orbe naranja central (sutil) */
+  .hero-section .hero-title::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle,
+      rgba(255, 153, 68, 0.25) 0%,
+      transparent 60%
+    );
+    filter: blur(40px);
+    opacity: 0.8;
+    animation: orbFloat3 15s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .hero-section .hero-title {
+    position: relative;
+  }
+}
 
 .hero-section > * {
   position: relative;
