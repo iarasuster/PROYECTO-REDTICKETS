@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { SERVER_URL } from "../services/api";
+import { getOptimizedImageUrl } from "../utils/imageOptimization";
 import "./LogoCarousel.css";
 
 /**
@@ -24,25 +25,26 @@ const LogoCarousel = ({ logos = [], speed = 30 }) => {
   const getImageUrl = (logo) => {
     if (!logo.imagen) return null;
 
+    let url = '';
     // Si imagen es un objeto con url
     if (typeof logo.imagen === "object" && logo.imagen.url) {
-      const url = logo.imagen.url;
-      // Si la URL ya incluye http, usarla directamente
-      if (url.startsWith("http")) {
-        return url;
-      }
+      url = logo.imagen.url;
       // Si es una ruta relativa, usar SERVER_URL
-      return `${SERVER_URL}${url}`;
+      if (!url.startsWith("http")) {
+        url = `${SERVER_URL}${url}`;
+      }
     }
-
     // Si imagen es un string directo
-    if (typeof logo.imagen === "string") {
-      return logo.imagen.startsWith("http")
+    else if (typeof logo.imagen === "string") {
+      url = logo.imagen.startsWith("http")
         ? logo.imagen
         : `${SERVER_URL}${logo.imagen}`;
     }
 
-    return null;
+    if (!url) return null;
+    
+    // Optimizar para logos
+    return getOptimizedImageUrl(url, 'logo');
   };
 
   // Duplicar los logos para crear el efecto infinito

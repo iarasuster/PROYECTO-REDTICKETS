@@ -1,6 +1,9 @@
 import { useState, useEffect, memo } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { getContentBySection, SERVER_URL } from "../services/api";
+import { getOptimizedImageUrl } from "../utils/imageOptimization";
+import Icon from "./Icon";
+import LazyYouTube from "./LazyYouTube";
 import ChromaGrid from "./ChromaGrid";
 import CommentsForm from "./CommentsForm";
 import Counter from "./Counter";
@@ -8,14 +11,21 @@ import LogoCarousel from "./LogoCarousel";
 import TestimoniosCarousel from "./TestimoniosCarousel";
 import BentoGrid from "./BentoGrid";
 import loaderAnimation from "../assets/loader.lottie";
-
-function getImageUrl(imageObj) {
-  if (!imageObj) return "";
-  if (imageObj.url) return imageObj.url;
-  if (imageObj.filename) return `${SERVER_URL}/media/${imageObj.filename}`;
-  return "";
-}
 import "./SectionContent.css";
+
+function getImageUrl(imageObj, type = 'default') {
+  if (!imageObj) return "";
+  
+  // Extraer URL
+  let url = '';
+  if (imageObj.url) url = imageObj.url;
+  else if (imageObj.filename) url = `${SERVER_URL}/media/${imageObj.filename}`;
+  
+  if (!url) return "";
+  
+  // Optimizar si es de Cloudinary
+  return getOptimizedImageUrl(url, type);
+}
 
 const SectionContent = ({ seccion, className = "" }) => {
   const [content, setContent] = useState(null);
@@ -199,14 +209,10 @@ const InicioContent = ({ data }) => {
       {/* Video Institucional */}
       <div className="inicio-video animate-item">
         <div className="video-wrapper">
-          <iframe
-            src="https://www.youtube.com/embed/aoC7rMeNZNY"
-            title="Video Institucional - RedTickets"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            loading="lazy"
-          ></iframe>
+          <LazyYouTube 
+            videoId="aoC7rMeNZNY" 
+            title="Video Institucional - RedTickets" 
+          />
         </div>
       </div>
 
@@ -297,7 +303,7 @@ function SobreNosotrosContent({ data }) {
           <h3 className="section-title">Fundadores</h3>
           <div className="fundadores-photo-interactive">
             <img
-              src={getImageUrl(data.fundadores_foto)}
+              src={getImageUrl(data.fundadores_foto, 'hero')}
               alt="Fundadores de RedTickets"
               className="group-photo"
               loading="lazy"
@@ -378,14 +384,14 @@ function SobreNosotrosContent({ data }) {
                     {miembro.imagen?.url ? (
                       <div className="team-photo">
                         <img
-                          src={getImageUrl(miembro.imagen)}
+                          src={getImageUrl(miembro.imagen, 'profile')}
                           alt={miembro.nombre}
                           loading="lazy"
                         />
                       </div>
                     ) : (
                       <div className="team-photo placeholder">
-                        <i className="fas fa-user"></i>
+                        <Icon name="user" size={40} color="#666" />
                       </div>
                     )}
                     <h4>{miembro.nombre}</h4>
@@ -772,13 +778,10 @@ const AyudaContent = ({ data }) => {
 
             {/* Video Tutorial */}
             <div className="video-wrapper">
-              <iframe
-                src="https://www.youtube.com/embed/O_JRfiGeSNI"
-                title="Tutorial de Compra - RedTickets"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+              <LazyYouTube 
+                videoId="O_JRfiGeSNI" 
+                title="Tutorial de Compra - RedTickets" 
+              />
             </div>
           </div>
         )}
@@ -902,8 +905,7 @@ const AyudaContent = ({ data }) => {
                 <p>{data.ayuda_tecnica.uso_totem.descripcion}</p>
                 {data.ayuda_tecnica.uso_totem.video && (
                   <p className="video-link">
-                    <i className="fas fa-play-circle"></i>{" "}
-                    {data.ayuda_tecnica.uso_totem.video}
+                    <Icon name="play-circle" size={18} /> {data.ayuda_tecnica.uso_totem.video}
                   </p>
                 )}
               </div>
@@ -1070,13 +1072,13 @@ const ContactoContent = ({ data }) => {
             <div className="contact-info-links">
               {data.email && (
                 <a href={`mailto:${data.email}`} className="contact-link">
-                  <i className="fas fa-envelope"></i>
+                  <Icon name="envelope" size={20} />
                   <span>{data.email}</span>
                 </a>
               )}
               {data.telefono && (
                 <a href={`tel:${data.telefono}`} className="contact-link">
-                  <i className="fas fa-phone"></i>
+                  <Icon name="phone" size={20} />
                   <span>{data.telefono}</span>
                 </a>
               )}

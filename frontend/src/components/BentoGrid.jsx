@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { SERVER_URL } from "../services/api";
+import { getOptimizedImageUrl } from "../utils/imageOptimization";
 import "./BentoGrid.css";
 
 const BentoGrid = ({ photos }) => {
@@ -11,25 +12,26 @@ const BentoGrid = ({ photos }) => {
   const getImageUrl = (photo) => {
     if (!photo.imagen) return "";
 
+    let url = '';
     // Si imagen es un objeto con url
     if (typeof photo.imagen === "object" && photo.imagen.url) {
-      const url = photo.imagen.url;
-      // Si la URL ya incluye http, usarla directamente
-      if (url.startsWith("http")) {
-        return url;
-      }
+      url = photo.imagen.url;
       // Si es una ruta relativa, usar SERVER_URL
-      return `${SERVER_URL}${url}`;
+      if (!url.startsWith("http")) {
+        url = `${SERVER_URL}${url}`;
+      }
     }
-
     // Si imagen es un string directo
-    if (typeof photo.imagen === "string") {
-      return photo.imagen.startsWith("http")
+    else if (typeof photo.imagen === "string") {
+      url = photo.imagen.startsWith("http")
         ? photo.imagen
         : `${SERVER_URL}${photo.imagen}`;
     }
 
-    return "";
+    if (!url) return "";
+    
+    // Optimizar para galería
+    return getOptimizedImageUrl(url, 'gallery');
   };
 
   // Convertir scroll vertical a horizontal

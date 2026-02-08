@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import SectionContent from "../components/SectionContent";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import loaderAnimation from "../assets/loader.lottie";
+import Icon from "../components/Icon";
 import { getSectionBySlug } from "../services/api";
 import "./SectionPage.css";
 
@@ -63,8 +64,8 @@ function SectionPage() {
         <div className="container">
           <div className="error-message">
             <h2>
-              <i className="fas fa-exclamation-triangle"></i> Sección no
-              encontrada
+              <Icon name="exclamation-triangle" size={48} color="#ff6600" />
+              Sección no encontrada
             </h2>
             <p>{error || "La sección que buscas no existe."}</p>
             <a href="/" className="btn-primary">

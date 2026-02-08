@@ -8,6 +8,20 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Animación para spinner de íconos */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
 :root {
   /* 🎨 Colores principales RedTickets (modernizados) */
   --primary-color: #FF6600;

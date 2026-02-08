@@ -377,8 +377,8 @@ body {
   transform: rotate(-45deg) translate(7px, -7px);
 }
 
-/* 🖥️ Desktop: Botón con texto */
-@media (min-width: 769px) {
+/* 🖥️ Desktop: Botón con texto (solo en pantallas grandes) */
+@media (min-width: 1024px) {
   .hamburger {
     flex-direction: row;
     background: var(--primary);
@@ -418,8 +418,8 @@ body {
   display: none;
 }
 
-/* Desktop nav visible desde tablet en adelante */
-@media (min-width: 768px) {
+/* Desktop nav visible desde 1024px (desktop) en adelante */
+@media (min-width: 1024px) {
   .desktop-nav {
     display: flex;
   }
@@ -433,8 +433,8 @@ body {
   }
 }
 
-/* Móvil: solo hamburger y menú lateral */
-@media (max-width: 767px) {
+/* Móvil y Tablet: solo hamburger y menú lateral */
+@media (max-width: 1023px) {
   .desktop-nav {
     display: none;
   }

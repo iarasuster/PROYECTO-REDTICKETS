@@ -39,6 +39,20 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoHovered, setLogoHovered] = useState(false);
   const [canAnimate, setCanAnimate] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // Detectar si es desktop (solo mostrar GIF en desktop)
+  useEffect(() => {
+    const checkIsDesktop = () => {
+      const isLargeScreen = window.innerWidth >= 1024;
+      const isNotMobile = !/(Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini)/i.test(navigator.userAgent);
+      setIsDesktop(isLargeScreen && isNotMobile);
+    };
+    
+    checkIsDesktop();
+    window.addEventListener('resize', checkIsDesktop);
+    return () => window.removeEventListener('resize', checkIsDesktop);
+  }, []);
 
   // Habilitar animación después de que el componente esté montado
   useEffect(() => {
@@ -61,7 +75,7 @@ function App() {
   // Cerrar menú al cambiar tamaño de ventana
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth >= 1024) {
         setIsMenuOpen(false);
       }
     };
@@ -102,51 +116,61 @@ function App() {
           <div className="container">
             <h1 className="site-title">
               <Link to="/">
-                <div
-                  onMouseEnter={() => {
-                    if (canAnimate) {
-                      setLogoHovered(true);
-                    }
-                  }}
-                  style={{
-                    overflow: "hidden",
-                    height: "40px",
-                    width: "200px",
-                    display: "inline-block",
-                    position: "relative",
-                  }}
-                >
-                  {/* Logo estático siempre visible */}
+                {isDesktop ? (
+                  /* Desktop: Logo con animación GIF */
+                  <div
+                    onMouseEnter={() => {
+                      if (canAnimate) {
+                        setLogoHovered(true);
+                      }
+                    }}
+                    style={{
+                      overflow: "hidden",
+                      height: "40px",
+                      width: "200px",
+                      display: "inline-block",
+                      position: "relative",
+                    }}
+                  >
+                    {/* Logo estático siempre visible */}
+                    <img
+                      src="/LOGO_1.svg"
+                      alt="RedTickets"
+                      className="site-logo"
+                      style={{
+                        opacity: logoHovered ? 0 : 1,
+                        transition: "opacity 0.2s ease",
+                      }}
+                    />
+
+                    {/* GIF animado solo cuando hover */}
+                    {logoHovered && canAnimate && (
+                      <img
+                        src="https://res.cloudinary.com/dto7bkvgc/image/upload/q_auto,f_auto/media/Logo.gif"
+                        alt="RedTickets Logo Animado"
+                        onLoad={() => {
+                          // Reset después de que termine la animación
+                          setTimeout(() => setLogoHovered(false), 5000);
+                        }}
+                        style={{
+                          position: "absolute",
+                          top: "-80px",
+                          left: "-5px",
+                          width: "200px",
+                          height: "200px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    )}
+                  </div>
+                ) : (
+                  /* Tablet/Móvil: Solo logo estático */
                   <img
                     src="/LOGO_1.svg"
                     alt="RedTickets"
                     className="site-logo"
-                    style={{
-                      opacity: logoHovered ? 0 : 1,
-                      transition: "opacity 0.2s ease",
-                    }}
                   />
-
-                  {/* GIF animado solo cuando hover */}
-                  {logoHovered && canAnimate && (
-                    <img
-                      src="https://res.cloudinary.com/dto7bkvgc/image/upload/q_auto,f_auto/media/Logo.gif"
-                      alt="RedTickets Logo Animado"
-                      onLoad={() => {
-                        // Reset después de que termine la animación
-                        setTimeout(() => setLogoHovered(false), 5000);
-                      }}
-                      style={{
-                        position: "absolute",
-                        top: "-80px",
-                        left: "-5px",
-                        width: "200px",
-                        height: "200px",
-                        objectFit: "contain",
-                      }}
-                    />
-                  )}
-                </div>
+                )}
               </Link>
             </h1>
 

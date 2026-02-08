@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { CardList } from "./chatbot/CardList";
 import { VideoBlock } from "./chatbot/VideoBlock";
 import { SuggestedActions } from "./chatbot/SuggestedActions";
+import Icon from "./Icon";
 import "./ChatUI.css";
 
 const ChatUI = ({ isOpen, onClose }) => {
@@ -132,7 +133,7 @@ const ChatUI = ({ isOpen, onClose }) => {
               }
             }}
           >
-            <i className="fas fa-arrow-right"></i>
+            <Icon name="arrow-right" size={16} />
             {action.label}
           </button>
         ))}
@@ -346,7 +347,7 @@ const ChatUI = ({ isOpen, onClose }) => {
         {/* Error message */}
         {error && (
           <div className="chat-ui__error">
-            <i className="fas fa-exclamation-triangle"></i>{" "}
+            <Icon name="exclamation-triangle" size={18} />
             {error || "Hubo un problema. Por favor, intenta nuevamente."}
           </div>
         )}
@@ -370,10 +371,10 @@ const ChatUI = ({ isOpen, onClose }) => {
           className="chat-ui__send-btn"
           disabled={status !== "ready" || !input || input.trim() === ""}
         >
-          {status === "submitting" && <i className="fas fa-paper-plane"></i>}
-          {status === "streaming" && <i className="fas fa-spinner fa-spin"></i>}
-          {status === "ready" && <i className="fas fa-paper-plane"></i>}
-          {status === "error" && <i className="fas fa-exclamation-circle"></i>}
+          {status === "submitting" && <Icon name="paper-plane" size={20} />}
+          {status === "streaming" && <Icon name="spinner" size={20} />}
+          {status === "ready" && <Icon name="paper-plane" size={20} />}
+          {status === "error" && <Icon name="exclamation-circle" size={20} />}
         </button>
       </form>
     </div>
