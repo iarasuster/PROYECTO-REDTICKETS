@@ -10,7 +10,7 @@ Plataforma headless CMS con chatbot inteligente, búsqueda semántica y Generati
 [![React](https://img.shields.io/badge/React-19.1.2-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
 [![Payload CMS](https://img.shields.io/badge/Payload_CMS-3.59-000000?style=flat&logo=payload&logoColor=white)](https://payloadcms.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat&logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Security](https://img.shields.io/badge/Security-Audited-success?style=flat&logo=shield&logoColor=white)](./SECURITY.md)
 
 [Instalación](#-inicio-rápido) · [Documentación](./DEPLOY-GUIDE.md) · [Chatbot](./DOCUMENTACION-CHATBOT.md) · [Seguridad](./SECURITY.md)
